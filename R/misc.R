@@ -13,3 +13,12 @@ h2o_r <- function(x) {
 
 # ------------------------------------------------------------------------------
 
+get_fit_opts <- function(...) {
+  opts <- list(...)
+  if (!any(names(opts) == "seed")) {
+    opts$seed <- sample.int(10^5, 1)
+  }
+  opts
+}
+
+
