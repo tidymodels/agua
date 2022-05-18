@@ -4,6 +4,7 @@
 #' seed configuration, and so on.
 #'
 #' @inheritParams h2o::h2o.randomForest
+#' @inheritParams h2o::h2o.xgboost
 #' @param x A data frame of predictors
 #' @param y A vector of outcomes.
 #' @param model A character string for the model.
@@ -64,3 +65,33 @@ h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
 }
 
 
+
+#' @export
+#' @rdname h2o_train
+h2o_train_xgboost <-
+  function(x,
+           y,
+           ntrees = 50,
+           max_depth = 6,
+           min_rows = 1,
+           learn_rate = 0.3,
+           sample_rate = 1,
+           col_sample_rate = 1,
+           min_split_improvement = 0,
+           stopping_rounds = 0,
+           ...) {
+    h2o_train(
+      x,
+      y,
+      model = "xgboost",
+      ntrees = ntrees,
+      max_depth = max_depth,
+      min_rows = min_rows,
+      learn_rate = learn_rate,
+      sample_rate = sample_rate,
+      col_sample_rate = col_sample_rate,
+      stopping_rounds = stopping_rounds,
+      ...
+    )
+
+  }

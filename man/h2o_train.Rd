@@ -3,11 +3,26 @@
 \name{h2o_train}
 \alias{h2o_train}
 \alias{h2o_train_rf}
+\alias{h2o_train_xgboost}
 \title{Model wrappers for h2o}
 \usage{
 h2o_train(x, y, model, ...)
 
 h2o_train_rf(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...)
+
+h2o_train_xgboost(
+  x,
+  y,
+  ntrees = 50,
+  max_depth = 6,
+  min_rows = 1,
+  learn_rate = 0.3,
+  sample_rate = 1,
+  col_sample_rate = 1,
+  min_split_improvement = 0,
+  stopping_rounds = 0,
+  ...
+)
 }
 \arguments{
 \item{x}{A data frame of predictors}
@@ -25,6 +40,19 @@ h2o_train_rf(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...)
 classification and p/3 for regression (where p is the # of predictors Defaults to -1.}
 
 \item{min_rows}{Fewest allowed (weighted) observations in a leaf. Defaults to 1.}
+
+\item{max_depth}{Maximum tree depth (0 for unlimited). Defaults to 20.}
+
+\item{learn_rate}{(same as eta) Learning rate (from 0.0 to 1.0) Defaults to 0.3.}
+
+\item{sample_rate}{Row sample rate per tree (from 0.0 to 1.0) Defaults to 0.632.}
+
+\item{col_sample_rate}{(same as colsample_bylevel) Column sample rate (from 0.0 to 1.0) Defaults to 1.}
+
+\item{min_split_improvement}{Minimum relative improvement in squared error reduction for a split to happen Defaults to 1e-05.}
+
+\item{stopping_rounds}{Early stopping based on convergence of stopping_metric. Stop if simple moving average of length k of the
+stopping_metric does not improve for k:=stopping_rounds scoring events (0 to disable) Defaults to 0.}
 }
 \value{
 An h2o model object.
