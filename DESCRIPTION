@@ -2,10 +2,10 @@ Package: agua
 Title: 'tidymodels' Integration with 'h2o'
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Steven", "Pawley", , "dr.stevenpawley@gmail.com", role = "aut"),
     person("Max", "Kuhn", , "max@rstudio.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2402-136X")),
     person("Qiushi", "Yan", , "qiushi.yan@rstudio.com", role = "aut"),
+    person("Steven", "Pawley", , "dr.stevenpawley@gmail.com", role = "aut"),
     person("RStudio", role = "cph")
   )
 Description: Create and evaluate models using 'tidymodel' and 'h2o'.
@@ -17,4 +17,6 @@ Depends:
     parsnip,
     tune
 Imports: 
-    h2o
+    h2o,
+    rlang,
+    tibble

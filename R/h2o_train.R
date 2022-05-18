@@ -1,5 +1,32 @@
-
-
+#' Model wrappers for h2o
+#'
+#' Basic model wrappers for h2o model functions that include data conversion,
+#' seed configuration, and so on.
+#'
+#' @inheritParams h2o::h2o.randomForest
+#' @param x A data frame of predictors
+#' @param y A vector of outcomes.
+#' @param model A character string for the model.
+#' @param ... Other options to pass to the h2o model functions (e.g.,
+#' [h2o::h2o.randomForest]).
+#' @return An h2o model object.
+#' @examples
+#' # start with h2o::h2o.init()
+#'
+#' if (h2o_running()) {
+#'   spec <-
+#'     rand_forest(mtry = 3, trees = 1000) %>%
+#'     set_engine("h2o") %>%
+#'     set_mode("regression")
+#'
+#'   set.seed(1)
+#'   mod <- fit(spec, mpg ~ ., data = mtcars)
+#'   mod
+#'
+#'   predict(mod, head(mtcars))
+#'
+#' }
+#' @export
 h2o_train <- function(x, y, model, ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
@@ -19,4 +46,21 @@ h2o_train <- function(x, y, model, ...) {
     )
   rlang::eval_tidy(cl)
 }
+
+#' @export
+#' @rdname h2o_train
+h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
+
+  h2o_train(
+    x,
+    y,
+    model = "randomForest",
+    ntrees = ntrees,
+    mtries = mtries,
+    min_rows = min_rows,
+    ...
+  )
+
+}
+
 
