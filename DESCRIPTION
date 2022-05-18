@@ -18,5 +18,10 @@ Depends:
     tune
 Imports: 
     h2o,
+    purrr,
     rlang,
-    tibble
+    tibble,
+    utils
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

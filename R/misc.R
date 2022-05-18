@@ -18,15 +18,23 @@
 #' }
 #' @export
 r_h2o <- function(x) {
-  h2o::as.h2o(x)
-  # TODO find a way to do this quietly withr::with_options and purrr::quietly
+  quiet_convert(x)$result
 }
+
+quiet_convert <- purrr::quietly(h2o::as.h2o)
 
 #' @export
 #' @rdname r_h2o
 h2o_r <- function(x) {
   x <- as.data.frame(x)
   tibble::as_tibble(x)
+}
+
+# ------------------------------------------------------------------------------
+
+quiet_start <- purrr::quietly(h2o::h2o.init)
+h2o_start <- function() {
+  res <- utils::capture.output(quiet_start(), "output")
 }
 
 # ------------------------------------------------------------------------------
