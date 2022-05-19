@@ -12,5 +12,6 @@
 ## usethis namespace: start
 #' @importFrom parsnip set_model_arg
 #' @importFrom tune tune
+#' @importFrom purrr quietly
 ## usethis namespace: end
 NULL
