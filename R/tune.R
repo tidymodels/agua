@@ -4,7 +4,7 @@ tune_grid_loop_iter_h2o <- function(split,
                                     metrics,
                                     control,
                                     seed) {
-  tune:::load_pkgs(workflow)
+  tune::load_pkgs(workflow)
   tune:::load_namespace(control$pkgs)
 
   training_frame <- rsample::analysis(split)
