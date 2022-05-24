@@ -95,3 +95,35 @@ h2o_train_xgboost <-
     )
 
   }
+
+#' @export
+#' @rdname h2o_train
+h2o_train_glm <-
+  function(x,
+           y,
+           lambda = NULL,
+           alpha = NULL,
+           family = c("AUTO",
+                      "gaussian",
+                      "binomial",
+                      "fractionalbinomial",
+                      "quasibinomial",
+                      "ordinal",
+                      "multinomial",
+                      "poisson",
+                      "gamma",
+                      "tweedie",
+                      "negativebinomial"),
+           ...) {
+    h2o_train(
+      x,
+      y,
+      model = "glm",
+      lambda = lambda,
+      alpha = alpha,
+      family = family,
+      ...
+    )
+
+  }
+
