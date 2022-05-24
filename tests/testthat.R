@@ -1,4 +1,4 @@
 library(testthat)
 library(agua)
 
-test_check("agua")
+# test_check("agua")
