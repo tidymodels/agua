@@ -1,4 +1,4 @@
-test_that('data conversion', {
+test_that("data conversion", {
   agua:::h2o_start()
   on.exit(h2o::h2o.shutdown(prompt = FALSE))
   skip_if(!h2o_running())
@@ -9,11 +9,9 @@ test_that('data conversion', {
 })
 
 
-test_that('server functions', {
+test_that("server functions", {
   expect_silent(agua:::h2o_start())
   expect_true(h2o_running())
   h2o::h2o.shutdown(prompt = FALSE)
   expect_false(h2o_running())
 })
-
-

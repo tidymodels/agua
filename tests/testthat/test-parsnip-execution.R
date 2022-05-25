@@ -1,4 +1,4 @@
-test_that('parsnip model execution', {
+test_that("parsnip model execution", {
   agua:::h2o_start()
   on.exit(try(h2o::h2o.shutdown(prompt = FALSE), silent = TRUE))
   skip_if(!h2o_running())
@@ -19,8 +19,10 @@ test_that('parsnip model execution', {
   pred_reg <- predict(fit_reg, head(mtcars))
   expect_equal(
     pred_reg$.pred,
-    c(19.0999998092651, 19.0999998092651, 22.4399993896484, 19.7699998855591,
-      17.8650003433228, 19.1633333206177)
+    c(
+      19.0999998092651, 19.0999998092651, 22.4399993896484, 19.7699998855591,
+      17.8650003433228, 19.1633333206177
+    )
   )
 
   # ------------------------------------------------------------------------------
@@ -39,9 +41,9 @@ test_that('parsnip model execution', {
   pred_reg <- predict(fit_reg, head(mtcars))
   expect_equal(
     pred_reg$.pred,
-    c(8.96138000488281, 8.96138000488281, 10.2200937271118, 8.28253364562988,
-      6.63353729248047, 8.28253364562988)
+    c(
+      8.96138000488281, 8.96138000488281, 10.2200937271118, 8.28253364562988,
+      6.63353729248047, 8.28253364562988
+    )
   )
-
 })
-

@@ -25,7 +25,6 @@
 #'   mod
 #'
 #'   predict(mod, head(mtcars))
-#'
 #' }
 #' @export
 h2o_train <- function(x, y, model, ...) {
@@ -51,7 +50,6 @@ h2o_train <- function(x, y, model, ...) {
 #' @export
 #' @rdname h2o_train
 h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
-
   h2o_train(
     x,
     y,
@@ -61,7 +59,6 @@ h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
     min_rows = min_rows,
     ...
   )
-
 }
 
 
@@ -93,7 +90,6 @@ h2o_train_xgboost <-
       stopping_rounds = stopping_rounds,
       ...
     )
-
   }
 
 #' @export
@@ -112,6 +108,4 @@ h2o_train_glm <-
       alpha = alpha,
       ...
     )
-
   }
-

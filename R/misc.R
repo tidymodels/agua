@@ -14,7 +14,6 @@
 #'
 #'   cars0 <- h2o_r(cars2)
 #'   cars0
-#'
 #' }
 #' @export
 r_h2o <- function(x) {
@@ -70,5 +69,3 @@ get_fit_opts <- function(...) {
   }
   opts
 }
-
-

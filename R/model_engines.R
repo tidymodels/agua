@@ -28,6 +28,7 @@ add_logistic_reg_h2o <- function() {
       interface = "data.frame",
       protect = c("x", "y"),
       func = c(pkg = "agua", fun = "h2o_train_glm"),
+      defaults = list()
     )
   )
 
@@ -437,4 +438,3 @@ add_boost_tree_h2o <- function() {
     )
   )
 }
-
