@@ -103,17 +103,6 @@ h2o_train_glm <-
            y,
            lambda = NULL,
            alpha = NULL,
-           family = c("AUTO",
-                      "gaussian",
-                      "binomial",
-                      "fractionalbinomial",
-                      "quasibinomial",
-                      "ordinal",
-                      "multinomial",
-                      "poisson",
-                      "gamma",
-                      "tweedie",
-                      "negativebinomial"),
            ...) {
     h2o_train(
       x,
@@ -121,7 +110,6 @@ h2o_train_glm <-
       model = "glm",
       lambda = lambda,
       alpha = alpha,
-      family = family,
       ...
     )
 
