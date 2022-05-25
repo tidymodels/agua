@@ -18,40 +18,42 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of agua is to ...
+agua enables users to fit, optimize, and evaluate models via [h2o](https://h2o.ai) using a tidymodels interface. 
+
+Most users will not have to use aqua directly; the features can be accessed via a parsnip engine value of `'h2o'`. 
+
+There are two main components in agua: 
+
+* parsnip engine definitions for the following models: 
+* Infrastructure for the tune and fine-tune packages. 
+
+When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to `h2o.grid()` to process them. 
+
+This work is based on @stevenpawley's [h2oparsnip](https://github.com/stevenpawley/h2oparsnip) package and additional work by Qiushi Yan on his summer internship at RStudio. 
 
 ## Installation
 
 You can install the development version of agua like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+require(pak)
+pak::pak(c("topepo/agua"))
 ```
 
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example, eval = FALSE}
+library(tidymodels)
 library(agua)
-## basic example code
+
+tidymodels_prefer()
+
+# Start the h2o server before running models
+h2o::h2o.init()
+
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
 
 ## Code of Conduct
   
