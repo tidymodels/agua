@@ -4,6 +4,9 @@ tune_grid_loop_iter_h2o <- function(split,
                                     metrics,
                                     control,
                                     seed) {
+  h2o::h2o.no_progress()
+  on.exit(h2o::h2o.show_progress())
+
   tune::load_pkgs(workflow)
   tune:::load_namespace(control$pkgs)
 
@@ -102,6 +105,8 @@ tune_grid_loop_iter_h2o <- function(split,
 
     h2o_model_ids <- as.character(h2o_res@model_ids)
     h2o_models <- purrr::map(h2o_model_ids, h2o.getModel)
+    # remove objects from h2o server
+    on.exit(h2o::h2o.rm(c(h2o_model_ids, h2o_training_frame$id, h2o_val_frame$id)))
 
     val_truth <- val_frame_processed[outcome_name]
     h2o_preds <- purrr::map(h2o_models, pull_h2o_predictions,
@@ -134,9 +139,6 @@ tune_grid_loop_iter_h2o <- function(split,
     }
 
     out[[iter_preprocessor]] <- grid_out
-
-    # remove objects from h2o server
-    h2o::h2o.rm(c(h2o_model_ids, h2o_training_frame$id, h2o_val_frame$id))
   }
 
   out <- vctrs::vec_rbind(!!!out) %>%
