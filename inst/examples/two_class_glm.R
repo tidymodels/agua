@@ -1,5 +1,6 @@
 library(modeldata)
 library(parsnip)
+library(tidyr)
 library(rsample)
 library(recipes)
 library(h2o)
@@ -79,8 +80,12 @@ results <- foreach::foreach(
   )
 }
 
+purrr::map(results, purrr::pluck, ".metrics")
+
+dplyr::bind_rows(!!!list(iris, iris))
+
+
 results[[1]]
-results[[1]]$.metrics
 results[[1]]$.predictions[[1]]
 
 results[[1]] %>%

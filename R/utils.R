@@ -34,6 +34,9 @@ is_h2o <- function(workflow, ...) {
   identical(model_spec$engine, "h2o")
 }
 
+
+
+
 rename_grid_h2o <- function(grid, workflow) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
   # For translate from given names/ids in grid to parsnip names:

@@ -15,6 +15,7 @@ tune_grid_loop_iter_h2o <- function(split,
   mode <- hardhat::extract_spec_parsnip(wf)$mode
   workflow_original <- wf
 
+  fold_id <- labels(split)
   pset <- hardhat::extract_parameter_set_dials(workflow_original)
   param_names <- dplyr::pull(pset, "id")
   model_params <- dplyr::filter(pset, source == "model_spec")
@@ -22,14 +23,18 @@ tune_grid_loop_iter_h2o <- function(split,
   model_param_names <- dplyr::pull(model_params, "id")
   preprocessor_param_names <- dplyr::pull(preprocessor_params, "id")
 
-
-  outcome_name <- tune:::outcome_names(workflow)
+  out_metrics <- NULL
+  out_extracts <- NULL
+  out_predictions <- NULL
+  out_all_outcome_names <- list()
+  out_notes <-
+    tibble::tibble(location = character(0), type = character(0), note = character(0))
   event_level <- control$event_level
   orig_rows <- as.integer(split, data = "assessment")
 
 
   iter_preprocessors <- grid_info[[".iter_preprocessor"]]
-  out <- vector("list", length(iter_preprocessors))
+
   # preprocessor loop
   for (iter_preprocessor in iter_preprocessors) {
     workflow <- workflow_original
@@ -69,6 +74,12 @@ tune_grid_loop_iter_h2o <- function(split,
       tidyr::unnest(.iter_config) %>%
       dplyr::select(dplyr::all_of(model_param_names), .iter_config)
 
+    outcome_name <- tune:::outcome_names(workflow)
+    out_all_outcome_names <- c(
+      out_all_outcome_names,
+      outcome_name
+    )
+
     iter_grid <- dplyr::bind_cols(
       iter_grid_preprocessor,
       iter_grid_info_models
@@ -106,61 +117,83 @@ tune_grid_loop_iter_h2o <- function(split,
     h2o_model_ids <- as.character(h2o_res@model_ids)
     h2o_models <- purrr::map(h2o_model_ids, h2o.getModel)
     # remove objects from h2o server
-    on.exit(h2o::h2o.rm(c(h2o_model_ids, h2o_training_frame$id, h2o_val_frame$id)))
+    on.exit(h2o::h2o.rm(c(
+      h2o_model_ids,
+      h2o_training_frame$id,
+      h2o_val_frame$id
+    )))
 
     val_truth <- val_frame_processed[outcome_name]
-    h2o_preds <- purrr::map(h2o_models, pull_h2o_predictions,
+    h2o_predictions <- purrr::map(
+      h2o_models,
+      pull_h2o_predictions,
       val_frame = h2o_val_frame$data,
       val_truth = val_truth,
+      fold_id = fold_id,
       orig_rows = orig_rows,
       mode = mode
     ) %>%
       purrr::imap(~ bind_prediction_iter_grid(
-        prediction = .x,
+        predictions = .x,
         iter_grid = iter_grid[.y, ],
         param_names = param_names
       ))
+    iter_predictions <- dplyr::bind_rows(!!!h2o_predictions)
+
+    out_predictions <- append_h2o_predictions(
+      out_predictions,
+      predictions = iter_predictions,
+      control = control
+    )
+
     # yardstick metrics
-    h2o_metrics <- purrr::map(h2o_preds, pull_h2o_metrics,
+    h2o_metrics <- purrr::map(
+      h2o_predictions,
+      pull_h2o_metrics,
       metrics = metrics,
+      fold_id = fold_id,
       param_names = param_names,
       outcome_name = outcome_name,
       event_level = event_level
     )
+    iter_metrics <- dplyr::bind_rows(!!!h2o_metrics)
+    out_metrics <- dplyr::bind_rows(out_metrics, iter_metrics)
 
-    grid_out <- iter_grid_info %>%
+    iter_extracts <- iter_grid_info %>%
       tidyr::unnest(cols = data) %>%
       dplyr::select(
         dplyr::all_of(preprocessor_param_names),
         dplyr::all_of(model_param_names),
         .iter_config
       ) %>%
-      tidyr::unnest(.iter_config) %>%
-      dplyr::mutate(.metrics = h2o_metrics)
-
-    if (control$save_pred) {
-      grid_out <- grid_out %>% dplyr::mutate(.predictions = h2o_preds)
-    }
-
-    out[[iter_preprocessor]] <- grid_out
+      tidyr::unnest(.iter_config)
+    out_extracts <- dplyr::bind_rows(out_extracts, iter_extracts)
   }
 
-  out <- vctrs::vec_rbind(!!!out) %>%
-    dplyr::bind_cols(labels(split))
-
-  out
+  list(
+    .extracts = out_extracts,
+    .metrics = out_metrics,
+    .predictions = out_predictions,
+    .all_outcome_names = out_all_outcome_names,
+    .notes = out_notes
+  )
 }
 
-bind_prediction_iter_grid <- function(prediction, iter_grid, param_names) {
-  prediction %>%
+bind_prediction_iter_grid <- function(predictions, iter_grid, param_names) {
+  predictions %>%
     dplyr::bind_cols(iter_grid) %>%
     # relocate and rename to be consistent with tune_grid output
     dplyr::relocate(dplyr::all_of(param_names), .after = .row) %>%
     dplyr::rename(.config = .iter_config)
 }
 
-
-pull_h2o_predictions <- function(h2o_model, val_frame, val_truth, orig_rows, mode) {
+pull_h2o_predictions <- function(h2o_model,
+                                 val_frame,
+                                 val_truth,
+                                 fold_id,
+                                 control,
+                                 orig_rows,
+                                 mode) {
   h2o_preds <- h2o::h2o.predict(h2o_model, val_frame) %>%
     tibble::as_tibble()
 
@@ -176,29 +209,38 @@ pull_h2o_predictions <- function(h2o_model, val_frame, val_truth, orig_rows, mod
       purrr::pluck("predict")) %>%
       dplyr::mutate(.row = orig_rows)
   }
+  h2o_preds %>% dplyr::bind_cols(val_truth, fold_id)
+}
 
-  h2o_preds %>%
-    dplyr::bind_cols(val_truth)
+
+append_h2o_predictions <- function(collection,
+                                   predictions,
+                                   control) {
+  if (!control$save_pred) {
+    return(NULL)
+  }
+  if (inherits(predictions, "try-error")) {
+    return(collection)
+  }
+
+  dplyr::bind_rows(collection, predictions)
 }
 
 
 
-pull_h2o_metrics <- function(prediction,
+pull_h2o_metrics <- function(predictions,
                              metrics,
+                             fold_id,
                              param_names,
                              outcome_name,
                              event_level) {
-  estimate_metrics_safely <- purrr::safely(tune:::estimate_metrics)
-  metrics <- estimate_metrics_safely(
-    prediction,
+  metrics <- tune:::estimate_metrics(
+    predictions,
     metrics,
     param_names,
     outcome_name,
     event_level
   )
-  if (is.null(metrics$error)) {
-    metrics$result
-  } else {
-    NULL
-  }
+  metrics
 }
+
