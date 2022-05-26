@@ -56,6 +56,12 @@ classification and p/3 for regression (where p is the # of predictors Defaults t
 
 \item{stopping_rounds}{Early stopping based on convergence of stopping_metric. Stop if simple moving average of length k of the
 stopping_metric does not improve for k:=stopping_rounds scoring events (0 to disable) Defaults to 0.}
+
+\item{lambda}{Regularization strength}
+
+\item{alpha}{Distribution of regularization between the L1 (Lasso) and L2 (Ridge) penalties. A value of 1 for alpha
+represents Lasso regression, a value of 0 produces Ridge regression, and anything in between specifies the
+amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-BFGS'; 0.5 otherwise.}
 }
 \value{
 An h2o model object.

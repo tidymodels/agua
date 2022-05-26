@@ -10,19 +10,21 @@ Authors@R: c(
   )
 Description: Create and evaluate models using 'tidymodel' and 'h2o'.
 License: MIT + file LICENSE
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0.9000
 Depends: 
     parsnip
 Imports: 
-    h2o,
+    dplyr,
+    glue,
+    hardhat,
+    h2o (>= 3.36.0.4),
     purrr,
     rlang,
     tibble,
-    tune,
     utils
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/testthat/parallel: false
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.0.9000

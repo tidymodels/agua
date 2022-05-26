@@ -15,7 +15,7 @@ accessed via a parsnip engine value of `'h2o'`.
 There are two main components in agua:
 
 -   parsnip engine definitions for the following models:
--   Infrastructure for the tune and fine-tune packages.
+-   Infrastructure for the tune and finetune packages.
 
 When fitting a parsnip model, the data are passed to the h2o server
 directly. For tuning, the data are passed once and instructions are

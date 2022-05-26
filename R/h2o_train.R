@@ -5,6 +5,7 @@
 #'
 #' @inheritParams h2o::h2o.randomForest
 #' @inheritParams h2o::h2o.xgboost
+#' @inheritParams h2o::h2o.glm
 #' @param x A data frame of predictors
 #' @param y A vector of outcomes.
 #' @param model A character string for the model.
