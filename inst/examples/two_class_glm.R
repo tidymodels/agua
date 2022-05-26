@@ -46,21 +46,6 @@ n_grid_info <- nrow(grid_info)
 rows <- seq_len(n_grid_info)
 splits <- folds$splits
 
-
-# model and preprocessor params
-
-cols <- rlang::expr(
-  c(
-    .iter_model,
-    .iter_config,
-    .msg_model,
-    dplyr::all_of(model_param_names)
-  )
-)
-out_notes <-
-  tibble::tibble(location = character(0), type = character(0), note = character(0))
-grid_info_nest <- tidyr::nest(grid_info, data = !!cols)
-
 # looping through resamples
 seeds <- tune:::generate_seeds(rng = TRUE, n_resamples)
 
@@ -72,7 +57,7 @@ results <- foreach::foreach(
 ) %dopar% {
   tune_grid_loop_iter_h2o_safely(
     split = split,
-    grid_info = grid_info_nest,
+    grid_info = grid_info,
     workflow = wf,
     metrics = metrics,
     control = control,
@@ -82,15 +67,7 @@ results <- foreach::foreach(
 
 purrr::map(results, purrr::pluck, ".metrics")
 
-dplyr::bind_rows(!!!list(iris, iris))
-
-
 results[[1]]
 results[[1]]$.predictions
-
-results[[1]] %>%
-  select(.predictions) %>%
-  unnest(.predictions)
-
 
 results[[1]]$.metrics

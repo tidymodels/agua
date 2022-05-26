@@ -32,6 +32,16 @@ tune_grid_loop_iter_h2o <- function(split,
   event_level <- control$event_level
   orig_rows <- as.integer(split, data = "assessment")
 
+  cols <- rlang::expr(
+    c(
+      .iter_model,
+      .iter_config,
+      .msg_model,
+      dplyr::all_of(model_param_names)
+    )
+  )
+  grid_info <- tidyr::nest(grid_info, data = !!cols)
+
 
   iter_preprocessors <- grid_info[[".iter_preprocessor"]]
 
@@ -166,7 +176,8 @@ tune_grid_loop_iter_h2o <- function(split,
         dplyr::all_of(model_param_names),
         .iter_config
       ) %>%
-      tidyr::unnest(.iter_config)
+      tidyr::unnest(.iter_config) %>%
+      bind_cols(fold_id)
     out_extracts <- dplyr::bind_rows(out_extracts, iter_extracts)
   }
 
@@ -177,95 +188,6 @@ tune_grid_loop_iter_h2o <- function(split,
     .all_outcome_names = out_all_outcome_names,
     .notes = out_notes
   )
-}
-
-
-tune_grid_loop_iter_h2o_safely <- function(split,
-                                       grid_info,
-                                       workflow,
-                                       metrics,
-                                       control,
-                                       seed) {
-  tune_grid_loop_iter_wrapper <- super_safely(tune_grid_loop_iter_h2o)
-
-  # Likely want to debug with `debugonce(tune_grid_loop_iter)`
-  result <- tune_grid_loop_iter_wrapper(
-    split,
-    grid_info,
-    workflow,
-    metrics,
-    control,
-    seed
-  )
-
-  error <- result$error
-  warnings <- result$warnings
-  result <- result$result
-
-  # No problems
-  if (is.null(error) && length(warnings) == 0L) {
-    return(result)
-  }
-
-  # No errors, but we might have warning notes
-  if (is.null(error)) {
-    res <- result
-    notes <- result$.notes
-  } else {
-    res <- error
-    notes <- NULL
-  }
-
-  problems <- list(res = res, signals = warnings)
-
-  notes <- log_problems(notes, control, split, "internal", problems)
-
-  # Need an output template
-  if (!is.null(error)) {
-    result <- list(
-      .metrics = NULL,
-      .extracts = NULL,
-      .predictions = NULL,
-      .all_outcome_names = list(),
-      .notes = NULL
-    )
-  }
-
-  # Update with new notes
-  result[[".notes"]] <- notes
-
-  result
-}
-
-# Capture any errors, and all warnings
-# If a warning is caught, we store it for later and invoke a restart
-# If an error is caught, we immediately exit
-# All other messages are still passed through
-super_safely <- function(fn) {
-  warnings <- list()
-
-  # Construct a try()-error to be compatible with `log_problems()`
-  handle_error <- function(e) {
-    e <- structure(e$message, class = "try-error", condition = e)
-    list(result = NULL, error = e, warnings = warnings)
-  }
-
-  handle_warning <- function(w) {
-    warnings <<- c(warnings, list(w))
-    rlang::cnd_muffle(w)
-  }
-
-  safe_fn <- function(...) {
-    withCallingHandlers(
-      expr = tryCatch(
-        expr = list(result = fn(...), error = NULL, warnings = warnings),
-        error = handle_error
-      ),
-      warning = handle_warning
-    )
-  }
-
-  safe_fn
 }
 
 bind_prediction_iter_grid <- function(predictions, iter_grid, param_names) {
@@ -330,6 +252,6 @@ pull_h2o_metrics <- function(predictions,
     outcome_name,
     event_level
   )
-  metrics
+  metrics %>% bind_cols(fold_id)
 }
 
