@@ -29,12 +29,12 @@ wf <- workflow() %>%
 pset <- hardhat::extract_parameter_set_dials(wf)
 param_names <- pset$id
 model_param_names <- dplyr::filter(pset, source == "model_spec")$id
-grid <- tidyr::expand_grid(
+param_grid <- tidyr::expand_grid(
   `spline df` = c(1, 3, 5, 10, 15),
   `lambda` = c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1)
 )
 
-grid <- tune:::check_grid(grid = grid, workflow = wf, pset = pset)
+grid <- tune:::check_grid(grid = param_grid, workflow = wf, pset = pset)
 grid_info <- tune:::compute_grid_info(wf, grid)
 control <- control_grid(verbose = TRUE, save_pred = TRUE)
 metrics <- check_metrics(NULL, wf)
@@ -46,9 +46,8 @@ n_grid_info <- nrow(grid_info)
 rows <- seq_len(n_grid_info)
 splits <- folds$splits
 
-# looping through resamples
+# manual looping
 seeds <- tune:::generate_seeds(rng = TRUE, n_resamples)
-
 results <- foreach::foreach(
   split = splits,
   seed = seeds,
@@ -65,9 +64,11 @@ results <- foreach::foreach(
   )
 }
 
-purrr::map(results, purrr::pluck, ".metrics")
-
-results[[1]]
-results[[1]]$.predictions
-
-results[[1]]$.metrics
+# use tune_grid
+# need to use tidymodels/tune@agua branch
+results <- tune_grid(
+  wf,
+  resamples = folds,
+  grid = param_grid,
+  control = control_grid(save_pred = TRUE)
+)
