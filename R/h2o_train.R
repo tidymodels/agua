@@ -25,7 +25,6 @@
 #'   mod
 #'
 #'   predict(mod, head(mtcars))
-#'
 #' }
 #' @export
 h2o_train <- function(x, y, model, ...) {
@@ -33,7 +32,7 @@ h2o_train <- function(x, y, model, ...) {
   x <- as.data.frame(x)
   x_names <- names(x)
   x$.outcome <- y
-  x <- r_h2o(x)
+  x <- as_h2o(x)$data
 
   mod_fun <- paste0("h2o.", model)
   cl <-
@@ -48,10 +47,17 @@ h2o_train <- function(x, y, model, ...) {
   rlang::eval_tidy(cl)
 }
 
+get_fit_opts <- function(...) {
+  opts <- list(...)
+  if (!any(names(opts) == "seed")) {
+    opts$seed <- sample.int(10^5, 1)
+  }
+  opts
+}
+
 #' @export
 #' @rdname h2o_train
 h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
-
   h2o_train(
     x,
     y,
@@ -61,7 +67,6 @@ h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
     min_rows = min_rows,
     ...
   )
-
 }
 
 
@@ -93,5 +98,22 @@ h2o_train_xgboost <-
       stopping_rounds = stopping_rounds,
       ...
     )
+  }
 
+#' @export
+#' @rdname h2o_train
+h2o_train_glm <-
+  function(x,
+           y,
+           lambda = NULL,
+           alpha = NULL,
+           ...) {
+    h2o_train(
+      x,
+      y,
+      model = "glm",
+      lambda = lambda,
+      alpha = alpha,
+      ...
+    )
   }
