@@ -70,7 +70,7 @@ results <- foreach::foreach(
   .packages = packages,
   .errorhandling = "pass"
 ) %dopar% {
-  tune_grid_loop_iter_h2o(
+  tune_grid_loop_iter_h2o_safely(
     split = split,
     grid_info = grid_info_nest,
     workflow = wf,
@@ -86,13 +86,11 @@ dplyr::bind_rows(!!!list(iris, iris))
 
 
 results[[1]]
-results[[1]]$.predictions[[1]]
+results[[1]]$.predictions
 
 results[[1]] %>%
   select(.predictions) %>%
   unnest(.predictions)
 
 
-results[[1]] %>%
-  select(.metrics) %>%
-  unnest(.metrics)
+results[[1]]$.metrics
