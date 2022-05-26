@@ -75,14 +75,6 @@ as_tibble.H2OFrame <-
                       rownames = rownames)
   }
 
-
-# ------------------------------------------------------------------------------
-
-is_h2o <- function(workflow, ...) {
-  model_spec <- hardhat::extract_spec_parsnip(workflow)
-  identical(model_spec$engine, "h2o")
-}
-
 # ------------------------------------------------------------------------------
 
 rename_grid_h2o <- function(grid, workflow) {
