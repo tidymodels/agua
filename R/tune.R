@@ -8,7 +8,7 @@ tune_grid_loop_iter_h2o <- function(split,
   on.exit(h2o::h2o.show_progress())
 
   tune::load_pkgs(workflow)
-  tune:::load_namespace(control$pkgs)
+  tune::.load_namespace(control$pkgs)
 
   training_frame <- rsample::analysis(split)
   val_frame <- rsample::assessment(split)
@@ -66,7 +66,7 @@ tune_grid_loop_iter_h2o <- function(split,
       workflow = workflow,
       grid_preprocessor = iter_grid_preprocessor
     )
-    workflow <- tune:::catch_and_log(
+    workflow <- tune::.catch_and_log(
       .expr = workflows::.fit_pre(workflow, training_frame),
       control,
       split,
@@ -84,7 +84,7 @@ tune_grid_loop_iter_h2o <- function(split,
       tidyr::unnest(.iter_config) %>%
       dplyr::select(dplyr::all_of(model_param_names), .iter_config)
 
-    outcome_name <- tune:::outcome_names(workflow)
+    outcome_name <- tune::outcome_names(workflow)
     out_all_outcome_names <- c(
       out_all_outcome_names,
       outcome_name
@@ -245,7 +245,7 @@ pull_h2o_metrics <- function(predictions,
                              param_names,
                              outcome_name,
                              event_level) {
-  metrics <- tune:::estimate_metrics(
+  metrics <- tune::.estimate_metrics(
     predictions,
     metrics,
     param_names,

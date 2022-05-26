@@ -55,7 +55,7 @@ results <- foreach::foreach(
   .packages = packages,
   .errorhandling = "pass"
 ) %dopar% {
-  tune_grid_loop_iter_h2o_safely(
+  tune_grid_loop_iter_h2o(
     split = split,
     grid_info = grid_info,
     workflow = wf,
