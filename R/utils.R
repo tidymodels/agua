@@ -76,12 +76,20 @@ as_tibble.H2OFrame <-
   }
 
 # ------------------------------------------------------------------------------
+
 extract_model_param_names_h2o <- function(model_param_names, workflow) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
+  param <- hardhat::extract_parameter_set_dials(workflow) %>% tibble::as_tibble()
+
   arg_key <- parsnip::get_from_env(paste0(class(model_spec)[1], "_args")) %>%
     dplyr::filter(engine == "h2o")
-  purrr::map_chr(model_param_names, ~ filter(arg_key, parsnip == .) %>%
-               pull("original"))
+
+  dplyr::inner_join(
+    arg_key %>% dplyr::select(name = parsnip, original),
+    param,
+    by = "name"
+  ) %>%
+    purrr::pluck("original")
 }
 
 
