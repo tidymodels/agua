@@ -8,12 +8,12 @@ tune_grid_loop_iter_h2o <- function(split,
   on.exit(h2o::h2o.show_progress())
 
   tune::load_pkgs(workflow)
-  tune:::load_namespace(control$pkgs)
+  tune:::.load_namespace(control$pkgs)
 
   training_frame <- rsample::analysis(split)
   val_frame <- rsample::assessment(split)
-  mode <- hardhat::extract_spec_parsnip(wf)$mode
-  workflow_original <- wf
+  mode <- hardhat::extract_spec_parsnip(workflow)$mode
+  workflow_original <- workflow
 
   pset <- hardhat::extract_parameter_set_dials(workflow_original)
   param_names <- dplyr::pull(pset, "id")
@@ -51,7 +51,7 @@ tune_grid_loop_iter_h2o <- function(split,
       workflow = workflow,
       grid_preprocessor = iter_grid_preprocessor
     )
-    workflow <- tune:::catch_and_log(
+    workflow <- tune:::.catch_and_log(
       .expr = workflows::.fit_pre(workflow, training_frame),
       control,
       split,
@@ -188,7 +188,7 @@ pull_h2o_metrics <- function(prediction,
                              param_names,
                              outcome_name,
                              event_level) {
-  estimate_metrics_safely <- purrr::safely(tune:::estimate_metrics)
+  estimate_metrics_safely <- purrr::safely(tune:::.estimate_metrics)
   metrics <- estimate_metrics_safely(
     prediction,
     metrics,
