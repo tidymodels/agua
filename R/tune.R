@@ -23,12 +23,15 @@ tune_grid_loop_iter_h2o <- function(split,
   model_param_names <- dplyr::pull(model_params, "id")
   preprocessor_param_names <- dplyr::pull(preprocessor_params, "id")
 
+  outcome_name <- tune::outcome_names(workflow)
+
   out_metrics <- NULL
   out_extracts <- NULL
   out_predictions <- NULL
   out_all_outcome_names <- list()
   out_notes <-
     tibble::tibble(location = character(0), type = character(0), note = character(0))
+
   event_level <- control$event_level
   orig_rows <- as.integer(split, data = "assessment")
 
@@ -126,7 +129,7 @@ tune_grid_loop_iter_h2o <- function(split,
     )
 
     h2o_model_ids <- as.character(h2o_res@model_ids)
-    h2o_models <- purrr::map(h2o_model_ids, h2o.getModel)
+    h2o_models <- purrr::map(h2o_model_ids, h2o::h2o.getModel)
     # remove objects from h2o server
     on.exit(h2o::h2o.rm(c(
       h2o_model_ids,
@@ -246,6 +249,7 @@ pull_h2o_metrics <- function(predictions,
                              param_names,
                              outcome_name,
                              event_level) {
+
   metrics <- tune::.estimate_metrics(
     predictions,
     metrics,

@@ -5,16 +5,26 @@
 #'
 #' @inheritParams h2o::h2o.randomForest
 #' @inheritParams h2o::h2o.xgboost
+#' @inheritParams h2o::h2o.glm
 #' @param x A data frame of predictors
 #' @param y A vector of outcomes.
-#' @param model A character string for the model.
+#' @param model A character string for the model. Current selections are
+#' `"randomForest"`, `"xgboost"`, and `"glm"`. Use [h2o::h2o.xgboost.available()]
+#' to see if that model can be used on your OS/h2o server.
 #' @param ... Other options to pass to the h2o model functions (e.g.,
-#' [h2o::h2o.randomForest]).
+#' [h2o::h2o.randomForest()]).
 #' @return An h2o model object.
 #' @examples
 #' # start with h2o::h2o.init()
 #'
 #' if (h2o_running()) {
+#'   # -------------------------------------------------------------------------
+#'   # Using the model wrappers:
+#'   h2o_train_glm(mtcars[, -1], mtcars$mpg)
+#'
+#'   # -------------------------------------------------------------------------
+#'   # using parsnip:
+#'
 #'   spec <-
 #'     rand_forest(mtry = 3, trees = 1000) %>%
 #'     set_engine("h2o") %>%
@@ -117,3 +127,4 @@ h2o_train_glm <-
       ...
     )
   }
+
