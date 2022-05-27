@@ -97,6 +97,14 @@ results_no_rec <- foreach::foreach(
   )
 }
 
+tune_grid_loop_iter_h2o(
+  split = splits[[1]],
+  grid_info = grid_info_no_rec,
+  workflow = wf_no_rec,
+  metrics = metrics,
+  control = control,
+  seed = seed
+)
 
 # use tune_grid
 # need to use tidymodels/tune@agua branch
