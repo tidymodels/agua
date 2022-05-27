@@ -40,6 +40,7 @@ tune_grid_loop_iter_h2o <- function(split,
       dplyr::all_of(model_param_names)
     )
   )
+  grid_info <- rename_grid_h2o(grid_info, workflow_original)
   grid_info <- tidyr::nest(grid_info, data = !!cols)
 
 
