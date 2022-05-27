@@ -20,7 +20,10 @@ Imports:
     h2o (>= 3.36.0.4),
     hardhat,
     purrr,
+    recipes,
     rlang,
+    rsample,
+    stats,
     tibble,
     utils
 Suggests: 

@@ -12,5 +12,12 @@
 ## usethis namespace: start
 #' @importFrom parsnip set_model_arg
 #' @importFrom purrr quietly
+#' @importFrom stats predict
 ## usethis namespace: end
 NULL
+
+utils::globalVariables(
+  c(
+    ".iter_config", ".iter_preprocessor", "data", "engine", "out_notes", "role"
+  )
+)

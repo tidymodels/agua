@@ -10,16 +10,16 @@ extract_h2o_algorithm <- function(workflow, ...) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
   model_class <- class(model_spec)[1]
   algo <- switch(model_class,
-    boost_tree = "gbm",
-    rand_forest = "randomForest",
-    linear_reg = "glm",
-    logistic_reg = "glm",
-    multinom_reg = "glm",
-    mlp = "deeplearning",
-    naive_Bayes = "naive_bayes",
-    rlang::abort(
-      glue::glue("Model `{model_class}` is not supported by the h2o engine, use one of { toString(all_algos) }")
-    )
+                 boost_tree = "gbm",
+                 rand_forest = "randomForest",
+                 linear_reg = "glm",
+                 logistic_reg = "glm",
+                 multinom_reg = "glm",
+                 mlp = "deeplearning",
+                 naive_Bayes = "naive_bayes",
+                 rlang::abort(
+                   glue::glue("Model `{model_class}` is not supported by the h2o engine, use one of { toString(all_algos) }")
+                 )
   )
   algo
 }
@@ -29,7 +29,7 @@ extract_h2o_algorithm <- function(workflow, ...) {
 
 #' Data conversion tools
 #' @inheritParams tibble::as_tibble
-#' @param df A R data frame (for `r_h2o`).
+#' @param df A R data frame.
 #' @param destination_frame_prefix A character string to use as the base name.
 #' @param x An H2OFrame.
 #' @return A tibble or, for `as_h2o()`, a list with `data` (an H2OFrame) and
@@ -101,5 +101,4 @@ h2o_running <- function(verbose = FALSE) {
   }
   res
 }
-
 

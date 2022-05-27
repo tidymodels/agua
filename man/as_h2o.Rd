@@ -16,7 +16,7 @@ as_h2o(df, destination_frame_prefix = "object")
 )
 }
 \arguments{
-\item{df}{A R data frame (for \code{r_h2o}).}
+\item{df}{A R data frame.}
 
 \item{destination_frame_prefix}{A character string to use as the base name.}
 
