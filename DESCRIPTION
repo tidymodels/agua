@@ -20,7 +20,7 @@ Imports:
     purrr,
     rlang,
     tibble,
-    tune,
+    tune (>= 0.2.0.9002), 
     utils
 Suggests: 
     testthat (>= 3.0.0)

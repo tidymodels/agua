@@ -87,10 +87,11 @@ rename_grid_h2o <- function(grid, workflow) {
   grid_parsnip <- dplyr::rename(grid, !!!pset)
 
   # Go from parsnip names to h2o names
-  arg_key <- get_from_env(paste0(class(model_spec)[1], "_args")) %>%
+  arg_key <- parsnip::get_from_env(paste0(class(model_spec)[1], "_args")) %>%
     dplyr::filter(engine == "h2o")
   # rename again
-  pset <- arg_key$parsnip %>% purrr::set_names(arg_key$original)
+  pset <- arg_key$parsnip
+  names(pset) <- arg_key$original
   grid_h2o <- dplyr::rename(grid_parsnip, !!!pset)
   grid_h2o
 }
