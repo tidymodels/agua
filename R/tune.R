@@ -12,8 +12,8 @@ tune_grid_loop_iter_h2o <- function(split,
 
   training_frame <- rsample::analysis(split)
   val_frame <- rsample::assessment(split)
-  mode <- hardhat::extract_spec_parsnip(wf)$mode
-  workflow_original <- wf
+  mode <- hardhat::extract_spec_parsnip(workflow)$mode
+  workflow_original <- workflow
 
   fold_id <- labels(split)
   pset <- hardhat::extract_parameter_set_dials(workflow_original)
