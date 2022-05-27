@@ -32,10 +32,12 @@ h2o_train_glm(x, y, lambda = NULL, alpha = NULL, ...)
 
 \item{y}{A vector of outcomes.}
 
-\item{model}{A character string for the model.}
+\item{model}{A character string for the model. Current selections are
+\code{"randomForest"}, \code{"xgboost"}, and \code{"glm"}. Use \code{\link[h2o:h2o.xgboost.available]{h2o::h2o.xgboost.available()}}
+to see if that model can be used on your OS/h2o server.}
 
 \item{...}{Other options to pass to the h2o model functions (e.g.,
-\link[h2o:h2o.randomForest]{h2o::h2o.randomForest}).}
+\code{\link[h2o:h2o.randomForest]{h2o::h2o.randomForest()}}).}
 
 \item{ntrees}{Number of trees. Defaults to 50.}
 
@@ -56,6 +58,12 @@ classification and p/3 for regression (where p is the # of predictors Defaults t
 
 \item{stopping_rounds}{Early stopping based on convergence of stopping_metric. Stop if simple moving average of length k of the
 stopping_metric does not improve for k:=stopping_rounds scoring events (0 to disable) Defaults to 0.}
+
+\item{lambda}{Regularization strength}
+
+\item{alpha}{Distribution of regularization between the L1 (Lasso) and L2 (Ridge) penalties. A value of 1 for alpha
+represents Lasso regression, a value of 0 produces Ridge regression, and anything in between specifies the
+amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-BFGS'; 0.5 otherwise.}
 }
 \value{
 An h2o model object.
@@ -68,6 +76,13 @@ seed configuration, and so on.
 # start with h2o::h2o.init()
 
 if (h2o_running()) {
+  # -------------------------------------------------------------------------
+  # Using the model wrappers:
+  h2o_train_glm(mtcars[, -1], mtcars$mpg)
+
+  # -------------------------------------------------------------------------
+  # using parsnip:
+
   spec <-
     rand_forest(mtry = 3, trees = 1000) \%>\%
     set_engine("h2o") \%>\%

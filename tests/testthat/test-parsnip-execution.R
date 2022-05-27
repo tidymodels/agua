@@ -1,4 +1,6 @@
 test_that('parsnip model execution', {
+  skip("h2o server issues with testthat")
+
   agua:::h2o_start()
   on.exit(try(h2o::h2o.shutdown(prompt = FALSE), silent = TRUE))
   skip_if(!h2o_running())

@@ -8,7 +8,7 @@ tune_grid_loop_iter_h2o <- function(split,
   on.exit(h2o::h2o.show_progress())
 
   tune::load_pkgs(workflow)
-  tune:::.load_namespace(control$pkgs)
+  tune::.load_namespace(control$pkgs)
 
   training_frame <- rsample::analysis(split)
   val_frame <- rsample::assessment(split)
@@ -23,7 +23,7 @@ tune_grid_loop_iter_h2o <- function(split,
   preprocessor_param_names <- dplyr::pull(preprocessor_params, "id")
 
 
-  outcome_name <- tune:::outcome_names(workflow)
+  outcome_name <- tune::outcome_names(workflow)
   event_level <- control$event_level
   orig_rows <- as.integer(split, data = "assessment")
 
@@ -51,7 +51,7 @@ tune_grid_loop_iter_h2o <- function(split,
       workflow = workflow,
       grid_preprocessor = iter_grid_preprocessor
     )
-    workflow <- tune:::.catch_and_log(
+    workflow <- tune::.catch_and_log(
       .expr = workflows::.fit_pre(workflow, training_frame),
       control,
       split,
@@ -104,7 +104,7 @@ tune_grid_loop_iter_h2o <- function(split,
     )
 
     h2o_model_ids <- as.character(h2o_res@model_ids)
-    h2o_models <- purrr::map(h2o_model_ids, h2o.getModel)
+    h2o_models <- purrr::map(h2o_model_ids, h2o::h2o.getModel)
     # remove objects from h2o server
     on.exit(h2o::h2o.rm(c(h2o_model_ids, h2o_training_frame$id, h2o_val_frame$id)))
 
@@ -188,7 +188,7 @@ pull_h2o_metrics <- function(prediction,
                              param_names,
                              outcome_name,
                              event_level) {
-  estimate_metrics_safely <- purrr::safely(tune:::.estimate_metrics)
+  estimate_metrics_safely <- purrr::safely(tune::.estimate_metrics)
   metrics <- estimate_metrics_safely(
     prediction,
     metrics,
