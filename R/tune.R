@@ -150,12 +150,7 @@ tune_grid_loop_iter_h2o <- function(split,
       fold_id = fold_id,
       orig_rows = orig_rows,
       mode = mode
-    ) %>%
-      purrr::imap(~ bind_prediction_iter_grid(
-        predictions = .x,
-        iter_grid = iter_grid[.y, ],
-        param_names = param_names
-      ))
+    ) %>% bind_predictions_iter_grid(iter_grid = iter_grid, param_names = param_names)
     iter_predictions <- dplyr::bind_rows(!!!h2o_predictions)
 
     out_predictions <- append_h2o_predictions(
@@ -173,7 +168,7 @@ tune_grid_loop_iter_h2o <- function(split,
       param_names = param_names,
       outcome_name = outcome_name,
       event_level = event_level
-    )
+    ) %>% bind_metrics_iter_grid(iter_grid = iter_grid)
     iter_metrics <- dplyr::bind_rows(!!!h2o_metrics)
     out_metrics <- dplyr::bind_rows(out_metrics, iter_metrics)
 
@@ -198,12 +193,27 @@ tune_grid_loop_iter_h2o <- function(split,
   )
 }
 
-bind_prediction_iter_grid <- function(predictions, iter_grid, param_names) {
-  predictions %>%
-    dplyr::bind_cols(iter_grid) %>%
-    # relocate and rename to be consistent with tune_grid output
-    dplyr::relocate(dplyr::all_of(param_names), .after = .row) %>%
-    dplyr::rename(.config = .iter_config)
+bind_predictions_iter_grid <- function(predictions, iter_grid, param_names) {
+  collections <- purrr::imap(
+    predictions,
+    ~ .x %>% dplyr::bind_cols(iter_grid[.y, ]) %>%
+      dplyr::rename(.config = .iter_config) %>%
+      dplyr::relocate(
+        dplyr::all_of(param_names),
+        .after = .row
+      )
+  )
+  collections
+}
+
+bind_metrics_iter_grid <- function(metrics, iter_grid) {
+  collections <- purrr::imap(
+    metrics,
+    ~ .x %>% dplyr::bind_cols(
+      select(iter_grid[.y, ], .config = .iter_config)
+    )
+  )
+  collections
 }
 
 pull_h2o_predictions <- function(h2o_model,
