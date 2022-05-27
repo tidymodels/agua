@@ -25,26 +25,6 @@ extract_h2o_algorithm <- function(workflow, ...) {
 }
 
 # ------------------------------------------------------------------------------
-
-rename_grid_h2o <- function(grid, workflow) {
-  model_spec <- hardhat::extract_spec_parsnip(workflow)
-  # For translate from given names/ids in grid to parsnip names:
-  params <- model_spec %>% hardhat::extract_parameter_set_dials()
-  params <- tibble::as_tibble(params)
-  pset <- params$id
-  names(pset) <- params$name
-  grid_parsnip <- dplyr::rename(grid, !!!pset)
-
-  # Go from parsnip names to h2o names
-  arg_key <- parsnip::get_from_env(paste0(class(model_spec)[1], "_args")) %>%
-    dplyr::filter(engine == "h2o")
-  # rename again
-  pset <- arg_key$parsnip %>% purrr::set_names(arg_key$original)
-  grid_h2o <- dplyr::rename(grid_parsnip, !!!pset)
-  grid_h2o
-}
-
-# ------------------------------------------------------------------------------
 # Data conversions
 
 #' Data conversion tools
@@ -94,6 +74,36 @@ as_tibble.H2OFrame <-
                       .name_repair = .name_repair,
                       rownames = rownames)
   }
+
+# ------------------------------------------------------------------------------
+extract_model_param_names_h2o <- function(model_param_names, workflow) {
+  model_spec <- hardhat::extract_spec_parsnip(workflow)
+  arg_key <- parsnip::get_from_env(paste0(class(model_spec)[1], "_args")) %>%
+    dplyr::filter(engine == "h2o")
+  purrr::map_chr(model_param_names, ~ filter(arg_key, parsnip == .) %>%
+               pull("original"))
+}
+
+
+rename_grid_h2o <- function(grid, workflow) {
+  model_spec <- hardhat::extract_spec_parsnip(workflow)
+  # For translate from given names/ids in grid to parsnip names:
+  params <- model_spec %>% extract_parameter_set_dials()
+  params <- tibble::as_tibble(params)
+  pset <- params$id
+  names(pset) <- params$name
+  grid_parsnip <- dplyr::rename(grid, !!!pset)
+
+  # Go from parsnip names to h2o names
+  arg_key <- parsnip::get_from_env(paste0(class(model_spec)[1], "_args")) %>%
+    dplyr::filter(engine == "h2o")
+  # rename again
+  pset <- arg_key$parsnip
+  names(pset) <- arg_key$original
+  grid_h2o <- dplyr::rename(grid_parsnip, !!!pset)
+  grid_h2o
+}
+
 
 quiet_start <- purrr::quietly(h2o::h2o.init)
 h2o_start <- function() {

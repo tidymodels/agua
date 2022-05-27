@@ -18,10 +18,14 @@ tune_grid_loop_iter_h2o <- function(split,
   fold_id <- labels(split)
   pset <- hardhat::extract_parameter_set_dials(workflow_original)
   param_names <- dplyr::pull(pset, "id")
-  model_params <- dplyr::filter(pset, source == "model_spec")
-  preprocessor_params <- dplyr::filter(pset, source == "recipe")
-  model_param_names <- dplyr::pull(model_params, "id")
-  preprocessor_param_names <- dplyr::pull(preprocessor_params, "id")
+  model_param_names <- dplyr::filter(pset, source == "model_spec") %>%
+    dplyr::pull("id")
+  model_param_names_h2o <- extract_model_param_names_h2o(
+    model_param_names,
+    workflow
+  )
+  preprocessor_param_names <- dplyr::filter(pset, source == "recipe") %>%
+    dplyr::pull("id")
 
   outcome_name <- tune::outcome_names(workflow)
 
@@ -43,9 +47,7 @@ tune_grid_loop_iter_h2o <- function(split,
       dplyr::all_of(model_param_names)
     )
   )
-  grid_info <- rename_grid_h2o(grid_info, workflow_original)
   grid_info <- tidyr::nest(grid_info, data = !!cols)
-
 
   iter_preprocessors <- grid_info[[".iter_preprocessor"]]
 
@@ -61,7 +63,6 @@ tune_grid_loop_iter_h2o <- function(split,
       .data = iter_grid_info,
       dplyr::all_of(preprocessor_param_names)
     )
-
 
     iter_msg_preprocessor <- iter_grid_info[[".msg_preprocessor"]]
 
@@ -114,7 +115,7 @@ tune_grid_loop_iter_h2o <- function(split,
       ~ dplyr::pull(iter_grid_info_models, .)
       %>% unique()
     ) %>%
-      purrr::set_names(model_param_names)
+      purrr::set_names(model_param_names_h2o)
 
     h2o_training_frame <- as_h2o(training_frame_processed, "training_frame")
     h2o_val_frame <- as_h2o(val_frame_processed, "val_frame")
@@ -259,4 +260,3 @@ pull_h2o_metrics <- function(predictions,
   )
   metrics %>% bind_cols(fold_id)
 }
-
