@@ -4,6 +4,7 @@
 \alias{h2o_train}
 \alias{h2o_train_rf}
 \alias{h2o_train_xgboost}
+\alias{h2o_train_glm}
 \title{Model wrappers for h2o}
 \usage{
 h2o_train(x, y, model, ...)
@@ -23,6 +24,8 @@ h2o_train_xgboost(
   stopping_rounds = 0,
   ...
 )
+
+h2o_train_glm(x, y, lambda = NULL, alpha = NULL, ...)
 }
 \arguments{
 \item{x}{A data frame of predictors}
@@ -75,6 +78,5 @@ if (h2o_running()) {
   mod
 
   predict(mod, head(mtcars))
-
 }
 }

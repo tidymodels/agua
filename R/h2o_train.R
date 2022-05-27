@@ -32,7 +32,7 @@ h2o_train <- function(x, y, model, ...) {
   x <- as.data.frame(x)
   x_names <- names(x)
   x$.outcome <- y
-  x <- r_h2o(x)
+  x <- as_h2o(x)$data
 
   mod_fun <- paste0("h2o.", model)
   cl <-
@@ -45,6 +45,14 @@ h2o_train <- function(x, y, model, ...) {
       !!!opts
     )
   rlang::eval_tidy(cl)
+}
+
+get_fit_opts <- function(...) {
+  opts <- list(...)
+  if (!any(names(opts) == "seed")) {
+    opts$seed <- sample.int(10^5, 1)
+  }
+  opts
 }
 
 #' @export
