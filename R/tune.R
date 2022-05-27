@@ -78,12 +78,24 @@ tune_grid_loop_iter_h2o <- function(split,
       iter_msg_preprocessor,
       notes = out_notes
     )
-
-    preprocessor <- hardhat::extract_recipe(workflow)
-
+    preprocessor <- hardhat::extract_preprocessor(workflow)
     # prep training and validation data
-    training_frame_processed <- recipes::bake(preprocessor, new_data = training_frame)
-    val_frame_processed <- recipes::bake(preprocessor, new_data = val_frame)
+    training_forged <- tune:::forge_from_workflow(training_frame,
+                                                  workflow)
+    training_frame_processed <- dplyr::bind_cols(
+      training_forged$predictors,
+      training_forged$outcomes,
+    )
+    val_forged <- tune:::forge_from_workflow(val_frame,
+                                             workflow)
+    val_frame_processed <- dplyr::bind_cols(
+      val_forged$predictors,
+      val_forged$outcomes,
+    )
+
+    # extract outcome and predictor names (used by h2o.grid)
+    outcome <- colnames(training_forged$outcomes)
+    predictors <- colnames(training_forged$predictors)
 
     iter_grid_info_models <- iter_grid_info[["data"]][[1L]] %>%
       tidyr::unnest(.iter_config) %>%
@@ -99,15 +111,6 @@ tune_grid_loop_iter_h2o <- function(split,
       iter_grid_preprocessor,
       iter_grid_info_models
     )
-
-    # extract outcome and predictor names (used by h2o.grid)
-    outcome <- preprocessor$term_info %>%
-      dplyr::filter(role == "outcome") %>%
-      dplyr::pull("variable")
-
-    predictors <- preprocessor$term_info %>%
-      dplyr::filter(role == "predictor") %>%
-      dplyr::pull("variable")
 
     # extract hyper params into list
     h2o_hyper_params <- purrr::map(
