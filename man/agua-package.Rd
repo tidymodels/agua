@@ -15,11 +15,11 @@ The package uses code initially written by Steven Pawley in his h2oparsnip
 package. Addition work was done by Qiushi Yan as an RStudio summer intern.
 }
 \author{
-\strong{Maintainer}: Max Kuhn \email{max@rstudio.com} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
+\strong{Maintainer}: Qiushi Yan \email{qiushi.yan@rstudio.com}
 
 Authors:
 \itemize{
-  \item Qiushi Yan \email{qiushi.yan@rstudio.com}
+  \item Max Kuhn \email{max@rstudio.com} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
   \item Steven Pawley \email{dr.stevenpawley@gmail.com}
 }
 
