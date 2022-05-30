@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 # agua
 
 <!-- badges: start -->
+[![Codecov test coverage](https://codecov.io/gh/tidymodels/agua/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/agua?branch=main)
+[![R-CMD-check](https://github.com/tidymodels/agua/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tidymodels/agua/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 agua enables users to fit, optimize, and evaluate models via [h2o](https://h2o.ai) using a tidymodels interface. 

@@ -75,6 +75,7 @@ as_tibble.H2OFrame <-
                       rownames = rownames)
   }
 
+
 quiet_start <- purrr::quietly(h2o::h2o.init)
 h2o_start <- function() {
   res <- utils::capture.output(quiet_start(), "output")

@@ -18,6 +18,7 @@ NULL
 
 utils::globalVariables(
   c(
-    ".iter_config", ".iter_preprocessor", "data", "engine", "out_notes", "role"
+    ".iter_config", ".iter_preprocessor", ".iter_model", "data", "engine",
+    "out_notes", "role", "parsnip", ".msg_model", "original"
   )
 )
