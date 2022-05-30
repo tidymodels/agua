@@ -59,35 +59,62 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="agua">agua<a class="anchor" aria-label="anchor" href="#agua"></a>
 </h1></div>
-<!-- badges: start --><!-- badges: end --><p>agua enables users to fit, optimize, and evaluate models via <a href="https://h2o.ai" class="external-link">h2o</a> using a tidymodels interface.</p>
+<!-- badges: start -->
+<p>agua enables users to fit, optimize, and evaluate models via <a href="https://h2o.ai" class="external-link">h2o</a> using a tidymodels interface.</p>
 <p>Most users will not have to use aqua directly; the features can be accessed via a parsnip engine value of <code>'h2o'</code>.</p>
 <p>There are two main components in agua:</p>
 <ul>
 <li>parsnip engine definitions for the following models:</li>
-<li>Infrastructure for the tune and fine-tune packages.</li>
+<li>Infrastructure for the tune and finetune packages (currently in-process).</li>
 </ul>
 <p>When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to <code>h2o.grid()</code> to process them.</p>
-<p>This work is based on @stevenpawley’s <a href="https://github.com/stevenpawley/h2oparsnip" class="external-link">h2oparsnip</a> package and additional work by Qiushi Yan on his summer internship at RStudio.</p>
+<p>This work is based on @stevenpawley’s <a href="https://github.com/stevenpawley/h2oparsnip" class="external-link">h2oparsnip</a> package. Additional work was done by Qiushi Yan for his 2022 summer internship at RStudio.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of agua like so:</p>
+<p>The CRAN version of the package can be installed via</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Not yet!</span>
+<span class="co"># install.packages("agua")</span></code></pre></div>
+<p>You can also install the development version of agua using:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://pak.r-lib.org/" class="external-link">pak</a></span><span class="op">)</span>
-<span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"topepo/agua"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"tidymodels/agua"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>The following code demonstrates how to create a single model on the h2o server and how to make predictions.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">agua</span><span class="op">)</span>
 
 <span class="fu">tidymodels_prefer</span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Start the h2o server before running models</span>
-<span class="fu">h2o</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o.init</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="va">logging</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/capture.output.html" class="external-link">capture.output</a></span><span class="op">(</span><span class="fu">h2o</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o.init</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Demonstrate fitting parsnip models: </span>
+
+<span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="reference/h2o_running.html">h2o_running</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+
+  <span class="co"># Specify the type of model</span>
+  <span class="va">spec</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="https://parsnip.tidymodels.org/reference/rand_forest.html" class="external-link">rand_forest</a></span><span class="op">(</span>mtry <span class="op">=</span> <span class="fl">3</span>, trees <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine</a></span><span class="op">(</span><span class="st">"h2o"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
+    <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_args.html" class="external-link">set_mode</a></span><span class="op">(</span><span class="st">"regression"</span><span class="op">)</span>
+
+  <span class="co"># Fit the model on the h2o server</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+  <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">spec</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>
+  <span class="va">mod</span>
+
+  <span class="co"># Predictions</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mod</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>
+  
+  <span class="co"># When done</span>
+  <span class="fu">h2o</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.shutdown.html" class="external-link">h2o.shutdown</a></span><span class="op">(</span>prompt <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
@@ -121,14 +148,20 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://github.com/topepo" class="external-link">Max Kuhn</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2402-136X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Qiushi Yan <br><small class="roles"> Author </small>  </li>
+<a href="https://github.com/topepo" class="external-link">Max Kuhn</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-2402-136X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Qiushi Yan <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Steven Pawley <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://app.codecov.io/gh/tidymodels/agua?branch=main" class="external-link"><img src="https://codecov.io/gh/tidymodels/agua/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://github.com/tidymodels/agua/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/tidymodels/agua/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
