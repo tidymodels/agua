@@ -20,22 +20,14 @@ Imports:
     h2o (>= 3.36.0.4),
     hardhat,
     purrr,
-    recipes,
     rlang,
-    rsample,
     stats,
     tibble,
-    tidyr,
-    tune (>= 0.2.0.9002),
-    utils,
-    vctrs,
-    workflows
+    utils
 Suggests: 
     covr,
     knitr,
     testthat (>= 3.0.0)
-Remotes: 
-    tidymodels/tune
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Config/testthat/parallel: false
