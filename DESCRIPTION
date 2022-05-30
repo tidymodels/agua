@@ -32,6 +32,7 @@ Imports:
     workflows
 Suggests: 
     covr,
+    knitr,
     testthat (>= 3.0.0)
 Remotes: 
     tidymodels/tune
