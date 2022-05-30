@@ -14,12 +14,12 @@ data(two_class_dat)
 doParallel::registerDoParallel()
 # model and workflow spec
 folds <- vfold_cv(two_class_dat, nfolds = 10)
-glm_spec <- logistic_reg(penalty = tune("lambda")) %>%
+glm_spec <- logistic_reg(penalty = tune()) %>%
   set_engine("h2o") %>%
   set_mode("classification")
 
 rec <- recipe(Class ~ A + B, two_class_dat) %>%
-  step_ns(A, deg_free = tune("spline df"))
+  step_ns(A, deg_free = tune())
 
 wf <- workflow() %>%
   add_model(glm_spec) %>%
@@ -28,8 +28,8 @@ wf <- workflow() %>%
 # build grid_info and looping iterators
 pset <- hardhat::extract_parameter_set_dials(wf)
 param_grid <- tidyr::expand_grid(
-  `spline df` = c(1, 3, 5, 10, 15),
-  `lambda` = c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1)
+  deg_free = c(1, 3, 5, 10, 15),
+  penalty = c(1e-5, 1e-4, 1e-3, 1e-2, 1e-1)
 )
 
 grid <- tune:::check_grid(grid = param_grid,
@@ -40,6 +40,7 @@ control <- control_grid(verbose = TRUE, save_pred = TRUE)
 metrics <- check_metrics(NULL, wf)
 packages <- c(control$pkgs, required_pkgs(wf))
 splits <- folds$splits
+n_resamples <- length(splits)
 
 # manual looping
 seeds <- tune:::generate_seeds(rng = TRUE, n_resamples)
