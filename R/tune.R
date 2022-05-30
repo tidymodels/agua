@@ -180,7 +180,7 @@ tune_grid_loop_iter_h2o <- function(split,
         .iter_config
       ) %>%
       tidyr::unnest(.iter_config) %>%
-      bind_cols(fold_id)
+      dplyr::bind_cols(fold_id)
     out_extracts <- dplyr::bind_rows(out_extracts, iter_extracts)
   }
 
@@ -271,5 +271,5 @@ pull_h2o_metrics <- function(predictions,
     outcome_name,
     event_level
   )
-  metrics %>% bind_cols(fold_id)
+  metrics %>% dplyr::bind_cols(fold_id)
 }

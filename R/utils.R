@@ -96,7 +96,7 @@ extract_model_param_names_h2o <- function(model_param_names, workflow) {
 rename_grid_h2o <- function(grid, workflow) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
   # For translate from given names/ids in grid to parsnip names:
-  params <- model_spec %>% extract_parameter_set_dials()
+  params <- model_spec %>% hardhat::extract_parameter_set_dials()
   params <- tibble::as_tibble(params)
   pset <- params$id
   names(pset) <- params$name
