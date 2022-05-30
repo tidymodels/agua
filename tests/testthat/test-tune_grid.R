@@ -63,7 +63,7 @@ test_that("tune model only (with label and recipe)", {
 
 
 test_that("tune model and recipe", {
-  # skip("h2o server issues with testthat")
+  skip("h2o server issues with testthat")
 
   agua:::h2o_start()
   on.exit(h2o::h2o.shutdown(prompt = FALSE))
@@ -81,7 +81,7 @@ test_that("tune model and recipe", {
   res <- tune::tune_grid(wflow,
                          resamples = helper_objects$folds,
                          control = control,
-                         grid = grid)
+                         grid = param_grid)
   expect_snapshot(res)
 })
 
