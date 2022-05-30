@@ -8,7 +8,7 @@ Authors@R: c(
     person("Steven", "Pawley", , "dr.stevenpawley@gmail.com", role = "aut"),
     person("RStudio", role = "cph")
   )
-Description: Create and evaluate models using 'tidymodel' and 'h2o'. The
+Description: Create and evaluate models using 'tidymodels' and 'h2o'. The
     package enables users to specify 'h2o' as an engine for several
     modeling methods.
 License: MIT + file LICENSE
@@ -26,12 +26,17 @@ Imports:
     stats,
     tibble,
     tidyr,
-    tune,
+    tune (>= 0.2.0.9002),
     utils,
     vctrs,
     workflows
 Suggests: 
+    covr,
+    knitr,
     testthat (>= 3.0.0)
+Remotes: 
+    tidymodels/tune
+Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
