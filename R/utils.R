@@ -49,15 +49,15 @@ extract_h2o_algorithm <- function(workflow, ...) {
 as_h2o <- function(df, destination_frame_prefix = "object") {
   suffix <- paste0(sample(letters, size = 10, replace = TRUE), collapse = "")
   id <- paste(destination_frame_prefix, suffix, sep = "_")
-  # Once h2o exports it, we should use the function with_no_h2o_progress
-  res <- quiet_convert(df, destination_frame = id)
+  # fix when h2o exports
+  data <- h2o:::with_no_h2o_progress(h2o::as.h2o(df, destination_frame = id))
   list(
-    data = res$result,
+    data = data,
     id = id
   )
 }
-quiet_convert <- purrr::quietly(h2o::as.h2o)
 
+queitly_conver <-
 
 #' @export
 #' @rdname as_h2o
@@ -111,6 +111,8 @@ rename_grid_h2o <- function(grid, workflow) {
   grid_h2o <- dplyr::rename(grid_parsnip, !!!pset)
   grid_h2o
 }
+
+
 
 
 quiet_start <- purrr::quietly(h2o::h2o.init)
