@@ -4,7 +4,7 @@ Version: 0.0.1
 Authors@R: c(
     person("Max", "Kuhn", , "max@rstudio.com", role = "aut",
            comment = c(ORCID = "0000-0003-2402-136X")),
-    person("Qiushi", "Yan", , "qiushi.yan@rstudio.com", role = c("aut", "cre")),
+    person("Qiushi", "Yan", , "qiushi.yann@gmail.com", role = c("aut", "cre")),
     person("Steven", "Pawley", , "dr.stevenpawley@gmail.com", role = "aut"),
     person("RStudio", role = "cph")
   )
@@ -12,12 +12,17 @@ Description: Create and evaluate models using 'tidymodels' and 'h2o'. The
     package enables users to specify 'h2o' as an engine for several
     modeling methods.
 License: MIT + file LICENSE
+URL: 
+  https://agua.tidymodels.org/, 
+  https://github.com/tidymodels/agua, 
+  https://cran.r-project.org/web/packages/h2o/h2o.pdf
+BugReports: https://github.com/tidymodels/agua/issues
 Depends: 
     parsnip
 Imports: 
     dplyr,
     glue,
-    h2o (>= 3.36.0.4),
+    h2o (>= 3.36.1.2),
     hardhat,
     purrr,
     recipes,
