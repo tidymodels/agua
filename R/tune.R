@@ -150,7 +150,8 @@ tune_grid_loop_iter_h2o <- function(split,
       fold_id = fold_id,
       orig_rows = orig_rows,
       mode = mode
-    ) %>% bind_predictions_iter_grid(iter_grid = iter_grid, param_names = param_names)
+    ) %>% bind_predictions_iter_grid(iter_grid = iter_grid,
+                                     param_names = param_names)
     iter_predictions <- dplyr::bind_rows(!!!h2o_predictions)
 
     out_predictions <- append_h2o_predictions(
@@ -210,7 +211,7 @@ bind_metrics_iter_grid <- function(metrics, iter_grid) {
   collections <- purrr::imap(
     metrics,
     ~ .x %>% dplyr::bind_cols(
-      select(iter_grid[.y, ], .config = .iter_config)
+      dplyr::select(iter_grid[.y, ], .config = .iter_config)
     )
   )
   collections
@@ -223,8 +224,10 @@ pull_h2o_predictions <- function(h2o_model,
                                  control,
                                  orig_rows,
                                  mode) {
+  outcome_name <- names(val_truth)
   h2o_preds <- h2o::h2o.predict(h2o_model, val_frame) %>%
-    tibble::as_tibble()
+    tibble::as_tibble() %>%
+    dplyr::mutate(predict = vctrs::vec_cast(predict, val_truth[[outcome_name]]))
 
   if (mode == "classification") {
     h2o_preds <- parsnip:::format_classprobs(h2o_preds %>%
@@ -234,9 +237,11 @@ pull_h2o_predictions <- function(h2o_model,
         parsnip:::format_class(h2o_preds %>% purrr::pluck("predict"))
       )
   } else {
-    h2o_preds <- parsnip:::format_num(h2o_preds %>%
-      purrr::pluck("predict")) %>%
-      dplyr::mutate(.row = orig_rows)
+    h2o_preds <- parsnip:::format_num(
+      h2o_preds %>%
+        purrr::pluck("predict")
+      ) %>%
+        dplyr::mutate(.row = orig_rows)
   }
   h2o_preds %>% dplyr::bind_cols(val_truth, fold_id)
 }

@@ -1,6 +1,6 @@
 data(two_class_dat, package = "modeldata")
 
-test_that("tune model only (with label)", {
+test_that("tune model only (with id)", {
   skip("h2o server issues with testthat")
 
   agua:::h2o_start()
@@ -20,7 +20,7 @@ test_that("tune model only (with label)", {
   expect_snapshot(res)
 })
 
-test_that("tune model only (without label)", {
+test_that("tune model only (without id)", {
   skip("h2o server issues with testthat")
 
   agua:::h2o_start()
@@ -40,7 +40,7 @@ test_that("tune model only (without label)", {
   expect_snapshot(res)
 })
 
-test_that("tune model only (with label and recipe)", {
+test_that("tune model only (with id and recipe)", {
   skip("h2o server issues with testthat")
 
   agua:::h2o_start()
