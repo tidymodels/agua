@@ -8,14 +8,13 @@ Authors@R: c(
     person("Steven", "Pawley", , "dr.stevenpawley@gmail.com", role = "aut"),
     person("RStudio", role = "cph")
   )
-Description: Create and evaluate models using 'tidymodels' and 'h2o'. The
+Description: Create and evaluate models using 'tidymodels' and 'h2o' <https://h2o.ai/>. The
     package enables users to specify 'h2o' as an engine for several
     modeling methods.
 License: MIT + file LICENSE
 URL: 
   https://agua.tidymodels.org/, 
-  https://github.com/tidymodels/agua, 
-  https://cran.r-project.org/web/packages/h2o/h2o.pdf
+  https://github.com/tidymodels/agua
 BugReports: https://github.com/tidymodels/agua/issues
 Depends: 
     parsnip
