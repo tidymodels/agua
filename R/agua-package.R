@@ -12,7 +12,6 @@
 ## usethis namespace: start
 #' @importFrom parsnip set_model_arg
 #' @importFrom tune tune
-#' @importFrom purrr quietly
 #' @importFrom stats predict
 ## usethis namespace: end
 NULL

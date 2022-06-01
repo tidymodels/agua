@@ -54,7 +54,7 @@ h2o_train <- function(x, y, model, ...) {
       training_frame = quote(x),
       !!!opts
     )
-  rlang::eval_tidy(cl)
+  h2o:::with_no_h2o_progress(rlang::eval_tidy(cl))
 }
 
 get_fit_opts <- function(...) {
@@ -127,4 +127,3 @@ h2o_train_glm <-
       ...
     )
   }
-

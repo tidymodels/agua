@@ -250,7 +250,6 @@ pull_h2o_metrics <- function(predictions,
                              param_names,
                              outcome_name,
                              event_level) {
-
   metrics <- tune::.estimate_metrics(
     predictions,
     metrics,

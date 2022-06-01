@@ -14,8 +14,18 @@ new parsnip model engines and sets up additional infrastructure for tune.
 The package uses code initially written by Steven Pawley in his h2oparsnip
 package. Addition work was done by Qiushi Yan as an RStudio summer intern.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://agua.tidymodels.org/}
+  \item \url{https://github.com/tidymodels/agua}
+  \item \url{https://cran.r-project.org/web/packages/h2o/h2o.pdf}
+  \item Report bugs at \url{https://github.com/tidymodels/agua/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: Qiushi Yan \email{qiushi.yan@rstudio.com}
+\strong{Maintainer}: Qiushi Yan \email{qiushi.yann@gmail.com}
 
 Authors:
 \itemize{

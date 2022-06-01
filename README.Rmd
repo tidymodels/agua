@@ -59,12 +59,7 @@ library(agua)
 library(h2o)
 tidymodels_prefer()
 ```
-```{r parsnip, eval = FALSE}
-library(tidymodels)
-library(agua)
-
-tidymodels_prefer()
-
+```{r parsnip}
 # Start the h2o server before running models
 logging <- capture.output(h2o::h2o.init())
 
