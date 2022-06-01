@@ -39,8 +39,9 @@ Suggests:
     knitr,
     modeldata,
     testthat (>= 3.0.0)
-Remotes: 
-    tidymodels/tune
+Remotes:  
+    tidymodels/tune,
+    tidymodels/parsnip
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Config/testthat/parallel: false

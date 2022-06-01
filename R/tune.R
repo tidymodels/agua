@@ -67,7 +67,7 @@ tune_grid_loop_iter_h2o <- function(split,
     iter_msg_preprocessor <- iter_grid_info[[".msg_preprocessor"]]
 
     # finalize and extract preprocessor
-    workflow <- tune:::finalize_workflow_preprocessor(
+    workflow <- tune::finalize_workflow_preprocessor(
       workflow = workflow,
       grid_preprocessor = iter_grid_preprocessor
     )
@@ -230,14 +230,14 @@ pull_h2o_predictions <- function(h2o_model,
     dplyr::mutate(predict = vctrs::vec_cast(predict, val_truth[[outcome_name]]))
 
   if (mode == "classification") {
-    h2o_preds <- parsnip:::format_classprobs(h2o_preds %>%
+    h2o_preds <- parsnip::format_classprobs(h2o_preds %>%
       dplyr::select(-predict)) %>%
       dplyr::mutate(.row = orig_rows) %>%
       dplyr::bind_cols(
-        parsnip:::format_class(h2o_preds %>% purrr::pluck("predict"))
+        parsnip::format_class(h2o_preds %>% purrr::pluck("predict"))
       )
   } else {
-    h2o_preds <- parsnip:::format_num(
+    h2o_preds <- parsnip::format_num(
       h2o_preds %>%
         purrr::pluck("predict")
       ) %>%
