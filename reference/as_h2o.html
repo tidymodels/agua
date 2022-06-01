@@ -104,12 +104,12 @@ Read more in <a href="https://tibble.tidyverse.org/reference/rownames.html" clas
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
 <span class="r-in"><span class="co"># start with h2o::h2o.init()</span></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="h2o_running.html">h2o_running</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"> <span class="va">cars2</span> <span class="op">&lt;-</span> <span class="fu">as_h2o</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"> <span class="va">cars2</span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">cars2</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">cars2</span> <span class="op">&lt;-</span> <span class="fu">as_h2o</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">cars2</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">cars2</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="va">cars0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">cars2</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
-<span class="r-in"> <span class="va">cars0</span></span>
+<span class="r-in">  <span class="va">cars0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">cars2</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">cars0</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>
