@@ -63,11 +63,11 @@ Data conversion tools
 
 # start with h2o::h2o.init()
 if (h2o_running()) {
- cars2 <- as_h2o(mtcars)
- cars2
- class(cars2$data)
+  cars2 <- as_h2o(mtcars)
+  cars2
+  class(cars2$data)
 
- cars0 <- as_tibble(cars2$data)
- cars0
+  cars0 <- as_tibble(cars2$data)
+  cars0
 }
 }

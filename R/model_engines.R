@@ -43,18 +43,20 @@ add_logistic_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_pred(
     model = "logistic_reg",
     eng = "h2o",
     mode = "classification",
     type = "class",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_classification"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "class"
       )
     )
   )
@@ -64,30 +66,33 @@ add_logistic_reg_h2o <- function() {
     mode = "classification",
     type = "prob",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x[, 2:ncol(x)]),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_classification"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "prob"
       )
     )
   )
-  parsnip::set_pred(
-    model = "logistic_reg",
-    eng = "h2o",
-    mode = "classification",
-    type = "raw",
-    value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
-      args = list(
-        object = quote(object$fit),
-        newdata = quote(new_data)
-      )
-    )
-  )
+  # TODO: type "raw", can h2o.predict return raw values?
+  # parsnip::set_pred(
+  #   model = "logistic_reg",
+  #   eng = "h2o",
+  #   mode = "classification",
+  #   type = "raw",
+  #   value = list(
+  #     pre = NULL,
+  #     post = NULL,
+  #     func = c(pkg = "agua", fun = "h2o_predict_glm"),
+  #     args = list(
+  #       object = quote(object$fit),
+  #       new_data = quote(new_data),
+  #       type = "raw"
+  #     )
+  #   )
+  # )
 }
 
 
@@ -172,12 +177,13 @@ add_rand_forest_h2o <- function() {
     mode = "regression",
     type = "numeric",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x)$predict,
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_regression"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "numeric"
       )
     )
   )
@@ -187,12 +193,13 @@ add_rand_forest_h2o <- function() {
     mode = "regression",
     type = "raw",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_regression"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "raw"
       )
     )
   )
@@ -204,12 +211,13 @@ add_rand_forest_h2o <- function() {
     mode = "classification",
     type = "class",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x)$predict,
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_classification"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "class"
       )
     )
   )
@@ -219,30 +227,31 @@ add_rand_forest_h2o <- function() {
     mode = "classification",
     type = "prob",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x[, 2:ncol(x)]),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_classification"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "prob"
       )
     )
   )
-  parsnip::set_pred(
-    model = "rand_forest",
-    eng = "h2o",
-    mode = "classification",
-    type = "raw",
-    value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
-      args = list(
-        object = quote(object$fit),
-        newdata = quote(new_data)
-      )
-    )
-  )
+  # parsnip::set_pred(
+  #   model = "rand_forest",
+  #   eng = "h2o",
+  #   mode = "classification",
+  #   type = "raw",
+  #   value = list(
+  #     pre = function(x, object) h2o::as.h2o(x),
+  #     post = function(x, object) as.data.frame(x),
+  #     func = c(pkg = "h2o", fun = "h2o.predict"),
+  #     args = list(
+  #       object = quote(object$fit),
+  #       newdata = quote(new_data)
+  #     )
+  #   )
+  # )
 }
 
 add_boost_tree_h2o <- function() {
@@ -366,12 +375,13 @@ add_boost_tree_h2o <- function() {
     mode = "regression",
     type = "numeric",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x)$predict,
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_regression"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "numeric"
       )
     )
   )
@@ -381,12 +391,13 @@ add_boost_tree_h2o <- function() {
     mode = "regression",
     type = "raw",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_regression"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "raw"
       )
     )
   )
@@ -398,12 +409,13 @@ add_boost_tree_h2o <- function() {
     mode = "classification",
     type = "class",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x)$predict,
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_classification"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "class"
       )
     )
   )
@@ -413,28 +425,29 @@ add_boost_tree_h2o <- function() {
     mode = "classification",
     type = "prob",
     value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x[, 2:ncol(x)]),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
+      pre = NULL,
+      post = NULL,
+      func = c(pkg = "agua", fun = "h2o_predict_classification"),
       args = list(
         object = quote(object$fit),
-        newdata = quote(new_data)
+        new_data = quote(new_data),
+        type = "prob"
       )
     )
   )
-  parsnip::set_pred(
-    model = "boost_tree",
-    eng = "h2o",
-    mode = "classification",
-    type = "raw",
-    value = list(
-      pre = function(x, object) h2o::as.h2o(x),
-      post = function(x, object) as.data.frame(x),
-      func = c(pkg = "h2o", fun = "h2o.predict"),
-      args = list(
-        object = quote(object$fit),
-        newdata = quote(new_data)
-      )
-    )
-  )
+  # parsnip::set_pred(
+  #   model = "boost_tree",
+  #   eng = "h2o",
+  #   mode = "classification",
+  #   type = "raw",
+  #   value = list(
+  #     pre = function(x, object) h2o::as.h2o(x),
+  #     post = function(x, object) as.data.frame(x),
+  #     func = c(pkg = "h2o", fun = "h2o.predict"),
+  #     args = list(
+  #       object = quote(object$fit),
+  #       newdata = quote(new_data)
+  #     )
+  #   )
+  # )
 }

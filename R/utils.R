@@ -10,16 +10,16 @@ extract_h2o_algorithm <- function(workflow, ...) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
   model_class <- class(model_spec)[1]
   algo <- switch(model_class,
-                 boost_tree = "gbm",
-                 rand_forest = "randomForest",
-                 linear_reg = "glm",
-                 logistic_reg = "glm",
-                 multinom_reg = "glm",
-                 mlp = "deeplearning",
-                 naive_Bayes = "naive_bayes",
-                 rlang::abort(
-                   glue::glue("Model `{model_class}` is not supported by the h2o engine, use one of { toString(all_algos) }")
-                 )
+    boost_tree = "gbm",
+    rand_forest = "randomForest",
+    linear_reg = "glm",
+    logistic_reg = "glm",
+    multinom_reg = "glm",
+    mlp = "deeplearning",
+    naive_Bayes = "naive_bayes",
+    rlang::abort(
+      glue::glue("Model `{model_class}` is not supported by the h2o engine, use one of { toString(all_algos) }")
+    )
   )
   algo
 }
@@ -38,12 +38,12 @@ extract_h2o_algorithm <- function(workflow, ...) {
 #'
 #' # start with h2o::h2o.init()
 #' if (h2o_running()) {
-#'  cars2 <- as_h2o(mtcars)
-#'  cars2
-#'  class(cars2$data)
+#'   cars2 <- as_h2o(mtcars)
+#'   cars2
+#'   class(cars2$data)
 #'
-#'  cars0 <- as_tibble(cars2$data)
-#'  cars0
+#'   cars0 <- as_tibble(cars2$data)
+#'   cars0
 #' }
 #' @export
 as_h2o <- function(df, destination_frame_prefix = "object") {
@@ -57,22 +57,21 @@ as_h2o <- function(df, destination_frame_prefix = "object") {
   )
 }
 
-queitly_conver <-
-
 #' @export
 #' @rdname as_h2o
 as_tibble.H2OFrame <-
-  function (x,
-            ...,
-            .rows = NULL,
-            .name_repair = c("check_unique", "unique", "universal", "minimal"),
-            rownames = pkgconfig::get_config("tibble::rownames", NULL)) {
+  function(x,
+           ...,
+           .rows = NULL,
+           .name_repair = c("check_unique", "unique", "universal", "minimal"),
+           rownames = pkgconfig::get_config("tibble::rownames", NULL)) {
     x <- as.data.frame(x)
     tibble::as_tibble(x,
-                      ...,
-                      .rows = .rows,
-                      .name_repair = .name_repair,
-                      rownames = rownames)
+      ...,
+      .rows = .rows,
+      .name_repair = .name_repair,
+      rownames = rownames
+    )
   }
 
 # ------------------------------------------------------------------------------
@@ -114,10 +113,10 @@ rename_grid_h2o <- function(grid, workflow) {
 
 
 
-
-quiet_start <- purrr::quietly(h2o::h2o.init)
 h2o_start <- function() {
-  res <- utils::capture.output(quiet_start(), "output")
+  res <- utils::capture.output(h2o:::with_no_h2o_progress(
+    h2o::h2o.init()
+  ), "output")
 }
 
 # ------------------------------------------------------------------------------
@@ -141,4 +140,3 @@ h2o_running <- function(verbose = FALSE) {
   }
   res
 }
-
