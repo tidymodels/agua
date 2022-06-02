@@ -28,6 +28,7 @@ jobs:
 
       - name: Test
         run: testthat::test_package("agua")
+        shell: Rscript {0}
 
       - name: Test coverage
         run: covr::codecov(quiet = FALSE)
