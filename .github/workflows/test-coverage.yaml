@@ -26,6 +26,9 @@ jobs:
           extra-packages: any::covr
           needs: coverage
 
+      - name: Test
+        run: testthat::test_package("agua")
+
       - name: Test coverage
         run: covr::codecov(quiet = FALSE)
         shell: Rscript {0}
