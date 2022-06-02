@@ -29,23 +29,25 @@ test_that('parsnip model execution', {
 
   # ------------------------------------------------------------------------------
 
-  set.seed(1)
-  fit_reg <-
-    boost_tree(learn_rate = .1, trees = 5) %>%
-    set_engine("h2o", model_id = "fit_2") %>%
-    set_mode("regression") %>%
-    fit(mpg ~ ., data = mtcars)
-  expect_equal(class(fit_reg), c("_H2ORegressionModel", "model_fit"))
-  expect_snapshot(
-    fit_reg
-  )
-
-  pred_reg <- predict(fit_reg, head(mtcars))
-  expect_equal(
-    pred_reg$.pred,
-    c(
-      8.96138000488281, 8.96138000488281, 10.2200937271118, 8.28253364562988,
-      6.63353729248047, 8.28253364562988
+  if (h2o::h2o.xgboost.available()) {
+    set.seed(1)
+    fit_reg <-
+      boost_tree(learn_rate = .1, trees = 5) %>%
+      set_engine("h2o", model_id = "fit_2") %>%
+      set_mode("regression") %>%
+      fit(mpg ~ ., data = mtcars)
+    expect_equal(class(fit_reg), c("_H2ORegressionModel", "model_fit"))
+    expect_snapshot(
+      fit_reg
     )
-  )
+
+    pred_reg <- predict(fit_reg, head(mtcars))
+    expect_equal(
+      pred_reg$.pred,
+      c(
+        8.96138000488281, 8.96138000488281, 10.2200937271118, 8.28253364562988,
+        6.63353729248047, 8.28253364562988
+      )
+    )
+  }
 })
