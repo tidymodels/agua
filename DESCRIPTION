@@ -40,8 +40,7 @@ Suggests:
     modeldata,
     testthat (>= 3.0.0)
 Remotes:  
-    tidymodels/tune,
-    tidymodels/parsnip
+    tidymodels/tune
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
 Config/testthat/parallel: false

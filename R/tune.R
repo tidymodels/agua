@@ -230,14 +230,14 @@ pull_h2o_predictions <- function(h2o_model,
     dplyr::mutate(predict = vctrs::vec_cast(predict, val_truth[[outcome_name]]))
 
   if (mode == "classification") {
-    h2o_preds <- parsnip::format_classprobs(h2o_preds %>%
+    h2o_preds <- parsnip:::format_classprobs(h2o_preds %>%
       dplyr::select(-predict)) %>%
       dplyr::mutate(.row = orig_rows) %>%
       dplyr::bind_cols(
-        parsnip::format_class(h2o_preds %>% purrr::pluck("predict"))
+        parsnip:::format_class(h2o_preds %>% purrr::pluck("predict"))
       )
   } else {
-    h2o_preds <- parsnip::format_num(
+    h2o_preds <- parsnip:::format_num(
       h2o_preds %>%
         purrr::pluck("predict")
       ) %>%
