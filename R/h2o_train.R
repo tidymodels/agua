@@ -42,7 +42,8 @@ h2o_train <- function(x, y, model, ...) {
   x <- as.data.frame(x)
   x_names <- names(x)
   x$.outcome <- y
-  x <- as_h2o(x)$data
+  x <- as_h2o(x)
+  on.exit(h2o::h2o.rm(x$id))
 
   mod_fun <- paste0("h2o.", model)
   cl <-
@@ -51,7 +52,7 @@ h2o_train <- function(x, y, model, ...) {
       .ns = "h2o",
       x = quote(x_names),
       y = ".outcome",
-      training_frame = quote(x),
+      training_frame = quote(x$data),
       !!!opts
     )
   h2o:::with_no_h2o_progress(rlang::eval_tidy(cl))
@@ -127,3 +128,92 @@ h2o_train_glm <-
       ...
     )
   }
+
+#' @export
+#' @rdname h2o_train
+h2o_train_nb <- function(x, y, laplace = 0, ...) {
+  h2o_train(
+    x,
+    y,
+    model = "naiveBayes",
+    laplace = laplace,
+    ...
+  )
+}
+
+#' @export
+#' @rdname h2o_train
+h2o_train_mlp <- function(x, y,
+                          hidden = 200,
+                          l2 = 0,
+                          hidden_dropout_ratios = 0,
+                          epochs = 10,
+                          activation = "Rectifier",
+                          ...) {
+
+
+  activation <- switch(activation,
+                       relu = rlang::abort(
+                         glue::glue(
+                           "Activation function `{activation}` is not supported
+                           by the h2o engine. Do you mean 'Rectifier'?"
+                         )
+                       ),
+                       tanh = rlang::abort(
+                         glue::glue(
+                           "Activation function `{activation}` is not supported
+                           by the h2o engine. Do you mean 'Tanh'?"
+                         )
+                       ),
+                       activation
+  )
+
+  # TODO move to parsnip:::check_args
+  all_activations <- c("Rectifier", "Tanh", "TanhWithDropout",
+                       "RectifierWithDropout", "Maxout", "MaxoutWithDropout")
+  if (!(activation %in% all_activations)) {
+    rlang::abort(glue::glue("Activation function `{activation}` is not
+                            supported by the h2o engine."))
+  }
+
+  if (activation == "Rectifier" & hidden_dropout_ratios > 0) {
+    activation <- "RectifierWithDropout"
+  } else if (activation == "Tanh" & hidden_dropout_ratios > 0) {
+    activation <- "TanhWithDropout"
+  } else if (activation == "Maxout" & hidden_dropout_ratios > 0) {
+    activation <- "MaxoutWithDropout"
+  }
+
+  if (hidden_dropout_ratios == 0) {
+    hidden_dropout_ratios <- NULL
+  }
+
+  h2o_train(
+    x,
+    y,
+    model = "deeplearning",
+    hidden = hidden,
+    l2 = l2,
+    hidden_dropout_ratios = hidden_dropout_ratios,
+    epochs = epochs,
+    activation = activation,
+    ...
+  )
+}
+
+h2o_train_rule <- function(x, y,
+                           rule_generation_ntrees = 50,
+                           max_rule_length = 5,
+                           lambda = NULL,
+                           ...
+) {
+  h2o_train(
+    x,
+    y,
+    model = "rulefit",
+    rule_generation_ntrees = rule_generation_ntrees,
+    max_rule_length = max_rule_length,
+    lambda = lambda,
+    ...
+  )
+}
