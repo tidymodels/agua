@@ -17,6 +17,8 @@ test_that("random forest specs", {
 })
 
 test_that("xgboost specs", {
+  skip_if_not(h2o::h2o.xgboost.available())
+
   expect_snapshot(
     boost_tree(learn_rate = .1, trees = 1000) %>%
       set_engine("h2o") %>%
@@ -26,7 +28,7 @@ test_that("xgboost specs", {
 
   expect_snapshot(
     boost_tree(learn_rate = .1, trees = 1000) %>%
-      set_engine("h2o", gamma = 1 / 3) %>%
+      set_engine("h2o", gamma = 1 / 3, validation = 0.1) %>%
       set_mode("regression") %>%
       translate()
   )

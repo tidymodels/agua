@@ -42,6 +42,21 @@ h2o_train <- function(x, y, model, ...) {
   x <- as.data.frame(x)
   x_names <- names(x)
   x$.outcome <- y
+
+  validation <- opts$validation
+  if (!is.null(validation) && validation > 0) {
+    # split x into train and validation set
+    n <- nrow(x)
+    m <- floor(n * (1 - validation)) + 1
+    train_index <- sample(1:n, size = max(m, 2))
+    validation_frame <- x[-train_index, ]
+    x <- x[train_index, ]
+    validation_frame <- as_h2o(validation_frame)
+    opts$validation_frame <- validation_frame$data
+    opts$validation <- NULL
+    on.exit(h2o::h2o.rm(validation_frame$id))
+  }
+
   x <- as_h2o(x)
   on.exit(h2o::h2o.rm(x$id))
 

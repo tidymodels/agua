@@ -41,7 +41,7 @@ Suggests:
     modeldata,
     testthat (>= 3.0.0)
 Remotes: 
-    tidymodels/tune,
+    tidymodels/tune@h2o,
     tidymodels/parsnip
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3

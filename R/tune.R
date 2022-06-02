@@ -80,13 +80,13 @@ tune_grid_loop_iter_h2o <- function(split,
     )
     preprocessor <- hardhat::extract_preprocessor(workflow)
     # prep training and validation data
-    training_forged <- tune:::forge_from_workflow(training_frame,
+    training_forged <- tune::forge_from_workflow(training_frame,
                                                   workflow)
     training_frame_processed <- dplyr::bind_cols(
       training_forged$predictors,
       training_forged$outcomes,
     )
-    val_forged <- tune:::forge_from_workflow(val_frame,
+    val_forged <- tune::forge_from_workflow(val_frame,
                                              workflow)
     val_frame_processed <- dplyr::bind_cols(
       val_forged$predictors,
