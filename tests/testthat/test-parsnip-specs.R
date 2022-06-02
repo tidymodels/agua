@@ -82,14 +82,13 @@ test_that("multinomial regression specs", {
 
 test_that("naive bayes specs", {
   expect_snapshot(
-    naive_Bayes(Laplace = 1) %>%
-      set_engine("h2o") %>%
+    naive_Bayes(engine = "h2o", Laplace = 1) %>%
       set_mode("classification") %>%
       translate()
   )
 
   expect_snapshot(
-    naive_Bayes(Laplace = 1) %>%
+    naive_Bayes(engine = "h2o", Laplace = 1) %>%
       set_engine("h2o", min_sdev = 1e-10, min_prob = 1e-5) %>%
       set_mode("classification") %>%
       translate()
@@ -115,14 +114,13 @@ test_that("mlp specs", {
 
 test_that("mlp specs", {
   expect_snapshot(
-    rule_fit(trees = 100, tree_depth = 5) %>%
-      set_engine("h2o") %>%
+    rule_fit(engine = "h2o", trees = 100, tree_depth = 5) %>%
       set_mode("regression") %>%
       translate()
   )
 
   expect_snapshot(
-    rule_fit(trees = 100, tree_depth = 5) %>%
+    rule_fit(engine = "h2o", trees = 100, tree_depth = 5) %>%
       set_engine("h2o", algorithm = "DRF") %>%
       set_mode("regression") %>%
       translate()
