@@ -153,18 +153,8 @@ h2o_train_mlp <- function(x, y,
 
 
   activation <- switch(activation,
-                       relu = rlang::abort(
-                         glue::glue(
-                           "Activation function `{activation}` is not supported
-                           by the h2o engine. Do you mean 'Rectifier'?"
-                         )
-                       ),
-                       tanh = rlang::abort(
-                         glue::glue(
-                           "Activation function `{activation}` is not supported
-                           by the h2o engine. Do you mean 'Tanh'?"
-                         )
-                       ),
+                       relu = "Rectifier",
+                       tanh = "Tanh",
                        activation
   )
 
