@@ -376,7 +376,7 @@ add_boost_tree_h2o <- function() {
     parsnip = "trees",
     original = "ntrees",
     func = list(pkg = "dials", fun = "trees"),
-    has_submodel = TRUE
+    has_submodel = FALSE
   )
   parsnip::set_model_arg(
     model = "boost_tree",
