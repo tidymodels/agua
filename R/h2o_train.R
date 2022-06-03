@@ -6,11 +6,15 @@
 #' @inheritParams h2o::h2o.randomForest
 #' @inheritParams h2o::h2o.xgboost
 #' @inheritParams h2o::h2o.glm
+#' @inheritParams h2o::h2o.deeplearning
+#' @inheritParams h2o::h2o.rulefit
 #' @param x A data frame of predictors
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
 #' `"randomForest"`, `"xgboost"`, and `"glm"`. Use [h2o::h2o.xgboost.available()]
 #' to see if that model can be used on your OS/h2o server.
+#' @param validation The _proportion_ of the data that are used for performance
+#' assessment and potential early stopping.
 #' @param ... Other options to pass to the h2o model functions (e.g.,
 #' [h2o::h2o.randomForest()]).
 #' @return An h2o model object.
@@ -49,8 +53,8 @@ h2o_train <- function(x, y, model, ...) {
     n <- nrow(x)
     m <- floor(n * (1 - validation)) + 1
     train_index <- sample(1:n, size = max(m, 2))
-    validation_frame <- x[-train_index, ]
-    x <- x[train_index, ]
+    validation_frame <- x[-train_index, , drop = FALSE]
+    x <- x[train_index, , drop = FALSE]
     validation_frame <- as_h2o(validation_frame)
     opts$validation_frame <- validation_frame$data
     opts$validation <- NULL
@@ -110,6 +114,7 @@ h2o_train_xgboost <-
            col_sample_rate = 1,
            min_split_improvement = 0,
            stopping_rounds = 0,
+           validation = 0,
            ...) {
     h2o_train(
       x,
@@ -122,6 +127,7 @@ h2o_train_xgboost <-
       sample_rate = sample_rate,
       col_sample_rate = col_sample_rate,
       stopping_rounds = stopping_rounds,
+      validation = validation,
       ...
     )
   }
@@ -164,22 +170,26 @@ h2o_train_mlp <- function(x, y,
                           hidden_dropout_ratios = 0,
                           epochs = 10,
                           activation = "Rectifier",
+                          validation = 0,
                           ...) {
-
-
   activation <- switch(activation,
-                       relu = "Rectifier",
-                       tanh = "Tanh",
-                       activation
+    relu = "Rectifier",
+    tanh = "Tanh",
+    activation
   )
 
-  # TODO move to parsnip:::check_args
-  all_activations <- c("Rectifier", "Tanh", "TanhWithDropout",
-                       "RectifierWithDropout", "Maxout", "MaxoutWithDropout")
+  all_activations <- c(
+    "Rectifier", "Tanh", "TanhWithDropout",
+    "RectifierWithDropout", "Maxout", "MaxoutWithDropout"
+  )
   if (!(activation %in% all_activations)) {
-    rlang::abort(glue::glue("Activation function `{activation}` is not
-                            supported by the h2o engine."))
+    rlang::abort(
+      glue::glue(
+        "Activation function `{activation}` is not supported by the h2o engine. Possible values are {toString(all_activations)}."
+      )
+    )
   }
+
 
   if (activation == "Rectifier" & hidden_dropout_ratios > 0) {
     activation <- "RectifierWithDropout"
@@ -202,6 +212,7 @@ h2o_train_mlp <- function(x, y,
     hidden_dropout_ratios = hidden_dropout_ratios,
     epochs = epochs,
     activation = activation,
+    validation = validation,
     ...
   )
 }
@@ -210,8 +221,7 @@ h2o_train_rule <- function(x, y,
                            rule_generation_ntrees = 50,
                            max_rule_length = 5,
                            lambda = NULL,
-                           ...
-) {
+                           ...) {
   h2o_train(
     x,
     y,

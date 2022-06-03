@@ -1,3 +1,6 @@
+# TODO: h2o.gam, h2o.coxph,
+
+
 class_info <- list(
   pre = NULL,
   post = NULL,
@@ -21,6 +24,69 @@ reg_info <- list(
 )
 reg_info_raw <- reg_info
 reg_info_raw$args$type <- "raw"
+
+
+add_linear_reg_h2o <- function() {
+  parsnip::set_model_engine("linear_reg", "regression", "h2o")
+  parsnip::set_dependency("linear_reg", "h2o", "h2o")
+
+  parsnip::set_model_arg(
+    model = "linear_reg",
+    eng = "h2o",
+    parsnip = "mixture",
+    original = "alpha",
+    func = list(pkg = "dials", fun = "mixture"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "linear_reg",
+    eng = "h2o",
+    parsnip = "penalty",
+    original = "lambda",
+    func = list(pkg = "dials", fun = "penalty"),
+    has_submodel = FALSE
+  )
+  parsnip::set_fit(
+    model = "linear_reg",
+    eng = "h2o",
+    mode = "regression",
+    value = list(
+      interface = "data.frame",
+      protect = c("x", "y"),
+      func = c(pkg = "agua", fun = "h2o_train_glm"),
+      defaults = list(
+        family = "gaussian"
+      )
+    )
+  )
+  parsnip::set_encoding(
+    model = "linear_reg",
+    eng = "h2o",
+    mode = "regression",
+    options = list(
+      predictor_indicators = "none",
+      compute_intercept = FALSE,
+      remove_intercept = FALSE,
+      allow_sparse_x = FALSE
+    )
+  )
+
+  # regression predict
+  parsnip::set_pred(
+    model = "linear_reg",
+    eng = "h2o",
+    mode = "regression",
+    type = "numeric",
+    value = reg_info
+  )
+  parsnip::set_pred(
+    model = "linear_reg",
+    eng = "h2o",
+    mode = "regression",
+    type = "raw",
+    value = reg_info_raw
+  )
+}
 
 add_logistic_reg_h2o <- function() {
   parsnip::set_model_engine("logistic_reg", "classification", "h2o")
@@ -459,68 +525,6 @@ add_boost_tree_h2o <- function() {
   #     )
   #   )
   # )
-}
-
-add_linear_reg_h2o <- function() {
-  parsnip::set_model_engine("linear_reg", "regression", "h2o")
-  parsnip::set_dependency("linear_reg", "h2o", "h2o")
-
-  parsnip::set_model_arg(
-    model = "linear_reg",
-    eng = "h2o",
-    parsnip = "mixture",
-    original = "alpha",
-    func = list(pkg = "dials", fun = "mixture"),
-    has_submodel = FALSE
-  )
-  parsnip::set_model_arg(
-    model = "linear_reg",
-    eng = "h2o",
-    parsnip = "penalty",
-    original = "lambda",
-    func = list(pkg = "dials", fun = "penalty"),
-    has_submodel = FALSE
-  )
-  parsnip::set_fit(
-    model = "linear_reg",
-    eng = "h2o",
-    mode = "regression",
-    value = list(
-      interface = "data.frame",
-      protect = c("x", "y"),
-      func = c(pkg = "agua", fun = "h2o_train_glm"),
-      defaults = list(
-        family = "gaussian"
-      )
-    )
-  )
-  parsnip::set_encoding(
-    model = "linear_reg",
-    eng = "h2o",
-    mode = "regression",
-    options = list(
-      predictor_indicators = "none",
-      compute_intercept = FALSE,
-      remove_intercept = FALSE,
-      allow_sparse_x = FALSE
-    )
-  )
-
-  # regression predict
-  parsnip::set_pred(
-    model = "linear_reg",
-    eng = "h2o",
-    mode = "regression",
-    type = "numeric",
-    value = reg_info
-  )
-  parsnip::set_pred(
-    model = "linear_reg",
-    eng = "h2o",
-    mode = "regression",
-    type = "raw",
-    value = reg_info_raw
-  )
 }
 
 add_naive_Bayes_h2o <- function() {

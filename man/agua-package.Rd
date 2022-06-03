@@ -19,7 +19,6 @@ Useful links:
 \itemize{
   \item \url{https://agua.tidymodels.org/}
   \item \url{https://github.com/tidymodels/agua}
-  \item \url{https://cran.r-project.org/web/packages/h2o/h2o.pdf}
   \item Report bugs at \url{https://github.com/tidymodels/agua/issues}
 }
 

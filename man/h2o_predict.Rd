@@ -8,9 +8,9 @@
 \usage{
 h2o_predict(object, new_data, ...)
 
-h2o_predict_classification(object, new_data, type, ...)
+h2o_predict_classification(object, new_data, type = "class", ...)
 
-h2o_predict_regression(object, new_data, type, ...)
+h2o_predict_regression(object, new_data, type = "numeric", ...)
 }
 \arguments{
 \item{object}{An object of class \code{model_fit}}

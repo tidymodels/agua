@@ -5,6 +5,8 @@
 \alias{h2o_train_rf}
 \alias{h2o_train_xgboost}
 \alias{h2o_train_glm}
+\alias{h2o_train_nb}
+\alias{h2o_train_mlp}
 \title{Model wrappers for h2o}
 \usage{
 h2o_train(x, y, model, ...)
@@ -22,10 +24,25 @@ h2o_train_xgboost(
   col_sample_rate = 1,
   min_split_improvement = 0,
   stopping_rounds = 0,
+  validation = 0,
   ...
 )
 
 h2o_train_glm(x, y, lambda = NULL, alpha = NULL, ...)
+
+h2o_train_nb(x, y, laplace = 0, ...)
+
+h2o_train_mlp(
+  x,
+  y,
+  hidden = 200,
+  l2 = 0,
+  hidden_dropout_ratios = 0,
+  epochs = 10,
+  activation = "Rectifier",
+  validation = 0,
+  ...
+)
 }
 \arguments{
 \item{x}{A data frame of predictors}
@@ -59,11 +76,26 @@ classification and p/3 for regression (where p is the # of predictors Defaults t
 \item{stopping_rounds}{Early stopping based on convergence of stopping_metric. Stop if simple moving average of length k of the
 stopping_metric does not improve for k:=stopping_rounds scoring events (0 to disable) Defaults to 0.}
 
+\item{validation}{The \emph{proportion} of the data that are used for performance
+assessment and potential early stopping.}
+
 \item{lambda}{Regularization strength}
 
 \item{alpha}{Distribution of regularization between the L1 (Lasso) and L2 (Ridge) penalties. A value of 1 for alpha
 represents Lasso regression, a value of 0 produces Ridge regression, and anything in between specifies the
 amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-BFGS'; 0.5 otherwise.}
+
+\item{hidden}{Hidden layer sizes (e.g. [100, 100]). Defaults to c(200, 200).}
+
+\item{l2}{L2 regularization (can add stability and improve generalization, causes many weights to be small. Defaults to
+0.}
+
+\item{hidden_dropout_ratios}{Hidden layer dropout ratios (can improve generalization), specify one value per hidden layer, defaults to 0.5.}
+
+\item{epochs}{How many times the dataset should be iterated (streamed), can be fractional. Defaults to 10.}
+
+\item{activation}{Activation function. Must be one of: "Tanh", "TanhWithDropout", "Rectifier", "RectifierWithDropout", "Maxout",
+"MaxoutWithDropout". Defaults to Rectifier.}
 }
 \value{
 An h2o model object.

@@ -109,13 +109,13 @@ test_that('parsnip model execution', {
 
   # ------------------------------------------------------------------------------
   # rule fit regression
-  expect_reg(rule_fit(trees = 100, tree_depth = 5),
+  expect_reg(rule_fit(engine = "h2o", trees = 100, tree_depth = 5),
                c(22.201423, 21.536628, 24.981005, 20.558594, 17.320593, 19.990024)
   )
 
   # ------------------------------------------------------------------------------
   # rule fit classification
-  expect_class(rule_fit(trees = 100, tree_depth = 5),
+  expect_class(rule_fit(engine = "h2o", trees = 100, tree_depth = 5),
                c(0.56616535, 0.20167720, 0.32106085, 0.60254444, 0.60077550, 0.77305489)
   )
 
