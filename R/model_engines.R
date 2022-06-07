@@ -29,6 +29,7 @@ reg_info_raw$args$type <- "raw"
 add_linear_reg_h2o <- function() {
   parsnip::set_model_engine("linear_reg", "regression", "h2o")
   parsnip::set_dependency("linear_reg", "h2o", "h2o")
+  parsnip::set_dependency("linear_reg", "h2o", "agua")
 
   parsnip::set_model_arg(
     model = "linear_reg",
@@ -91,6 +92,7 @@ add_linear_reg_h2o <- function() {
 add_logistic_reg_h2o <- function() {
   parsnip::set_model_engine("logistic_reg", "classification", "h2o")
   parsnip::set_dependency("logistic_reg", "h2o", "h2o")
+  parsnip::set_dependency("logistic_reg", "h2o", "agua")
 
   parsnip::set_model_arg(
     model = "logistic_reg",
@@ -168,6 +170,8 @@ add_logistic_reg_h2o <- function() {
 add_multinom_reg_h2o <- function() {
   parsnip::set_model_engine("multinom_reg", "classification", "h2o")
   parsnip::set_dependency("multinom_reg", "h2o", "h2o")
+  parsnip::set_dependency("multinom_reg", "h2o", "agua")
+
 
   parsnip::set_model_arg(
     model = "multinom_reg",
@@ -247,6 +251,8 @@ add_rand_forest_h2o <- function() {
   parsnip::set_model_engine("rand_forest", "classification", "h2o")
   parsnip::set_model_engine("rand_forest", "regression", "h2o")
   parsnip::set_dependency("rand_forest", "h2o", "h2o")
+  parsnip::set_dependency("rand_forest", "h2o", "agua")
+
 
   parsnip::set_model_arg(
     model = "rand_forest",
@@ -369,6 +375,7 @@ add_boost_tree_h2o <- function() {
   parsnip::set_model_engine("boost_tree", "classification", "h2o")
   parsnip::set_model_engine("boost_tree", "regression", "h2o")
   parsnip::set_dependency("boost_tree", "h2o", "h2o")
+  parsnip::set_dependency("boost_tree", "h2o", "agua")
 
   parsnip::set_model_arg(
     model = "boost_tree",
@@ -530,6 +537,8 @@ add_boost_tree_h2o <- function() {
 add_naive_Bayes_h2o <- function() {
   parsnip::set_model_engine("naive_Bayes", "classification", "h2o")
   parsnip::set_dependency("naive_Bayes", "h2o", "h2o")
+  parsnip::set_dependency("naive_Bayes", "h2o", "agua")
+
 
   parsnip::set_model_arg(
     model = "naive_Bayes",
@@ -597,6 +606,8 @@ add_mlp_h2o <- function() {
   parsnip::set_model_engine("mlp", "classification", "h2o")
   parsnip::set_model_engine("mlp", "regression", "h2o")
   parsnip::set_dependency("mlp", "h2o", "h2o")
+  parsnip::set_dependency("mlp", "h2o", "agua")
+
 
 
   parsnip::set_model_arg(
@@ -745,6 +756,8 @@ add_rule_fit_h2o <- function() {
   parsnip::set_model_engine("rule_fit", "classification", "h2o")
   parsnip::set_model_engine("rule_fit", "regression", "h2o")
   parsnip::set_dependency("rule_fit", "h2o", "h2o")
+  parsnip::set_dependency("rule_fit", "h2o", "agua")
+
 
   parsnip::set_model_arg(
     model = "rule_fit",
