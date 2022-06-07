@@ -217,6 +217,8 @@ h2o_train_mlp <- function(x, y,
   )
 }
 
+#' @export
+#' @rdname h2o_train
 h2o_train_rule <- function(x, y,
                            rule_generation_ntrees = 50,
                            max_rule_length = 5,

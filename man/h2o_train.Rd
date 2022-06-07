@@ -7,6 +7,7 @@
 \alias{h2o_train_glm}
 \alias{h2o_train_nb}
 \alias{h2o_train_mlp}
+\alias{h2o_train_rule}
 \title{Model wrappers for h2o}
 \usage{
 h2o_train(x, y, model, ...)
@@ -41,6 +42,15 @@ h2o_train_mlp(
   epochs = 10,
   activation = "Rectifier",
   validation = 0,
+  ...
+)
+
+h2o_train_rule(
+  x,
+  y,
+  rule_generation_ntrees = 50,
+  max_rule_length = 5,
+  lambda = NULL,
   ...
 )
 }
@@ -96,6 +106,10 @@ amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-B
 
 \item{activation}{Activation function. Must be one of: "Tanh", "TanhWithDropout", "Rectifier", "RectifierWithDropout", "Maxout",
 "MaxoutWithDropout". Defaults to Rectifier.}
+
+\item{rule_generation_ntrees}{Specifies the number of trees to build in the tree model. Defaults to 50. Defaults to 50.}
+
+\item{max_rule_length}{Maximum length of rules. Defaults to 3.}
 }
 \value{
 An h2o model object.
