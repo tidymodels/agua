@@ -1,3 +1,7 @@
+#' Tuning parameters in h2o
+#' @rdname h2o-tuning-params
+#' @keywords internal
+#' @export
 h2o_activation <- function(values = c("Rectifier",
                                       "RectifierWithDropout",
                                       "Tanh",
