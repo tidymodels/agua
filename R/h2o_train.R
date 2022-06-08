@@ -8,6 +8,7 @@
 #' @inheritParams h2o::h2o.glm
 #' @inheritParams h2o::h2o.deeplearning
 #' @inheritParams h2o::h2o.rulefit
+#' @inheritParams h2o::h2o.naiveBayes
 #' @param x A data frame of predictors
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
@@ -48,6 +49,8 @@ h2o_train <- function(x, y, model, ...) {
   x$.outcome <- y
 
   validation <- opts$validation
+  opts$validation <- NULL
+
   if (!is.null(validation) && validation > 0) {
     # split x into train and validation set
     n <- nrow(x)
@@ -57,7 +60,6 @@ h2o_train <- function(x, y, model, ...) {
     x <- x[train_index, , drop = FALSE]
     validation_frame <- as_h2o(validation_frame)
     opts$validation_frame <- validation_frame$data
-    opts$validation <- NULL
     on.exit(h2o::h2o.rm(validation_frame$id))
   }
 

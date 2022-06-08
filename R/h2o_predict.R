@@ -20,7 +20,7 @@
 #'   mod <- fit(spec, mpg ~ ., data = mtcars)
 #'   h2o_predict_regression(mod$fit, new_data = head(mtcars), type = "numeric")
 #'
-#'   # using pasrsnip
+#'   # using parsnip
 #'   predict(mod, new_data = head(mtcars))
 #' }
 h2o_predict <- function(object, new_data, ...) {

@@ -12,4 +12,7 @@ h2o_activation(
 \description{
 Tuning parameters in h2o
 }
+\examples{
+h2o_activation()
+}
 \keyword{internal}

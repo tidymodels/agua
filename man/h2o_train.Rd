@@ -95,6 +95,8 @@ assessment and potential early stopping.}
 represents Lasso regression, a value of 0 produces Ridge regression, and anything in between specifies the
 amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-BFGS'; 0.5 otherwise.}
 
+\item{laplace}{Laplace smoothing parameter Defaults to 0.}
+
 \item{hidden}{Hidden layer sizes (e.g. [100, 100]). Defaults to c(200, 200).}
 
 \item{l2}{L2 regularization (can add stability and improve generalization, causes many weights to be small. Defaults to

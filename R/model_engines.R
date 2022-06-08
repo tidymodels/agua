@@ -1,6 +1,4 @@
-# TODO: h2o.gam, h2o.coxph,
-
-
+# TODO: h2o.gam, h2o.coxph
 class_info <- list(
   pre = NULL,
   post = NULL,
@@ -118,7 +116,9 @@ add_logistic_reg_h2o <- function() {
       interface = "data.frame",
       protect = c("x", "y"),
       func = c(pkg = "agua", fun = "h2o_train_glm"),
-      defaults = list()
+      defaults = list(
+        family = "binomial"
+      )
     )
   )
 

@@ -59,8 +59,8 @@
 ---
 
     Code
-      boost_tree(learn_rate = 0.1, trees = 1000) %>% set_engine("h2o", gamma = 1 / 3) %>%
-        set_mode("regression") %>% translate()
+      boost_tree(learn_rate = 0.1, trees = 1000) %>% set_engine("h2o", gamma = 1 / 3,
+      validation = 0.1) %>% set_mode("regression") %>% translate()
     Output
       Boosted Tree Model Specification (regression)
       
@@ -70,12 +70,13 @@
       
       Engine-Specific Arguments:
         gamma = 1/3
+        validation = 0.1
       
       Computational engine: h2o 
       
       Model fit template:
       agua::h2o_train_xgboost(x = missing_arg(), y = missing_arg(), 
-          ntrees = 1000, learn_rate = 0.1, gamma = 1/3)
+          ntrees = 1000, learn_rate = 0.1, gamma = 1/3, validation = 0.1)
 
 # linear regression specs
 
@@ -132,7 +133,7 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5)
+          alpha = 0.5, family = "binomial")
 
 ---
 
@@ -153,7 +154,7 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5, theta = 1e-05)
+          alpha = 0.5, theta = 1e-05, family = "binomial")
 
 # multinomial regression specs
 
@@ -234,34 +235,34 @@
 # mlp specs
 
     Code
-      mlp(hidden_units = 100, penalty = 0.5, activation = "Rectifier") %>% set_engine(
+      mlp(hidden_units = 100, penalty = 0.5, activation = "relu") %>% set_engine(
         "h2o") %>% set_mode("regression") %>% translate()
     Output
-      Single Layer Neural Network Specification (regression)
+      Single Layer Neural Network Model Specification (regression)
       
       Main Arguments:
         hidden_units = 100
         penalty = 0.5
-        activation = Rectifier
+        activation = relu
       
       Computational engine: h2o 
       
       Model fit template:
       agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), hidden = 100, 
-          l2 = 0.5, activation = "Rectifier")
+          l2 = 0.5, activation = "relu")
 
 ---
 
     Code
-      mlp(hidden_units = 100, penalty = 0.5, activation = "Rectifier") %>% set_engine(
+      mlp(hidden_units = 100, penalty = 0.5, activation = "relu") %>% set_engine(
         "h2o", standarize = FALSE) %>% set_mode("regression") %>% translate()
     Output
-      Single Layer Neural Network Specification (regression)
+      Single Layer Neural Network Model Specification (regression)
       
       Main Arguments:
         hidden_units = 100
         penalty = 0.5
-        activation = Rectifier
+        activation = relu
       
       Engine-Specific Arguments:
         standarize = FALSE
@@ -270,7 +271,7 @@
       
       Model fit template:
       agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), hidden = 100, 
-          l2 = 0.5, activation = "Rectifier", standarize = FALSE)
+          l2 = 0.5, activation = "relu", standarize = FALSE)
 
 ---
 

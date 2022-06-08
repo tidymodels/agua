@@ -17,8 +17,6 @@ test_that("random forest specs", {
 })
 
 test_that("xgboost specs", {
-  skip_if_not(h2o::h2o.xgboost.available())
-
   expect_snapshot(
     boost_tree(learn_rate = .1, trees = 1000) %>%
       set_engine("h2o") %>%
@@ -100,14 +98,14 @@ test_that("naive bayes specs", {
 test_that("mlp specs", {
   # TODO mlp activation
   expect_snapshot(
-    mlp(hidden_units = 100, penalty = 0.5, activation = "Rectifier") %>%
+    mlp(hidden_units = 100, penalty = 0.5, activation = "relu") %>%
       set_engine("h2o") %>%
       set_mode("regression") %>%
       translate()
   )
 
   expect_snapshot(
-    mlp(hidden_units = 100, penalty = 0.5, activation = "Rectifier") %>%
+    mlp(hidden_units = 100, penalty = 0.5, activation = "relu") %>%
       set_engine("h2o", standarize = FALSE) %>%
       set_mode("regression") %>%
       translate()

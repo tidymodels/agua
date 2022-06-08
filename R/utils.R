@@ -75,10 +75,11 @@ as_tibble.H2OFrame <-
   }
 
 # ------------------------------------------------------------------------------
-
+# translate parsnip labels into original h2o parameter names
 extract_model_param_names_h2o <- function(model_param_names, workflow) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
-  param <- hardhat::extract_parameter_set_dials(workflow) %>% tibble::as_tibble()
+  param <- hardhat::extract_parameter_set_dials(workflow) %>%
+    tibble::as_tibble()
 
   arg_key <- parsnip::get_from_env(paste0(class(model_spec)[1], "_args")) %>%
     dplyr::filter(engine == "h2o")
@@ -91,7 +92,7 @@ extract_model_param_names_h2o <- function(model_param_names, workflow) {
     purrr::pluck("original")
 }
 
-
+# not used
 rename_grid_h2o <- function(grid, workflow) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
   # For translate from given names/ids in grid to parsnip names:
