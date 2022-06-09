@@ -1,4 +1,5 @@
-# TODO: h2o.gam, h2o.coxph
+# TODO: model types: automl, h2o.gam, h2o.coxph
+# raw prediction type for predict
 class_info <- list(
   pre = NULL,
   post = NULL,
@@ -26,8 +27,8 @@ reg_info_raw$args$type <- "raw"
 
 add_linear_reg_h2o <- function() {
   parsnip::set_model_engine("linear_reg", "regression", "h2o")
-  parsnip::set_dependency("linear_reg", "h2o", "h2o")
-  parsnip::set_dependency("linear_reg", "h2o", "agua")
+  parsnip::set_dependency("linear_reg", "h2o", "h2o", "regression")
+  parsnip::set_dependency("linear_reg", "h2o", "agua", "regression")
 
   parsnip::set_model_arg(
     model = "linear_reg",
@@ -69,8 +70,6 @@ add_linear_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
-  # regression predict
   parsnip::set_pred(
     model = "linear_reg",
     eng = "h2o",
@@ -89,8 +88,8 @@ add_linear_reg_h2o <- function() {
 
 add_logistic_reg_h2o <- function() {
   parsnip::set_model_engine("logistic_reg", "classification", "h2o")
-  parsnip::set_dependency("logistic_reg", "h2o", "h2o")
-  parsnip::set_dependency("logistic_reg", "h2o", "agua")
+  parsnip::set_dependency("logistic_reg", "h2o", "h2o", "classification")
+  parsnip::set_dependency("logistic_reg", "h2o", "agua", "classification")
 
   parsnip::set_model_arg(
     model = "logistic_reg",
@@ -121,7 +120,6 @@ add_logistic_reg_h2o <- function() {
       )
     )
   )
-
   parsnip::set_encoding(
     model = "logistic_reg",
     eng = "h2o",
@@ -133,7 +131,6 @@ add_logistic_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
   parsnip::set_pred(
     model = "logistic_reg",
     eng = "h2o",
@@ -148,30 +145,12 @@ add_logistic_reg_h2o <- function() {
     type = "prob",
     value = class_info_prob
   )
-  # TODO: type "raw", can h2o.predict return raw values?
-  # parsnip::set_pred(
-  #   model = "logistic_reg",
-  #   eng = "h2o",
-  #   mode = "classification",
-  #   type = "raw",
-  #   value = list(
-  #     pre = NULL,
-  #     post = NULL,
-  #     func = c(pkg = "agua", fun = "h2o_predict_glm"),
-  #     args = list(
-  #       object = quote(object$fit),
-  #       new_data = quote(new_data),
-  #       type = "raw"
-  #     )
-  #   )
-  # )
 }
 
 add_multinom_reg_h2o <- function() {
   parsnip::set_model_engine("multinom_reg", "classification", "h2o")
-  parsnip::set_dependency("multinom_reg", "h2o", "h2o")
-  parsnip::set_dependency("multinom_reg", "h2o", "agua")
-
+  parsnip::set_dependency("multinom_reg", "h2o", "h2o", "classification")
+  parsnip::set_dependency("multinom_reg", "h2o", "agua", "classification")
 
   parsnip::set_model_arg(
     model = "multinom_reg",
@@ -213,8 +192,6 @@ add_multinom_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
-  # classification predict
   parsnip::set_pred(
     model = "multinom_reg",
     eng = "h2o",
@@ -229,21 +206,6 @@ add_multinom_reg_h2o <- function() {
     type = "prob",
     value = class_info_prob
   )
-  # parsnip::set_pred(
-  #   model = "multinom_reg",
-  #   eng = "h2o",
-  #   mode = "classification",
-  #   type = "raw",
-  #   value = list(
-  #     pre = function(x, object) h2o::as.h2o(x),
-  #     post = function(x, object) as.data.frame(x),
-  #     func = c(pkg = "h2o", fun = "h2o.predict"),
-  #     args = list(
-  #       object = quote(object$fit),
-  #       newdata = quote(new_data)
-  #     )
-  #   )
-  # )
 }
 
 
@@ -252,7 +214,6 @@ add_rand_forest_h2o <- function() {
   parsnip::set_model_engine("rand_forest", "regression", "h2o")
   parsnip::set_dependency("rand_forest", "h2o", "h2o")
   parsnip::set_dependency("rand_forest", "h2o", "agua")
-
 
   parsnip::set_model_arg(
     model = "rand_forest",
@@ -322,7 +283,6 @@ add_rand_forest_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
   # regression predict
   parsnip::set_pred(
     model = "rand_forest",
@@ -338,7 +298,6 @@ add_rand_forest_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
-
   # classification predict
   parsnip::set_pred(
     model = "rand_forest",
@@ -354,21 +313,6 @@ add_rand_forest_h2o <- function() {
     type = "prob",
     value = class_info_prob
   )
-  # parsnip::set_pred(
-  #   model = "rand_forest",
-  #   eng = "h2o",
-  #   mode = "classification",
-  #   type = "raw",
-  #   value = list(
-  #     pre = function(x, object) h2o::as.h2o(x),
-  #     post = function(x, object) as.data.frame(x),
-  #     func = c(pkg = "h2o", fun = "h2o.predict"),
-  #     args = list(
-  #       object = quote(object$fit),
-  #       newdata = quote(new_data)
-  #     )
-  #   )
-  # )
 }
 
 add_boost_tree_h2o <- function() {
@@ -485,7 +429,6 @@ add_boost_tree_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
   # regression predict
   parsnip::set_pred(
     model = "boost_tree",
@@ -501,7 +444,6 @@ add_boost_tree_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
-
   # classification predict
   parsnip::set_pred(
     model = "boost_tree",
@@ -517,28 +459,12 @@ add_boost_tree_h2o <- function() {
     type = "prob",
     value = class_info_prob
   )
-  # parsnip::set_pred(
-  #   model = "boost_tree",
-  #   eng = "h2o",
-  #   mode = "classification",
-  #   type = "raw",
-  #   value = list(
-  #     pre = function(x, object) h2o::as.h2o(x),
-  #     post = function(x, object) as.data.frame(x),
-  #     func = c(pkg = "h2o", fun = "h2o.predict"),
-  #     args = list(
-  #       object = quote(object$fit),
-  #       newdata = quote(new_data)
-  #     )
-  #   )
-  # )
 }
 
 add_naive_Bayes_h2o <- function() {
   parsnip::set_model_engine("naive_Bayes", "classification", "h2o")
-  parsnip::set_dependency("naive_Bayes", "h2o", "h2o")
-  parsnip::set_dependency("naive_Bayes", "h2o", "agua")
-
+  parsnip::set_dependency("naive_Bayes", "h2o", "h2o", "classification")
+  parsnip::set_dependency("naive_Bayes", "h2o", "agua", "classification")
 
   parsnip::set_model_arg(
     model = "naive_Bayes",
@@ -570,7 +496,6 @@ add_naive_Bayes_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
   parsnip::set_pred(
     model = "naive_Bayes",
     eng = "h2o",
@@ -585,21 +510,6 @@ add_naive_Bayes_h2o <- function() {
     type = "prob",
     value = class_info_prob
   )
-  # parsnip::set_pred(
-  #   model = "naive_Bayes",
-  #   eng = "h2o",
-  #   mode = "classification",
-  #   type = "raw",
-  #   value = list(
-  #     pre = function(x, object) h2o::as.h2o(x),
-  #     post = function(x, object) as.data.frame(x),
-  #     func = c(pkg = "h2o", fun = "h2o.predict"),
-  #     args = list(
-  #       object = quote(object$fit),
-  #       newdata = quote(new_data)
-  #     )
-  #   )
-  # )
 }
 
 add_mlp_h2o <- function() {
@@ -607,8 +517,6 @@ add_mlp_h2o <- function() {
   parsnip::set_model_engine("mlp", "regression", "h2o")
   parsnip::set_dependency("mlp", "h2o", "h2o")
   parsnip::set_dependency("mlp", "h2o", "agua")
-
-
 
   parsnip::set_model_arg(
     model = "mlp",
@@ -703,7 +611,6 @@ add_mlp_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
   # regression predict
   parsnip::set_pred(
     model = "mlp",
@@ -719,7 +626,6 @@ add_mlp_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
-
   # classification predict
   parsnip::set_pred(
     model = "mlp",
@@ -735,21 +641,6 @@ add_mlp_h2o <- function() {
     type = "prob",
     value = class_info_prob
   )
-  # parsnip::set_pred(
-  #   model = "mlp",
-  #   eng = "h2o",
-  #   mode = "classification",
-  #   type = "raw",
-  #   value = list(
-  #     pre = function(x, object) h2o::as.h2o(x),
-  #     post = function(x, object) as.data.frame(x),
-  #     func = c(pkg = "h2o", fun = "h2o.predict"),
-  #     args = list(
-  #       object = quote(object$fit),
-  #       newdata = quote(new_data)
-  #     )
-  #   )
-  # )
 }
 
 add_rule_fit_h2o <- function() {
@@ -757,7 +648,6 @@ add_rule_fit_h2o <- function() {
   parsnip::set_model_engine("rule_fit", "regression", "h2o")
   parsnip::set_dependency("rule_fit", "h2o", "h2o")
   parsnip::set_dependency("rule_fit", "h2o", "agua")
-
 
   parsnip::set_model_arg(
     model = "rule_fit",
@@ -827,7 +717,6 @@ add_rule_fit_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
-
   # regression predict
   parsnip::set_pred(
     model = "rule_fit",
@@ -843,7 +732,6 @@ add_rule_fit_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
-
   # classification predict
   parsnip::set_pred(
     model = "rule_fit",
@@ -859,21 +747,6 @@ add_rule_fit_h2o <- function() {
     type = "prob",
     value = class_info_prob
   )
-  # parsnip::set_pred(
-  #   model = "rule_fit",
-  #   eng = "h2o",
-  #   mode = "classification",
-  #   type = "raw",
-  #   value = list(
-  #     pre = function(x, object) h2o::as.h2o(x),
-  #     post = function(x, object) as.data.frame(x),
-  #     func = c(pkg = "h2o", fun = "h2o.predict"),
-  #     args = list(
-  #       object = quote(object$fit),
-  #       newdata = quote(new_data)
-  #     )
-  #   )
-  # )
 }
 
 
