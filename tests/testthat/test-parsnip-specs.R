@@ -64,6 +64,22 @@ test_that("logistic regression specs", {
   )
 })
 
+test_that("poisson regression specs", {
+  expect_snapshot(
+    poisson_reg(engine = "h2o", mixture = 0.5, penalty = 1e-2) %>%
+      set_engine("h2o") %>%
+      set_mode("regression") %>%
+      translate()
+  )
+
+  expect_snapshot(
+    poisson_reg(engine = "h2o", mixture = 0.5, penalty = 1e-2) %>%
+      set_engine("h2o", solver = "L_BFGS") %>%
+      set_mode("regression") %>%
+      translate()
+  )
+})
+
 test_that("multinomial regression specs", {
   expect_snapshot(
     multinom_reg(mixture = 0.5, penalty = 1e-2) %>%

@@ -156,6 +156,45 @@
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
           alpha = 0.5, theta = 1e-05, family = "binomial")
 
+# poisson regression specs
+
+    Code
+      poisson_reg(engine = "h2o", mixture = 0.5, penalty = 0.01) %>% set_engine("h2o") %>%
+        set_mode("regression") %>% translate()
+    Output
+      Poisson Regression Model Specification (regression)
+      
+      Main Arguments:
+        penalty = 0.01
+        mixture = 0.5
+      
+      Computational engine: h2o 
+      
+      Model fit template:
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
+          alpha = 0.5, family = "poisson")
+
+---
+
+    Code
+      poisson_reg(engine = "h2o", mixture = 0.5, penalty = 0.01) %>% set_engine("h2o",
+        solver = "L_BFGS") %>% set_mode("regression") %>% translate()
+    Output
+      Poisson Regression Model Specification (regression)
+      
+      Main Arguments:
+        penalty = 0.01
+        mixture = 0.5
+      
+      Engine-Specific Arguments:
+        solver = L_BFGS
+      
+      Computational engine: h2o 
+      
+      Model fit template:
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
+          alpha = 0.5, solver = "L_BFGS", family = "poisson")
+
 # multinomial regression specs
 
     Code

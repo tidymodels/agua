@@ -147,6 +147,67 @@ add_logistic_reg_h2o <- function() {
   )
 }
 
+add_poisson_reg_h2o <- function() {
+  parsnip::set_model_engine("poisson_reg", "regression", "h2o")
+  parsnip::set_dependency("poisson_reg", "h2o", "h2o", "regression")
+  parsnip::set_dependency("poisson_reg", "h2o", "agua", "regression")
+
+  parsnip::set_model_arg(
+    model = "poisson_reg",
+    eng = "h2o",
+    parsnip = "mixture",
+    original = "alpha",
+    func = list(pkg = "dials", fun = "mixture"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "poisson_reg",
+    eng = "h2o",
+    parsnip = "penalty",
+    original = "lambda",
+    func = list(pkg = "dials", fun = "penalty"),
+    has_submodel = FALSE
+  )
+  parsnip::set_fit(
+    model = "poisson_reg",
+    eng = "h2o",
+    mode = "regression",
+    value = list(
+      interface = "data.frame",
+      protect = c("x", "y"),
+      func = c(pkg = "agua", fun = "h2o_train_glm"),
+      defaults = list(
+        family = "poisson"
+      )
+    )
+  )
+  parsnip::set_encoding(
+    model = "poisson_reg",
+    eng = "h2o",
+    mode = "regression",
+    options = list(
+      predictor_indicators = "none",
+      compute_intercept = FALSE,
+      remove_intercept = FALSE,
+      allow_sparse_x = FALSE
+    )
+  )
+  parsnip::set_pred(
+    model = "poisson_reg",
+    eng = "h2o",
+    mode = "regression",
+    type = "numeric",
+    value = reg_info
+  )
+  parsnip::set_pred(
+    model = "poisson_reg",
+    eng = "h2o",
+    mode = "regression",
+    type = "raw",
+    value = reg_info_raw
+  )
+}
+
 add_multinom_reg_h2o <- function() {
   parsnip::set_model_engine("multinom_reg", "classification", "h2o")
   parsnip::set_dependency("multinom_reg", "h2o", "h2o", "classification")

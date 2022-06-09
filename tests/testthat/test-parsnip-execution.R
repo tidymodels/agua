@@ -7,44 +7,49 @@ test_that('parsnip model execution', {
 
   data("two_class_dat", package = "modeldata")
 
-  expect_reg <- function(spec, expected_pred, ...) {
+  expect_reg <- function(spec,
+                         expected_pred,
+                         formula = mpg ~ .,
+                         data = mtcars,
+                         ...) {
     set.seed(1)
     fit_reg <- spec %>%
       set_engine("h2o", ...) %>%
       set_mode("regression") %>%
-      fit(mpg ~ ., data = mtcars)
-    pred_reg <- predict(fit_reg, head(mtcars))
+      fit(formula, data = data)
+    pred_reg <- predict(fit_reg, head(data))
 
     eval(bquote(expect_snapshot(fit_reg)))
     eval(bquote(expect_equal(class(fit_reg), c("_H2ORegressionModel", "model_fit"))))
     eval(bquote(expect_equal(pred_reg$.pred, expected_pred)))
   }
 
-  expect_class <- function(spec, expected_pred, ...) {
+
+  expect_class <- function(spec,
+                           expected_pred,
+                           formula = Class ~ .,
+                           data = two_class_dat,
+                           ...) {
     set.seed(1)
+    mod <- class(spec)[1]
     fit_class <- spec %>%
       set_engine("h2o", ...) %>%
       set_mode("classification") %>%
-      fit(Class ~ ., data = two_class_dat)
-    pred_class <- predict(fit_class, head(two_class_dat), type = "prob")
+      fit(formula, data = data)
+    pred_class <- predict(fit_class, head(data), type = "prob")
 
     eval(bquote(expect_snapshot(fit_class)))
-    eval(bquote(expect_equal(class(fit_class), c("_H2OBinomialModel", "model_fit"))))
-    eval(bquote(expect_equal(pred_class$.pred_Class2, expected_pred)))
-  }
+    if (!identical(mod, "multinom_reg")) {
+      eval(bquote(expect_equal(class(fit_class),
+                               c("_H2OBinomialModel", "model_fit"))))
+      eval(bquote(expect_equal(pred_class[[2]], expected_pred)))
+    } else {
+      eval(bquote(expect_equal(class(fit_class),
+                               c("_H2OMultinomialModel", "model_fit"))))
+      eval(bquote(expect_equal(pred_class[[1]], expected_pred[[1]])))
+      eval(bquote(expect_equal(pred_class[[2]], expected_pred[[2]])))
+    }
 
-  expect_multi_class <- function(spec, expected_pred1, expected_pred2, ...) {
-    set.seed(1)
-    fit_class <- spec %>%
-      set_engine("h2o", ...) %>%
-      set_mode("classification") %>%
-      fit(Species ~ ., data = iris)
-    pred_class <- predict(fit_class, head(iris), type = "prob")
-
-    eval(bquote(expect_snapshot(fit_class)))
-    eval(bquote(expect_equal(class(fit_class), c("_H2OMultinomialModel", "model_fit"))))
-    eval(bquote(expect_equal(pred_class$.pred_setosa, expected_pred1)))
-    eval(bquote(expect_equal(pred_class$.pred_versicolor, expected_pred2)))
   }
 
   # random forest regression
@@ -81,10 +86,21 @@ test_that('parsnip model execution', {
                  0.408943488, 0.567220135, 0.798129245)
   )
 
+  # poisson_regression
+  expect_reg(poisson_reg(engine = "h2o"),
+             c(26.9557559, 24.9799984, 36.2847662, 45.7794546, 10.4762436, 9.7083736),
+             formula = Freq ~ .,
+             data = as.data.frame(Titanic)
+  )
+
   # multinomial classification
-  expect_multi_class(multinom_reg(),
-                     c(0.99831868, 0.99091443, 0.99807912, 0.99691936, 0.99917055, 0.99824032),
-                     c(0.0016813171, 0.0090855667, 0.0019208824, 0.0030806428, 0.0008294532, 0.0017596838))
+  expect_class(multinom_reg(),
+               list(
+                 c(0.99831868, 0.99091443, 0.99807912, 0.99691936, 0.99917055, 0.99824032),
+                 c(0.0016813171, 0.0090855667, 0.0019208824, 0.0030806428, 0.0008294532, 0.0017596838)
+               ),
+               formula = Species ~ .,
+               data = iris)
 
   # naive bayes classification
   expect_class(naive_Bayes(engine = "h2o", Laplace = 1),

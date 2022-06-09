@@ -142,6 +142,16 @@ h2o_train_glm <-
            lambda = NULL,
            alpha = NULL,
            ...) {
+
+    opts <- list(...)
+    if (opts$family == "poisson") {
+      all_positive <- all(sum(y > 0))
+      all_ints <- rlang::is_integerish(y)
+      if (!(all_positive && all_ints)) {
+        rlang::abort("Poisson regression expects non-negative integer response.")
+      }
+    }
+
     h2o_train(
       x,
       y,
