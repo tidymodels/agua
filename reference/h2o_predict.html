@@ -53,9 +53,9 @@ h2o server cleanup, and so on.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">h2o_predict</span><span class="op">(</span><span class="va">object</span>, <span class="va">new_data</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="fu">h2o_predict_classification</span><span class="op">(</span><span class="va">object</span>, <span class="va">new_data</span>, <span class="va">type</span>, <span class="va">...</span><span class="op">)</span>
+<span class="fu">h2o_predict_classification</span><span class="op">(</span><span class="va">object</span>, <span class="va">new_data</span>, type <span class="op">=</span> <span class="st">"class"</span>, <span class="va">...</span><span class="op">)</span>
 
-<span class="fu">h2o_predict_regression</span><span class="op">(</span><span class="va">object</span>, <span class="va">new_data</span>, <span class="va">type</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+<span class="fu">h2o_predict_regression</span><span class="op">(</span><span class="va">object</span>, <span class="va">new_data</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -90,7 +90,7 @@ rows as <code>new_data</code>. For type == "raw", return original <code><a href=
 <span class="r-in">  <span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">spec</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span class="r-in">  <span class="fu">h2o_predict_regression</span><span class="op">(</span><span class="va">mod</span><span class="op">$</span><span class="va">fit</span>, new_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in">  <span class="co"># using pasrsnip</span></span>
+<span class="r-in">  <span class="co"># using parsnip</span></span>
 <span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mod</span>, new_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>

@@ -66,10 +66,34 @@ seed configuration, and so on.</p>
   col_sample_rate <span class="op">=</span> <span class="fl">1</span>,
   min_split_improvement <span class="op">=</span> <span class="fl">0</span>,
   stopping_rounds <span class="op">=</span> <span class="fl">0</span>,
+  validation <span class="op">=</span> <span class="fl">0</span>,
   <span class="va">...</span>
 <span class="op">)</span>
 
-<span class="fu">h2o_train_glm</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, lambda <span class="op">=</span> <span class="cn">NULL</span>, alpha <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+<span class="fu">h2o_train_glm</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, lambda <span class="op">=</span> <span class="cn">NULL</span>, alpha <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
+
+<span class="fu">h2o_train_nb</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, laplace <span class="op">=</span> <span class="fl">0</span>, <span class="va">...</span><span class="op">)</span>
+
+<span class="fu">h2o_train_mlp</span><span class="op">(</span>
+  <span class="va">x</span>,
+  <span class="va">y</span>,
+  hidden <span class="op">=</span> <span class="fl">200</span>,
+  l2 <span class="op">=</span> <span class="fl">0</span>,
+  hidden_dropout_ratios <span class="op">=</span> <span class="fl">0</span>,
+  epochs <span class="op">=</span> <span class="fl">10</span>,
+  activation <span class="op">=</span> <span class="st">"Rectifier"</span>,
+  validation <span class="op">=</span> <span class="fl">0</span>,
+  <span class="va">...</span>
+<span class="op">)</span>
+
+<span class="fu">h2o_train_rule</span><span class="op">(</span>
+  <span class="va">x</span>,
+  <span class="va">y</span>,
+  rule_generation_ntrees <span class="op">=</span> <span class="fl">50</span>,
+  max_rule_length <span class="op">=</span> <span class="fl">5</span>,
+  lambda <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -105,12 +129,33 @@ classification and p/3 for regression (where p is the # of predictors Defaults t
 <dt>stopping_rounds</dt>
 <dd><p>Early stopping based on convergence of stopping_metric. Stop if simple moving average of length k of the
 stopping_metric does not improve for k:=stopping_rounds scoring events (0 to disable) Defaults to 0.</p></dd>
+<dt>validation</dt>
+<dd><p>The <em>proportion</em> of the data that are used for performance
+assessment and potential early stopping.</p></dd>
 <dt>lambda</dt>
 <dd><p>Regularization strength</p></dd>
 <dt>alpha</dt>
 <dd><p>Distribution of regularization between the L1 (Lasso) and L2 (Ridge) penalties. A value of 1 for alpha
 represents Lasso regression, a value of 0 produces Ridge regression, and anything in between specifies the
 amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-BFGS'; 0.5 otherwise.</p></dd>
+<dt>laplace</dt>
+<dd><p>Laplace smoothing parameter Defaults to 0.</p></dd>
+<dt>hidden</dt>
+<dd><p>Hidden layer sizes (e.g. [100, 100]). Defaults to c(200, 200).</p></dd>
+<dt>l2</dt>
+<dd><p>L2 regularization (can add stability and improve generalization, causes many weights to be small. Defaults to
+0.</p></dd>
+<dt>hidden_dropout_ratios</dt>
+<dd><p>Hidden layer dropout ratios (can improve generalization), specify one value per hidden layer, defaults to 0.5.</p></dd>
+<dt>epochs</dt>
+<dd><p>How many times the dataset should be iterated (streamed), can be fractional. Defaults to 10.</p></dd>
+<dt>activation</dt>
+<dd><p>Activation function. Must be one of: "Tanh", "TanhWithDropout", "Rectifier", "RectifierWithDropout", "Maxout",
+"MaxoutWithDropout". Defaults to Rectifier.</p></dd>
+<dt>rule_generation_ntrees</dt>
+<dd><p>Specifies the number of trees to build in the tree model. Defaults to 50. Defaults to 50.</p></dd>
+<dt>max_rule_length</dt>
+<dd><p>Maximum length of rules. Defaults to 3.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

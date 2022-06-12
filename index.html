@@ -72,7 +72,7 @@
 <p>There are two main components in agua:</p>
 <ul>
 <li>parsnip engine definitions for the following models:</li>
-<li>Infrastructure for the tune and finetune packages (not yet implemented).</li>
+<li>Infrastructure for the tune and finetune packages (currently in-process).</li>
 </ul>
 <p>When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to <code>h2o.grid()</code> to process them.</p>
 <p>This work is based on @stevenpawley’s <a href="https://github.com/stevenpawley/h2oparsnip" class="external-link">h2oparsnip</a> package. Additional work was done by Qiushi Yan for his 2022 summer internship at RStudio.</p>
@@ -81,7 +81,8 @@
 </h2>
 <p>The CRAN version of the package can be installed via</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"agua"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="co"># Not yet!</span>
+<span class="co"># install.packages("agua")</span></code></pre></div>
 <p>You can also install the development version of agua using:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://pak.r-lib.org/" class="external-link">pak</a></span><span class="op">)</span>
@@ -133,6 +134,7 @@
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=agua" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/tidymodels/agua/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/tidymodels/agua/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
