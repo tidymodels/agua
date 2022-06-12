@@ -8,9 +8,9 @@
 \usage{
 h2o_predict(object, new_data, ...)
 
-h2o_predict_classification(object, new_data, type, ...)
+h2o_predict_classification(object, new_data, type = "class", ...)
 
-h2o_predict_regression(object, new_data, type, ...)
+h2o_predict_regression(object, new_data, type = "numeric", ...)
 }
 \arguments{
 \item{object}{An object of class \code{model_fit}}
@@ -44,7 +44,7 @@ if (h2o_running()) {
   mod <- fit(spec, mpg ~ ., data = mtcars)
   h2o_predict_regression(mod$fit, new_data = head(mtcars), type = "numeric")
 
-  # using pasrsnip
+  # using parsnip
   predict(mod, new_data = head(mtcars))
 }
 }

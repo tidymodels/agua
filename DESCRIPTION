@@ -19,10 +19,11 @@ BugReports: https://github.com/tidymodels/agua/issues
 Depends: 
     parsnip
 Imports: 
+    dials,
     dplyr,
     glue,
     h2o (>= 3.36.1.2),
-    hardhat,
+    hardhat (>= 1.1.0),
     purrr,
     recipes,
     rlang,
@@ -39,7 +40,7 @@ Suggests:
     knitr,
     modeldata,
     testthat (>= 3.0.0)
-Remotes:  
+Remotes: 
     tidymodels/tune,
     tidymodels/parsnip
 Config/Needs/website: tidyverse/tidytemplate

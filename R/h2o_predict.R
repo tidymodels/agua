@@ -20,7 +20,7 @@
 #'   mod <- fit(spec, mpg ~ ., data = mtcars)
 #'   h2o_predict_regression(mod$fit, new_data = head(mtcars), type = "numeric")
 #'
-#'   # using pasrsnip
+#'   # using parsnip
 #'   predict(mod, new_data = head(mtcars))
 #' }
 h2o_predict <- function(object, new_data, ...) {
@@ -41,23 +41,35 @@ h2o_predict <- function(object, new_data, ...) {
 
 #' @export
 #' @rdname h2o_predict
-h2o_predict_classification <- function(object, new_data, type, ...) {
+h2o_predict_classification <- function(object, new_data, type = "class", ...) {
   res <- h2o_predict(object, new_data, ...)
+  all_types <- c("class", "prob")
+
   switch(type,
     "class" = res$predict,
     "prob" = res[, 2:ncol(res)],
     # TODO: type "raw", can h2o.predict return raw values?
-    rlang::abort(glue::glue("prediction type `{type}` is not supported."))
+    rlang::abort(
+      glue::glue(
+        "Prediction type `{type}` is not supported by the h2o engine. Possible values are {toString{all_types}.}"
+      )
+    )
   )
 }
 
 #' @export
 #' @rdname h2o_predict
-h2o_predict_regression <- function(object, new_data, type, ...) {
+h2o_predict_regression <- function(object, new_data, type = "numeric", ...) {
   res <- h2o_predict(object, new_data, ...)
+  all_types <- c("numeric", "raw")
+
   switch(type,
     "numeric" = res$predict,
     "raw" = res,
-    rlang::abort(glue::glue("prediction type `{type}` is not supported."))
+    rlang::abort(
+      glue::glue(
+        "Prediction type `{type}` is not supported by the h2o engine. Possible values are {toString{all_types}.}"
+      )
+    )
   )
 }
