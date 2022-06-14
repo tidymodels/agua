@@ -144,7 +144,7 @@ h2o_train_glm <-
            ...) {
 
     opts <- list(...)
-    if (opts$family == "poisson") {
+    if (length(opts) >= 1 && opts$family == "poisson") {
       all_positive <- all(sum(y > 0))
       all_ints <- rlang::is_integerish(y)
       if (!(all_positive && all_ints)) {
