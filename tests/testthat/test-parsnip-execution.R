@@ -1,5 +1,5 @@
 test_that("random forest execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   expect_reg(rand_forest(mtry = 2, trees = 5),
              c(19.100000, 19.100000, 22.439999, 19.770000, 17.865000, 19.163333)
@@ -10,20 +10,18 @@ test_that("random forest execution", {
 })
 
 test_that("xgboost execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   skip_if_not(h2o::h2o.xgboost.available())
   expect_reg(boost_tree(learn_rate = .1, trees = 5),
              c( 8.96138000488281, 8.96138000488281, 10.2200937271118,
                 8.28253364562988, 6.63353729248047, 8.28253364562988))
-
   expect_class(boost_tree(learn_rate = .1, trees = 20),
-               c( 8.96138000488281, 8.96138000488281, 10.2200937271118,
-                  8.28253364562988, 6.63353729248047, 8.28253364562988))
+               c(1, 0, 1, 0, 1, 1))
 })
 
 test_that("linear regression execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   expect_reg(linear_reg(),
              c(21.948257, 21.646053, 25.345465, 20.448832, 17.044916, 20.125847)
@@ -31,7 +29,7 @@ test_that("linear regression execution", {
 })
 
 test_that("logistic regression execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   expect_class(logistic_reg(),
                c(0.486674849, 0.097683696, 0.355450942,
@@ -40,7 +38,7 @@ test_that("logistic regression execution", {
 })
 
 test_that("poisson regression execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   expect_reg(poisson_reg(engine = "h2o"),
              c(26.9557559, 24.9799984, 36.2847662, 45.7794546, 10.4762436, 9.7083736),
@@ -50,7 +48,7 @@ test_that("poisson regression execution", {
 })
 
 test_that("multinomial regression execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   expect_class(multinom_reg(),
                list(
@@ -63,7 +61,7 @@ test_that("multinomial regression execution", {
 })
 
 test_that("naive bayes execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   expect_class(naive_Bayes(engine = "h2o", Laplace = 1),
                c(0.47724811, 0.15598391, 0.24309786, 0.87980213, 0.82694825, 0.96210559)
@@ -71,9 +69,8 @@ test_that("naive bayes execution", {
 })
 
 test_that("mlp execution", {
-  h2o::h2o.init()
-
   skip("seeding issue with mlp")
+  h2o_start()
   expect_reg(mlp(hidden_units = 100),
              c(21.591594, 20.779010, 26.678451, 20.876708, 17.381320, 19.551599)
   )
@@ -83,7 +80,7 @@ test_that("mlp execution", {
 })
 
 test_that("rule fit execution", {
-  h2o::h2o.init()
+  h2o_start()
 
   expect_reg(rule_fit(engine = "h2o", trees = 100, tree_depth = 5),
                c(22.201423, 21.536628, 24.981005, 20.558594, 17.320593, 19.990024)

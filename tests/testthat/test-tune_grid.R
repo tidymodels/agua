@@ -1,8 +1,8 @@
 data(two_class_dat, package = "modeldata")
-h2o::h2o.init()
+
 test_that("tune model only (with id)", {
   # skip("h2o server issues with testthat")
-  set.seed(1)
+  h2o_start()
 
   helper_objects <- helper_objects_agua()
   wflow <- workflows::workflow() %>%
@@ -19,7 +19,7 @@ test_that("tune model only (with id)", {
 
 test_that("tune model only (without id)", {
   # skip("h2o server issues with testthat")
-  skip_if_not(h2o_running())
+  h2o_start()
 
   helper_objects <- helper_objects_agua()
   wflow <- workflows::workflow() %>%
