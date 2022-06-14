@@ -52,7 +52,7 @@ add_linear_reg_h2o <- function() {
     mode = "regression",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_glm"),
       defaults = list(
         family = "gaussian"
@@ -113,7 +113,7 @@ add_logistic_reg_h2o <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_glm"),
       defaults = list(
         family = "binomial"
@@ -174,7 +174,7 @@ add_poisson_reg_h2o <- function() {
     mode = "regression",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_glm"),
       defaults = list(
         family = "poisson"
@@ -235,7 +235,7 @@ add_multinom_reg_h2o <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y", "family"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_glm"),
       defaults = list(
         family = "multinomial"
@@ -306,7 +306,7 @@ add_rand_forest_h2o <- function() {
     mode = "regression",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_rf"),
       defaults = list()
     )
@@ -317,7 +317,7 @@ add_rand_forest_h2o <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_rf"),
       defaults = list()
     )
@@ -452,7 +452,7 @@ add_boost_tree_h2o <- function() {
     mode = "regression",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_xgboost"),
       defaults = list()
     )
@@ -463,7 +463,7 @@ add_boost_tree_h2o <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_xgboost"),
       defaults = list()
     )
@@ -541,7 +541,7 @@ add_naive_Bayes_h2o <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_nb"),
       defaults = list()
     )
@@ -634,7 +634,7 @@ add_mlp_h2o <- function() {
     mode = "regression",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_mlp"),
       defaults = list()
     )
@@ -645,7 +645,7 @@ add_mlp_h2o <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_mlp"),
       defaults = list()
     )
@@ -740,7 +740,7 @@ add_rule_fit_h2o <- function() {
     mode = "regression",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_rule"),
       defaults = list()
     )
@@ -751,7 +751,7 @@ add_rule_fit_h2o <- function() {
     mode = "classification",
     value = list(
       interface = "data.frame",
-      protect = c("x", "y"),
+      protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_rule"),
       defaults = list()
     )

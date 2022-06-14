@@ -42,17 +42,26 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
-h2o_train <- function(x, y, model, ...) {
+h2o_train <- function(x, y, model,  ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
   x_names <- names(x)
   x$.outcome <- y
 
+  # if passed in case weights
+  weights <- opts$weights
+  opts$weights <- NULL
+  if (!is.null(weights)) {
+    x$.weights <- weights
+    opts$weights_column <- ".weights"
+  }
+
   validation <- opts$validation
   opts$validation <- NULL
 
+  # if passed in validation, split x into train and validation set
   if (!is.null(validation) && validation > 0) {
-    # split x into train and validation set
+
     n <- nrow(x)
     m <- floor(n * (1 - validation)) + 1
     train_index <- sample(1:n, size = max(m, 2))
