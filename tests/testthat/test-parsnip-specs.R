@@ -1,5 +1,3 @@
-library(testthat)
-
 test_that("random forest specs", {
   expect_snapshot(
     rand_forest(mtry = 2, trees = 1000) %>%
