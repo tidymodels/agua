@@ -100,11 +100,16 @@ rename_grid_h2o <- function(grid, workflow) {
 }
 
 
-
+#' Silently start h2o server
+#' @return The output from [h2o::h2o.init()]
+#' @export
+#' @examples
+#' h2o_start()
 h2o_start <- function() {
   res <- utils::capture.output(h2o:::with_no_h2o_progress(
     h2o::h2o.init()
   ), "output")
+  invisible(res)
 }
 
 # ------------------------------------------------------------------------------
