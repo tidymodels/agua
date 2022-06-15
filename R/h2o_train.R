@@ -12,8 +12,10 @@
 #' @param x A data frame of predictors
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
-#' `"randomForest"`, `"xgboost"`, and `"glm"`. Use [h2o::h2o.xgboost.available()]
-#' to see if that model can be used on your OS/h2o server.
+#' `"randomForest"`, `"xgboost"`, `"glm"`, `"deeplearning"`, `"rulefit"` and
+#' `"naiveBayes"`. Use [h2o::h2o.xgboost.available()] to see if xgboost
+#' can be used on your OS/h2o server.
+#' @param weights A numeric vector of case weights.
 #' @param validation The _proportion_ of the data that are used for performance
 #' assessment and potential early stopping.
 #' @param ... Other options to pass to the h2o model functions (e.g.,
@@ -42,21 +44,22 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
-#' @details
-#' For fitting neural networks with `h2o_train_mlp()`, the underlying h2o
-#' function [h2o::h2o.deeplearning()] ignores the seed and can produce different
-#' models that cannot be reproduced.
-h2o_train <- function(x, y, model, ...) {
+h2o_train <- function(x, y, model, weights = NULL,  ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
   x_names <- names(x)
   x$.outcome <- y
 
+  # if passed in case weights
+  if (!is.null(weights)) {
+    x$.weights <- weights
+    opts$weights_column <- ".weights"
+  }
+
   validation <- opts$validation
   opts$validation <- NULL
-
+  # if passed in validation, split x into train and validation set
   if (!is.null(validation) && validation > 0) {
-    # split x into train and validation set
     n <- nrow(x)
     m <- floor(n * (1 - validation)) + 1
     train_index <- sample(1:n, size = max(m, 2))
