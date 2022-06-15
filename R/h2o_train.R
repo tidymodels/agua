@@ -42,6 +42,10 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
+#' @details
+#' For fitting neural networks with `h2o_train_mlp()`, the underlying h2o
+#' function [h2o::h2o.deeplearning()] ignores the seed and can produce different
+#' models that cannot be reproduced.
 h2o_train <- function(x, y, model, ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
