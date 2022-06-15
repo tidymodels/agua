@@ -51,7 +51,7 @@ seed configuration, and so on.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">h2o_train</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">model</span>, <span class="va">...</span><span class="op">)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">h2o_train</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">model</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="fu">h2o_train_rf</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, ntrees <span class="op">=</span> <span class="fl">50</span>, mtries <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, min_rows <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
 
@@ -100,66 +100,120 @@ seed configuration, and so on.</p>
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>A data frame of predictors</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A vector of outcomes.</p></dd>
+
+
 <dt>model</dt>
 <dd><p>A character string for the model. Current selections are
-<code>"randomForest"</code>, <code>"xgboost"</code>, and <code>"glm"</code>. Use <code><a href="https://rdrr.io/pkg/h2o/man/h2o.xgboost.available.html" class="external-link">h2o::h2o.xgboost.available()</a></code>
-to see if that model can be used on your OS/h2o server.</p></dd>
+<code>"randomForest"</code>, <code>"xgboost"</code>, <code>"glm"</code>, <code>"deeplearning"</code>, <code>"rulefit"</code> and
+<code>"naiveBayes"</code>. Use <code><a href="https://rdrr.io/pkg/h2o/man/h2o.xgboost.available.html" class="external-link">h2o::h2o.xgboost.available()</a></code> to see if xgboost
+can be used on your OS/h2o server.</p></dd>
+
+
+<dt>weights</dt>
+<dd><p>A numeric vector of case weights.</p></dd>
+
+
 <dt>...</dt>
 <dd><p>Other options to pass to the h2o model functions (e.g.,
 <code><a href="https://rdrr.io/pkg/h2o/man/h2o.randomForest.html" class="external-link">h2o::h2o.randomForest()</a></code>).</p></dd>
+
+
 <dt>ntrees</dt>
 <dd><p>Number of trees. Defaults to 50.</p></dd>
+
+
 <dt>mtries</dt>
 <dd><p>Number of variables randomly sampled as candidates at each split. If set to -1, defaults to sqrtp for
 classification and p/3 for regression (where p is the # of predictors Defaults to -1.</p></dd>
+
+
 <dt>min_rows</dt>
 <dd><p>Fewest allowed (weighted) observations in a leaf. Defaults to 1.</p></dd>
+
+
 <dt>max_depth</dt>
 <dd><p>Maximum tree depth (0 for unlimited). Defaults to 20.</p></dd>
+
+
 <dt>learn_rate</dt>
 <dd><p>(same as eta) Learning rate (from 0.0 to 1.0) Defaults to 0.3.</p></dd>
+
+
 <dt>sample_rate</dt>
 <dd><p>Row sample rate per tree (from 0.0 to 1.0) Defaults to 0.632.</p></dd>
+
+
 <dt>col_sample_rate</dt>
 <dd><p>(same as colsample_bylevel) Column sample rate (from 0.0 to 1.0) Defaults to 1.</p></dd>
+
+
 <dt>min_split_improvement</dt>
 <dd><p>Minimum relative improvement in squared error reduction for a split to happen Defaults to 1e-05.</p></dd>
+
+
 <dt>stopping_rounds</dt>
 <dd><p>Early stopping based on convergence of stopping_metric. Stop if simple moving average of length k of the
 stopping_metric does not improve for k:=stopping_rounds scoring events (0 to disable) Defaults to 0.</p></dd>
+
+
 <dt>validation</dt>
 <dd><p>The <em>proportion</em> of the data that are used for performance
 assessment and potential early stopping.</p></dd>
+
+
 <dt>lambda</dt>
 <dd><p>Regularization strength</p></dd>
+
+
 <dt>alpha</dt>
 <dd><p>Distribution of regularization between the L1 (Lasso) and L2 (Ridge) penalties. A value of 1 for alpha
 represents Lasso regression, a value of 0 produces Ridge regression, and anything in between specifies the
 amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-BFGS'; 0.5 otherwise.</p></dd>
+
+
 <dt>laplace</dt>
 <dd><p>Laplace smoothing parameter Defaults to 0.</p></dd>
+
+
 <dt>hidden</dt>
 <dd><p>Hidden layer sizes (e.g. [100, 100]). Defaults to c(200, 200).</p></dd>
+
+
 <dt>l2</dt>
 <dd><p>L2 regularization (can add stability and improve generalization, causes many weights to be small. Defaults to
 0.</p></dd>
+
+
 <dt>hidden_dropout_ratios</dt>
 <dd><p>Hidden layer dropout ratios (can improve generalization), specify one value per hidden layer, defaults to 0.5.</p></dd>
+
+
 <dt>epochs</dt>
 <dd><p>How many times the dataset should be iterated (streamed), can be fractional. Defaults to 10.</p></dd>
+
+
 <dt>activation</dt>
 <dd><p>Activation function. Must be one of: "Tanh", "TanhWithDropout", "Rectifier", "RectifierWithDropout", "Maxout",
 "MaxoutWithDropout". Defaults to Rectifier.</p></dd>
+
+
 <dt>rule_generation_ntrees</dt>
 <dd><p>Specifies the number of trees to build in the tree model. Defaults to 50. Defaults to 50.</p></dd>
+
+
 <dt>max_rule_length</dt>
 <dd><p>Maximum length of rules. Defaults to 3.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An h2o model object.</p>
+    
+
+<p>An h2o model object.</p>
     </div>
 
     <div class="section level2">
@@ -198,7 +252,7 @@ amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-B
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
   </div></footer></body></html>
