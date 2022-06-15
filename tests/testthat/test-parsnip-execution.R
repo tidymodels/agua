@@ -2,32 +2,23 @@ test_that("random forest execution", {
   h2o_start()
 
   expect_h2o_fit(rand_forest(mtry = 2, trees = 5) %>%
-               set_mode("regression"))
+                   set_mode("regression"))
 
   expect_h2o_fit(rand_forest(mtry = 2, trees = 20) %>%
                    set_mode("classification"))
 })
 
-test_that("xgboost execution", {
-  h2o_start()
-
-  skip_if_not(h2o::h2o.xgboost.available())
-  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
-                   set_mode("regression"))
-  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
-                   set_mode("classification"))
-})
 
 test_that("linear regression execution", {
   h2o_start()
 
-  expect_h2o_fit(linear_reg())
+  expect_h2o_fit(linear_reg(penalty = 0.1))
 })
 
 test_that("logistic regression execution", {
   h2o_start()
 
-  expect_h2o_fit(logistic_reg())
+  expect_h2o_fit(logistic_reg(mixture = 1))
 })
 
 test_that("poisson regression execution", {
@@ -69,3 +60,14 @@ test_that("rule fit execution", {
   expect_h2o_fit(rule_fit(engine = "h2o", trees = 10, tree_depth = 3) %>%
                    set_mode("classification"))
 })
+
+test_that("xgboost execution", {
+  h2o_start()
+
+  skip_if_not(h2o::h2o.xgboost.available())
+  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
+                   set_mode("regression"))
+  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
+                   set_mode("classification"))
+})
+
