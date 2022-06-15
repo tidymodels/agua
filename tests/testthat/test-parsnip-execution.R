@@ -5,6 +5,7 @@ test_that('parsnip model execution', {
   on.exit(try(h2o::h2o.shutdown(prompt = FALSE), silent = TRUE))
   skip_if(!h2o_running())
 
+  skip_if_not_installed("modeldata")
   data("two_class_dat", package = "modeldata")
 
   expect_reg <- function(spec,

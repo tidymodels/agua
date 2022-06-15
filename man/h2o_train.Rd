@@ -10,7 +10,7 @@
 \alias{h2o_train_rule}
 \title{Model wrappers for h2o}
 \usage{
-h2o_train(x, y, model, ...)
+h2o_train(x, y, model, weights = NULL, ...)
 
 h2o_train_rf(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...)
 
@@ -60,8 +60,11 @@ h2o_train_rule(
 \item{y}{A vector of outcomes.}
 
 \item{model}{A character string for the model. Current selections are
-\code{"randomForest"}, \code{"xgboost"}, and \code{"glm"}. Use \code{\link[h2o:h2o.xgboost.available]{h2o::h2o.xgboost.available()}}
-to see if that model can be used on your OS/h2o server.}
+\code{"randomForest"}, \code{"xgboost"}, \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
+\code{"naiveBayes"}. Use \code{\link[h2o:h2o.xgboost.available]{h2o::h2o.xgboost.available()}} to see if xgboost
+can be used on your OS/h2o server.}
+
+\item{weights}{A numeric vector of case weights.}
 
 \item{...}{Other options to pass to the h2o model functions (e.g.,
 \code{\link[h2o:h2o.randomForest]{h2o::h2o.randomForest()}}).}
