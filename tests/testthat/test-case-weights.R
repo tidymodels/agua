@@ -1,5 +1,8 @@
 test_that("case weights works", {
+  skip_if(!interactive())
   skip_if_not_installed("modeldata")
+
+  h2o_start()
   data("two_class_dat", package = "modeldata")
 
   wts <- runif(nrow(two_class_dat))

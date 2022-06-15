@@ -13,8 +13,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_rf(x = missing_arg(), y = missing_arg(), mtries = 2, 
-          ntrees = 1000)
+      agua::h2o_train_rf(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          mtries = 2, ntrees = 1000)
 
 ---
 
@@ -35,8 +35,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_rf(x = missing_arg(), y = missing_arg(), mtries = 2, 
-          ntrees = 1000, sample_rate = 1/3, distribution = "quantile")
+      agua::h2o_train_rf(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          mtries = 2, ntrees = 1000, sample_rate = 1/3, distribution = "quantile")
 
 # xgboost specs
 
@@ -54,7 +54,7 @@
       
       Model fit template:
       agua::h2o_train_xgboost(x = missing_arg(), y = missing_arg(), 
-          ntrees = 1000, learn_rate = 0.1)
+          weights = missing_arg(), ntrees = 1000, learn_rate = 0.1)
 
 ---
 
@@ -76,7 +76,8 @@
       
       Model fit template:
       agua::h2o_train_xgboost(x = missing_arg(), y = missing_arg(), 
-          ntrees = 1000, learn_rate = 0.1, gamma = 1/3, validation = 0.1)
+          weights = missing_arg(), ntrees = 1000, learn_rate = 0.1, 
+          gamma = 1/3, validation = 0.1)
 
 # linear regression specs
 
@@ -93,8 +94,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5, family = "gaussian")
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          lambda = 0.01, alpha = 0.5, family = "gaussian")
 
 ---
 
@@ -114,8 +115,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5, solver = "IRLSM", family = "gaussian")
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          lambda = 0.01, alpha = 0.5, solver = "IRLSM", family = "gaussian")
 
 # logistic regression specs
 
@@ -132,8 +133,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5, family = "binomial")
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          lambda = 0.01, alpha = 0.5, family = "binomial")
 
 ---
 
@@ -153,8 +154,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5, theta = 1e-05, family = "binomial")
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          lambda = 0.01, alpha = 0.5, theta = 1e-05, family = "binomial")
 
 # poisson regression specs
 
@@ -171,8 +172,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5, family = "poisson")
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          lambda = 0.01, alpha = 0.5, family = "poisson")
 
 ---
 
@@ -192,8 +193,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), lambda = 0.01, 
-          alpha = 0.5, solver = "L_BFGS", family = "poisson")
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          lambda = 0.01, alpha = 0.5, solver = "L_BFGS", family = "poisson")
 
 # multinomial regression specs
 
@@ -210,7 +211,7 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), family = missing_arg(), 
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
           lambda = 0.01, alpha = 0.5, family = "multinomial")
 
 ---
@@ -231,7 +232,7 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), family = missing_arg(), 
+      agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
           lambda = 0.01, alpha = 0.5, theta = 1e-05, family = "multinomial")
 
 # naive bayes specs
@@ -248,7 +249,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_nb(x = missing_arg(), y = missing_arg(), laplace = 1)
+      agua::h2o_train_nb(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          laplace = 1)
 
 ---
 
@@ -268,8 +270,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_nb(x = missing_arg(), y = missing_arg(), laplace = 1, 
-          min_sdev = 1e-10, min_prob = 1e-05)
+      agua::h2o_train_nb(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          laplace = 1, min_sdev = 1e-10, min_prob = 1e-05)
 
 # mlp specs
 
@@ -287,8 +289,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), hidden = 100, 
-          l2 = 0.5, activation = "relu")
+      agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          hidden = 100, l2 = 0.5, activation = "relu")
 
 ---
 
@@ -309,8 +311,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), hidden = 100, 
-          l2 = 0.5, activation = "relu", standarize = FALSE)
+      agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          hidden = 100, l2 = 0.5, activation = "relu", standarize = FALSE)
 
 ---
 
@@ -327,8 +329,8 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_rule(x = missing_arg(), y = missing_arg(), rule_generation_ntrees = 100, 
-          max_rule_length = 5)
+      agua::h2o_train_rule(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          rule_generation_ntrees = 100, max_rule_length = 5)
 
 ---
 
@@ -348,6 +350,6 @@
       Computational engine: h2o 
       
       Model fit template:
-      agua::h2o_train_rule(x = missing_arg(), y = missing_arg(), rule_generation_ntrees = 100, 
-          max_rule_length = 5, algorithm = "DRF")
+      agua::h2o_train_rule(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          rule_generation_ntrees = 100, max_rule_length = 5, algorithm = "DRF")
 
