@@ -1,91 +1,71 @@
 test_that("random forest execution", {
   h2o_start()
 
-  expect_reg(rand_forest(mtry = 2, trees = 5),
-             c(19.100000, 19.100000, 22.439999, 19.770000, 17.865000, 19.163333)
-  )
-  expect_class(rand_forest(mtry = 2, trees = 20),
-               c(0.3, 0, 0.85, 0.8, 0.4, 1)
-  )
+  expect_h2o_fit(rand_forest(mtry = 2, trees = 5) %>%
+               set_mode("regression"))
+
+  expect_h2o_fit(rand_forest(mtry = 2, trees = 20) %>%
+                   set_mode("classification"))
 })
 
 test_that("xgboost execution", {
   h2o_start()
 
   skip_if_not(h2o::h2o.xgboost.available())
-  expect_reg(boost_tree(learn_rate = .1, trees = 5),
-             c( 8.96138000488281, 8.96138000488281, 10.2200937271118,
-                8.28253364562988, 6.63353729248047, 8.28253364562988))
-  expect_class(boost_tree(learn_rate = .1, trees = 20),
-               c(1, 0, 1, 0, 1, 1))
+  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
+                   set_mode("regression"))
+  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
+                   set_mode("classification"))
 })
 
 test_that("linear regression execution", {
   h2o_start()
 
-  expect_reg(linear_reg(),
-             c(21.948257, 21.646053, 25.345465, 20.448832, 17.044916, 20.125847)
-  )
+  expect_h2o_fit(linear_reg())
 })
 
 test_that("logistic regression execution", {
   h2o_start()
 
-  expect_class(logistic_reg(),
-               c(0.486674849, 0.097683696, 0.355450942,
-                 0.408943488, 0.567220135, 0.798129245)
-  )
+  expect_h2o_fit(logistic_reg())
 })
 
 test_that("poisson regression execution", {
   h2o_start()
 
-  expect_reg(poisson_reg(engine = "h2o"),
-             c(26.9557559, 24.9799984, 36.2847662, 45.7794546, 10.4762436, 9.7083736),
-             formula = Freq ~ .,
-             data = as.data.frame(Titanic)
-  )
+  expect_h2o_fit(poisson_reg(engine = "h2o"),
+             .data = as.data.frame(Titanic),
+             .formula = Freq ~ .)
 })
 
 test_that("multinomial regression execution", {
   h2o_start()
 
-  expect_class(multinom_reg(),
-               list(
-                 c(0.99831868, 0.99091443, 0.99807912, 0.99691936, 0.99917055, 0.99824032),
-                 c(0.0016813171, 0.0090855667, 0.0019208824, 0.0030806428, 0.0008294532, 0.0017596838)
-               ),
-               formula = Species ~ .,
-               data = iris)
-
+  expect_h2o_fit(multinom_reg(),
+               .data = iris,
+               .formula = Species ~ .
+  )
 })
 
 test_that("naive bayes execution", {
   h2o_start()
 
-  expect_class(naive_Bayes(engine = "h2o", Laplace = 1),
-               c(0.47724811, 0.15598391, 0.24309786, 0.87980213, 0.82694825, 0.96210559)
-  )
+  expect_h2o_fit(naive_Bayes(engine = "h2o", Laplace = 1))
 })
 
 test_that("mlp execution", {
-  skip("seeding issue with mlp")
   h2o_start()
-  expect_reg(mlp(hidden_units = 100),
-             c(21.591594, 20.779010, 26.678451, 20.876708, 17.381320, 19.551599)
-  )
-  expect_class(mlp(hidden_units = 100),
-               c(0.556647684, 0.096701481, 0.371913185, 0.594010773, 0.709933951, 0.908649196)
-  )
+  expect_h2o_fit(mlp(hidden_units = 100) %>%
+                   set_mode("regression"))
+  expect_h2o_fit(mlp(hidden_units = 100) %>%
+                   set_mode("classification"))
 })
 
 test_that("rule fit execution", {
   h2o_start()
 
-  expect_reg(rule_fit(engine = "h2o", trees = 100, tree_depth = 5),
-               c(22.201423, 21.536628, 24.981005, 20.558594, 17.320593, 19.990024)
-  )
-  expect_class(rule_fit(engine = "h2o", trees = 100, tree_depth = 5),
-               c(0.56616535, 0.20167720, 0.32106085, 0.60254444, 0.60077550, 0.77305489)
-  )
+  expect_h2o_fit(rule_fit(engine = "h2o", trees = 10, tree_depth = 3) %>%
+                   set_mode("regression"))
+  expect_h2o_fit(rule_fit(engine = "h2o", trees = 10, tree_depth = 3) %>%
+                   set_mode("classification"))
 })
