@@ -1,5 +1,5 @@
 test_that("data conversion", {
-  # skip("h2o server issues with testthat")
+  skip_if(!interactive())
   h2o_start()
 
   expect_silent(cars_1 <- as_h2o(mtcars))
@@ -11,9 +11,11 @@ test_that("data conversion", {
 
 test_that("server functions", {
   # skip("h2o server issues with testthat")
+  skip_if(!interactive())
 
   expect_silent(agua::h2o_start())
   expect_true(h2o_running())
   h2o::h2o.shutdown(prompt = FALSE)
   expect_false(h2o_running())
 })
+
