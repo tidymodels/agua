@@ -253,3 +253,15 @@ h2o_train_rule <- function(x, y,
     ...
   )
 }
+
+#' @export
+#' @rdname h2o_train
+h2o_train_auto <- function(x, y,...) {
+  h2o_train(
+    x,
+    y,
+    model = "automl",
+    ...
+  )
+}
+

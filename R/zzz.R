@@ -8,4 +8,5 @@
   add_naive_Bayes_h2o()
   add_mlp_h2o()
   add_rule_fit_h2o()
+  add_auto_ml_h2o()
 }

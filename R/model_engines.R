@@ -810,4 +810,89 @@ add_rule_fit_h2o <- function() {
   )
 }
 
+add_auto_ml_h2o <- function() {
+  parsnip::set_model_engine("auto_ml", "classification", "h2o")
+  parsnip::set_model_engine("auto_ml", "regression", "h2o")
+  parsnip::set_dependency("auto_ml", "h2o", "h2o")
+  parsnip::set_dependency("auto_ml", "h2o", "agua")
+
+  parsnip::set_fit(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "regression",
+    value = list(
+      interface = "data.frame",
+      protect = c("x", "y", "weights"),
+      func = c(pkg = "agua", fun = "h2o_train_auto"),
+      defaults = list()
+    )
+  )
+  parsnip::set_fit(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "classification",
+    value = list(
+      interface = "data.frame",
+      protect = c("x", "y", "weights"),
+      func = c(pkg = "agua", fun = "h2o_train_auto"),
+      defaults = list(
+        verbosity = NULL
+      )
+    )
+  )
+  parsnip::set_encoding(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "classification",
+    options = list(
+      predictor_indicators = "none",
+      compute_intercept = FALSE,
+      remove_intercept = FALSE,
+      allow_sparse_x = FALSE
+    )
+  )
+  parsnip::set_encoding(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "regression",
+    options = list(
+      predictor_indicators = "none",
+      compute_intercept = FALSE,
+      remove_intercept = FALSE,
+      allow_sparse_x = FALSE
+    )
+  )
+  # regression predict
+  parsnip::set_pred(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "regression",
+    type = "numeric",
+    value = reg_info
+  )
+  parsnip::set_pred(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "regression",
+    type = "raw",
+    value = reg_info_raw
+  )
+  # classification predict
+  parsnip::set_pred(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "classification",
+    type = "class",
+    value = class_info
+  )
+  parsnip::set_pred(
+    model = "auto_ml",
+    eng = "h2o",
+    mode = "classification",
+    type = "prob",
+    value = class_info_prob
+  )
+}
+
+
 

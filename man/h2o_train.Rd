@@ -8,6 +8,7 @@
 \alias{h2o_train_nb}
 \alias{h2o_train_mlp}
 \alias{h2o_train_rule}
+\alias{h2o_train_auto}
 \title{Model wrappers for h2o}
 \usage{
 h2o_train(x, y, model, weights = NULL, ...)
@@ -53,6 +54,8 @@ h2o_train_rule(
   lambda = NULL,
   ...
 )
+
+h2o_train_auto(x, y, ...)
 }
 \arguments{
 \item{x}{A data frame of predictors}
