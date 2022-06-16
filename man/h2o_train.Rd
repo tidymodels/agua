@@ -123,6 +123,11 @@ An h2o model object.
 Basic model wrappers for h2o model functions that include data conversion,
 seed configuration, and so on.
 }
+\details{
+For fitting neural networks with \code{h2o_train_mlp()}, the underlying h2o
+function \code{\link[h2o:h2o.deeplearning]{h2o::h2o.deeplearning()}} ignores the seed and can produce different
+models that cannot be reproduced.
+}
 \examples{
 # start with h2o::h2o.init()
 

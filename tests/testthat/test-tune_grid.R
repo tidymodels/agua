@@ -1,11 +1,8 @@
 data(two_class_dat, package = "modeldata")
 
 test_that("tune model only (with id)", {
-  skip("h2o server issues with testthat")
-
-  agua:::h2o_start()
-  on.exit(h2o::h2o.shutdown(prompt = FALSE))
-  skip_if(!h2o_running())
+  skip_if(!interactive())
+  h2o_start()
 
   helper_objects <- helper_objects_agua()
   wflow <- workflows::workflow() %>%
@@ -21,11 +18,8 @@ test_that("tune model only (with id)", {
 })
 
 test_that("tune model only (without id)", {
-  skip("h2o server issues with testthat")
-
-  agua:::h2o_start()
-  on.exit(h2o::h2o.shutdown(prompt = FALSE))
-  skip_if(!h2o_running())
+  skip_if(!interactive())
+  h2o_start()
 
   helper_objects <- helper_objects_agua()
   wflow <- workflows::workflow() %>%
@@ -41,11 +35,8 @@ test_that("tune model only (without id)", {
 })
 
 test_that("tune model only (with id and recipe)", {
-  skip("h2o server issues with testthat")
-
-  agua:::h2o_start()
-  on.exit(h2o::h2o.shutdown(prompt = FALSE))
-  skip_if(!h2o_running())
+  skip_if(!interactive())
+  h2o_start()
 
   helper_objects <- helper_objects_agua()
   wflow <- workflows::workflow() %>%
@@ -63,11 +54,8 @@ test_that("tune model only (with id and recipe)", {
 
 
 test_that("tune model and recipe", {
-  skip("h2o server issues with testthat")
-
-  agua:::h2o_start()
-  on.exit(h2o::h2o.shutdown(prompt = FALSE))
-  skip_if(!h2o_running())
+  skip_if(!interactive())
+  h2o_start()
 
   helper_objects <- helper_objects_agua()
   wflow <- workflows::workflow() %>%
@@ -84,6 +72,4 @@ test_that("tune model and recipe", {
                          grid = param_grid)
   expect_snapshot(res)
 })
-
-
 

@@ -151,7 +151,7 @@ h2o_train_glm <-
            ...) {
 
     opts <- list(...)
-    if (opts$family == "poisson") {
+    if (length(opts) >= 1 && opts$family == "poisson") {
       all_positive <- all(sum(y > 0))
       all_ints <- rlang::is_integerish(y)
       if (!(all_positive && all_ints)) {
@@ -243,6 +243,20 @@ h2o_train_rule <- function(x, y,
                            max_rule_length = 5,
                            lambda = NULL,
                            ...) {
+  opts <- list(...)
+  if (!is.null(opts$min_rule_length) && max_rule_length < opts$min_rule_length) {
+    rlang::abort(
+      glue::glue("`tree_depth` ({max_rule_length}) must be greater than the engine argument `min_rule_length` ({opts$min_rule_length}).")
+    )
+  }
+
+  if (is.null(opts$min_rule_length) && max_rule_length < 3) {
+    rlang::abort(
+      glue::glue("`tree_depth` ({max_rule_length}) must be greater than the engine argument `min_rule_length`'s default value of 3.")
+    )
+  }
+
+
   h2o_train(
     x,
     y,
