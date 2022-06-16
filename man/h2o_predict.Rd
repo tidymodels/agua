@@ -33,6 +33,9 @@ output
 Prediction wrappers for fitted models with h2o engine that include data conversion,
 h2o server cleanup, and so on.
 }
+\details{
+For \code{auto_ml()} models, prediction is based on the best performing model.
+}
 \examples{
 if (h2o_running()) {
   spec <-
