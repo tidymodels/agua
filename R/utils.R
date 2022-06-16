@@ -3,7 +3,7 @@
 
 all_algos <- c(
   "boost_tree", "rand_forest", "linear_reg", "logistic_reg",
-  "multinom_reg", "mlp", "naive_Bayes"
+  "multinom_reg", "mlp", "naive_Bayes", "auto_ml"
 )
 
 extract_h2o_algorithm <- function(workflow, ...) {

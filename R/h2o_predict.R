@@ -9,6 +9,8 @@
 #'   rows as `new_data`. For type == "raw", return original [h2o::h2o.predict()]
 #'   output
 #' @export
+#' @details
+#' For `auto_ml()` models, prediction is based on the best performing model.
 #' @examples
 #' if (h2o_running()) {
 #'   spec <-
