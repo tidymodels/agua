@@ -1,5 +1,7 @@
+data(two_class_dat, package = "modeldata")
+
 helper_objects_agua <- function() {
-  data(two_class_dat, package = "modeldata")
+  set.seed(1)
   folds <- rsample::vfold_cv(two_class_dat, v = 5)
 
   rec_no_tune <-
@@ -29,4 +31,29 @@ helper_objects_agua <- function() {
     glm_spec_tune_label = glm_spec_tune_label,
     glm_spec_tune_no_label = glm_spec_tune_no_label
   )
+}
+
+expect_h2o_fit <- function(spec, ..., .data = NULL, .formula = NULL) {
+  spec <- spec %>% set_engine("h2o", ...)
+  if (spec$mode == "regression") {
+    data <- if (is.null(.data)) mtcars else .data
+    formula <- if (is.null(.formula)) (mpg ~ .) else .formula
+    mod <- spec %>%
+      fit(formula, data = data)
+    preds <- predict(mod, head(data))
+    eval(bquote(expect_s3_class(mod, "_H2ORegressionModel")))
+    eval(bquote(expect_type(preds[[1]], "double")))
+  }
+
+  else if (spec$mode == "classification") {
+    data <- if (is.null(.data)) two_class_dat else .data
+    formula <- if (is.null(.formula)) (Class ~ .) else .formula
+    mod <- spec %>%
+      fit(formula, data = data)
+    spec_class <- class(spec)[1]
+    mod_class <- if (spec_class == "multinom_reg") "_H2OMultinomialModel" else "_H2OBinomialModel"
+    preds <- predict(mod, head(data))
+    eval(bquote(expect_s3_class(mod, mod_class)))
+    eval(bquote(expect_s3_class(preds[[1]], "factor")))
+  }
 }
