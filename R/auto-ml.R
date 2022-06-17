@@ -1,33 +1,64 @@
 #' Tools for working with h2o auto_ml results
 #' @param object A `model_fit` or fitted `workflow` object.
 #' @param n The number of individual models to extract from `auto_ml` results,
-#'  ranked descendingly by performance.
-#' @return A [tibble::tibble()] of model's cross validation performances
+#'  ranked descendingly by performance. Default to all.
+#' @param id Model id.
+#' @return A [tibble::tibble()] of model's cross validation performances.
 #' @rdname autml-tools
 #' @export
-h2o_rank <- function(object, ...) {
-  UseMethod("h2o_rank")
+rank_automl <- function(object, ...) {
+  UseMethod("rank_automl")
 }
 
 #' @export
-h2o_rank.default <- function(object, ...) {
+rank_automl.default <- function(object, ...) {
   msg <- paste0(
-    "The first argument to [h2o_rank()] should be either ",
-    "a fitted model or workflow."
+    "The first argument to [rank_automl()] should be either ",
+    "a fitted `auto_ml()` model or workflow."
   )
   rlang::abort(msg)
 }
 
 #' @export
-h2o_rank.workflow <- function(object, n = 10) {
-  h2o_rank.model_fit(object$fit$fit, n = n)
+rank_automl.workflow <- function(object, n = NULL) {
+  fit <- object$fit$fit
+  if (!("_H2OAutoML" %in% class(fit))) {
+    msg <- paste0(
+      "The first argument to [rank_automl()] should be ",
+      "fitted by `auto_ml()`."
+    )
+    rlang::abort(msg)
+  }
+
+  rank_automl.model_fit(fit, n = n)
 }
 
 #' @export
-h2o_rank.model_fit <- function(object, n = 10) {
+rank_automl.model_fit <- function(object, n = NULL) {
+  if (!("_H2OAutoML" %in% class(object))) {
+    msg <- paste0(
+      "The first argument to [rank_automl()] should be ",
+      "fitted by `auto_ml()`."
+    )
+    rlang::abort(msg)
+  }
+  leaderboard <- object$fit@leaderboard
+  n_models <- nrow(leaderboard)
+  if (!is.null(n)) {
+    if (n > n_models) {
+      msg <- paste0(
+        "`n` must be smaller or equal than the number of models (",
+        glue::glue({n_models}),
+        ")."
+      )
+      rlang::abort(msg)
+    }
+  } else {
+    n <- n_models
+  }
+
   idx <- seq_len(n)
-  board <- (object$fit@leaderboard)[idx, , drop = FALSE]
-  board <- tibble::as_tibble(board)
+  board <- tibble::as_tibble(leaderboard[idx, , drop = FALSE])
   model_ids <- board$model_id
   models <- purrr::map(model_ids, h2o::h2o.getModel)
   models_summary <- purrr::map_dfr(models, summarize_cv)

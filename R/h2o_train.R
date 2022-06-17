@@ -44,7 +44,7 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
-h2o_train <- function(x, y, model, weights = NULL,  ...) {
+h2o_train <- function(x, y, model, weights = NULL, ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
   x_names <- names(x)
@@ -56,9 +56,9 @@ h2o_train <- function(x, y, model, weights = NULL,  ...) {
     opts$weights_column <- ".weights"
   }
 
+  # if passed in validation, split x into train and validation set
   validation <- opts$validation
   opts$validation <- NULL
-  # if passed in validation, split x into train and validation set
   if (!is.null(validation) && validation > 0) {
     n <- nrow(x)
     m <- floor(n * (1 - validation)) + 1
@@ -87,7 +87,7 @@ h2o_train <- function(x, y, model, weights = NULL,  ...) {
 }
 
 get_fit_opts <- function(...) {
-  opts <- list(...)
+  opts <- rlang::list2(...)
   if (!any(names(opts) == "seed")) {
     opts$seed <- sample.int(10^5, 1)
   }
@@ -271,11 +271,34 @@ h2o_train_rule <- function(x, y,
 #' @export
 #' @rdname h2o_train
 h2o_train_auto <- function(x, y,...) {
-  h2o_train(
-    x,
-    y,
+  opts <- list(...)
+
+  if (!is.null(opts$leaderboard_frame)) {
+    opts$leaderboard_frame <- convert_frame(opts$leaderboard_frame, names(x))
+  }
+  if (!is.null(opts$blending_frame)) {
+    opts$blending_frame <- convert_frame(opts$blending_frame, names(x))
+  }
+
+  cl <- rlang::call2(
+    "h2o_train",
+    .ns = "agua",
+    x = quote(x),
+    y = quote(y),
     model = "automl",
-    ...
+    !!!opts,
   )
+
+  rlang::eval_tidy(cl)
 }
 
+convert_frame <- function(frame, x_names) {
+  frame_x <- frame[x_names]
+  y_name <- setdiff(names(frame), x_names)
+  y <- frame[[y_name]]
+  frame_x$.outcome <- y
+  frame <- as_h2o(frame_x)
+  on.exit(h2o::h2o.rm(frame$id))
+
+  frame$data
+}
