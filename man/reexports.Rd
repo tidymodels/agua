@@ -6,6 +6,7 @@
 \alias{as_tibble}
 \alias{\%>\%}
 \alias{tidy}
+\alias{autoplot}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -16,6 +17,8 @@ below to see their documentation.
   \item{dplyr}{\code{\link[dplyr:reexports]{\%>\%}}}
 
   \item{generics}{\code{\link[generics]{tidy}}}
+
+  \item{ggplot2}{\code{\link[ggplot2]{autoplot}}}
 
   \item{tibble}{\code{\link[tibble]{as_tibble}}}
 }}

@@ -22,6 +22,7 @@ Imports:
     dials,
     dplyr,
     generics,
+    ggplot2,
     glue,
     h2o (>= 3.36.1.2),
     hardhat (>= 1.1.0),

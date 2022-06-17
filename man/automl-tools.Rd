@@ -5,8 +5,10 @@
 \alias{rank_automl.default}
 \alias{rank_automl.workflow}
 \alias{rank_automl.model_fit}
+\alias{rank_automl.H2OAutoML}
 \alias{tidy._H2OAutoML}
 \alias{print.automl_fit}
+\alias{autoplot.H2OAutoML}
 \title{Tools for working with h2o auto_ml results}
 \usage{
 rank_automl(object, ...)
@@ -17,15 +19,25 @@ rank_automl(object, ...)
 
 \method{rank_automl}{model_fit}(object, n = NULL)
 
-\method{tidy}{`_H2OAutoML`}(object, ...)
+\method{rank_automl}{H2OAutoML}(object, n = NULL)
+
+\method{tidy}{`_H2OAutoML`}(object, get_model = TRUE, ...)
 
 \method{print}{automl_fit}(object, ...)
+
+\method{autoplot}{H2OAutoML}(object, type = c("rank", "metric"), metric = NULL, ...)
 }
 \arguments{
 \item{object}{A \code{model_fit} or fitted \code{workflow} object.}
 
 \item{n}{The number of individual models to extract from \code{auto_ml} results,
 ranked descendingly by performance. Default to all.}
+
+\item{type}{A single character of choices of "rank" (plotting average ranking
+of algorithms within metrics) or "metric" (plotting average value of metrics).}
+
+\item{metric}{A character vector or NULL for which metric to plot.
+By default, all metrics will be shown via facets.}
 
 \item{id}{Model id.}
 }

@@ -7,7 +7,7 @@
 \usage{
 as_h2o(df, destination_frame_prefix = "object")
 
-as_tibble.H2OFrame(
+\method{as_tibble}{H2OFrame}(
   x,
   ...,
   .rows = NULL,

@@ -40,29 +40,36 @@ rank_automl.default <- function(object, ...) {
 #' @rdname automl-tools
 #' @export
 rank_automl.workflow <- function(object, n = NULL) {
-  fit <- object$fit$fit
-  if (!("_H2OAutoML" %in% class(fit))) {
+  object <- object$fit$fit$fit
+  if (!("H2OAutoML" %in% class(object))) {
     msg <- paste0(
       "The first argument to [rank_automl()] should be ",
-      "fitted by `auto_ml()`."
+      "a fitted workflow object with `auto_ml()` specs."
     )
     rlang::abort(msg)
   }
 
-  rank_automl.model_fit(fit, n = n)
+  rank_automl.H2OAutoML(object, n = n)
 }
 
 #' @rdname automl-tools
 #' @export
 rank_automl.model_fit <- function(object, n = NULL) {
-  if (!("_H2OAutoML" %in% class(object))) {
+  if (!("H2OAutoML" %in% class(object$fit))) {
     msg <- paste0(
       "The first argument to [rank_automl()] should be ",
-      "fitted by `auto_ml()`."
+      "a `model_fit` object with `auto_ml()` specs."
     )
     rlang::abort(msg)
   }
-  leaderboard <- object$fit@leaderboard
+
+  rank_automl.H2OAutoML(object$fit, n = n)
+}
+
+#' @rdname automl-tools
+#' @export
+rank_automl.H2OAutoML <- function(object, n = NULL) {
+  leaderboard <- object@leaderboard
   n_models <- nrow(leaderboard)
   if (!is.null(n)) {
     if (n > n_models) {
@@ -171,4 +178,33 @@ print.automl_fit <- function(object, ...) {
   rlang::warn(msg)
 
   NextMethod()
+}
+
+#' @rdname automl-tools
+#' @param type A single character of choices of "rank" (plotting average ranking
+#'  of algorithms within metrics) or "metric" (plotting average value of metrics).
+#' @param metric A character vector or NULL for which metric to plot.
+#'  By default, all metrics will be shown via facets.
+#' @export
+autoplot.H2OAutoML <- function(object, type = c("rank", "metric"), metric = NULL, ...) {
+  type <- match.arg(type)
+  results <- rank_automl(object) %>%
+    dplyr::group_by(algorithm, .metric)
+
+  if (!is.null(metric)) {
+    results <- results %>% dplyr::filter(.metric %in% metric)
+  }
+
+  if (type == "rank") {
+    df <- results %>% dplyr::summarise(value = mean(rank))
+  }
+
+  if (type == "metric") {
+    df <- results %>% dplyr::summarise(value = mean(mean))
+  }
+
+  df %>%
+    ggplot2::ggplot() +
+    ggplot2::geom_col(ggplot2::aes(value, algorithm)) +
+    ggplot2::facet_wrap(~ .metric, scales = "free")
 }
