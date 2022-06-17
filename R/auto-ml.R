@@ -136,15 +136,19 @@ metric_info <- tibble::tribble(
 
 #' @rdname automl-tools
 #' @export
-tidy._H2OAutoML <- function(object, ...) {
+tidy._H2OAutoML <- function(object, get_model = TRUE, ...) {
   leaderboard <- tibble::as_tibble(object$fit@leaderboard)
-  leaderboard %>%
+  res <- leaderboard %>%
     tidyr::pivot_longer(-c(model_id),
                         names_to = ".metric",
-                        values_to = "mean") %>%
-    dplyr::mutate(
-      .model = purrr::map(model_id, convert_model, spec = object$spec)
-    )
+                        values_to = "mean")
+  if (!get_model) {
+    return(res)
+  }
+
+  res %>%
+    dplyr::mutate(.model = purrr::map(model_id, convert_model,
+                                      spec = object$spec))
 }
 
 convert_model <- function(model_id, spec) {
@@ -160,7 +164,7 @@ convert_model <- function(model_id, spec) {
 #' @export
 print.automl_fit <- function(object, ...) {
   msg <- paste0(
-    "This model is not a real parsnip `model_fit` object ",
+    "This is not a real parsnip `model_fit` object ",
     "and is only meant to be used for prediction with predict(). ",
     "Specifications are borrowed directly from the parent `auto_ml()` model."
   )
