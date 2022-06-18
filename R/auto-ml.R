@@ -6,6 +6,9 @@
 #' in tidy format.
 #'
 #' @details
+#' The names of algorithms comes from h2o, see the details section in [h2o::h2o.automl()] for
+#' more information.
+#'
 #' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
 #' component is a "fake" parsnip `model_fit` object constructed
 #' from the h2o model. These objects are meant to be used for prediction only,

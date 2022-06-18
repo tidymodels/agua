@@ -58,12 +58,12 @@ h2o_train_rule(
 h2o_train_auto(x, y, verbosity = NULL, ...)
 }
 \arguments{
-\item{x}{A data frame of predictors}
+\item{x}{A data frame of predictors.}
 
 \item{y}{A vector of outcomes.}
 
 \item{model}{A character string for the model. Current selections are
-\code{"randomForest"}, \code{"xgboost"}, \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
+\code{"automl"}, \code{"randomForest"}, \code{"xgboost"}, \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
 \code{"naiveBayes"}. Use \code{\link[h2o:h2o.xgboost.available]{h2o::h2o.xgboost.available()}} to see if xgboost
 can be used on your OS/h2o server.}
 

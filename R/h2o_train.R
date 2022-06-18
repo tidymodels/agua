@@ -10,10 +10,10 @@
 #' @inheritParams h2o::h2o.rulefit
 #' @inheritParams h2o::h2o.naiveBayes
 #' @inheritParams h2o::h2o.automl
-#' @param x A data frame of predictors
+#' @param x A data frame of predictors.
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
-#' `"randomForest"`, `"xgboost"`, `"glm"`, `"deeplearning"`, `"rulefit"` and
+#' `"automl"`, `"randomForest"`, `"xgboost"`, `"glm"`, `"deeplearning"`, `"rulefit"` and
 #' `"naiveBayes"`. Use [h2o::h2o.xgboost.available()] to see if xgboost
 #' can be used on your OS/h2o server.
 #' @param weights A numeric vector of case weights.

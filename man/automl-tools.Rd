@@ -53,6 +53,9 @@ of different algorithms on a metric. \code{tidy()} returns the leaderboard
 in tidy format.
 }
 \details{
+The names of algorithms comes from h2o, see the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for
+more information.
+
 When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
 component is a "fake" parsnip \code{model_fit} object constructed
 from the h2o model. These objects are meant to be used for prediction only,
