@@ -21,7 +21,7 @@ rank_automl(object, ...)
 
 \method{rank_automl}{H2OAutoML}(object, n = NULL)
 
-\method{tidy}{`_H2OAutoML`}(object, get_model = TRUE, ...)
+\method{tidy}{`_H2OAutoML`}(object, keep_model = TRUE, ...)
 
 \method{print}{automl_fit}(object, ...)
 
@@ -33,24 +33,32 @@ rank_automl(object, ...)
 \item{n}{The number of individual models to extract from \code{auto_ml} results,
 ranked descendingly by performance. Default to all.}
 
+\item{keep_model}{A logical value for whether individual models by
+\code{auto_ml()} should be retrieved from the server. Defaults to \code{TRUE}.}
+
 \item{type}{A single character of choices of "rank" (plotting average ranking
 of algorithms within metrics) or "metric" (plotting average value of metrics).}
 
 \item{metric}{A character vector or NULL for which metric to plot.
 By default, all metrics will be shown via facets.}
-
-\item{id}{Model id.}
 }
 \value{
-A \code{\link[tibble:tibble]{tibble::tibble()}} of model's cross validation performances.
+A \code{\link[tibble:tibble]{tibble::tibble()}} cross validation performances.
 }
 \description{
 \code{rank_automl()} returns a tibble ranking cross validation performances
 of different algorithms on a metric. \code{tidy()} returns the leaderboard
 in tidy format.
 }
+\details{
+When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
+component is a "fake" parsnip \code{model_fit} object constructed
+from the h2o model. These objects are meant to be used for prediction only,
+i.e., \code{predict(object, new_data = data)}, and should not be used as a
+regular parsnip model.
+}
 \examples{
-if (h2o_running) {
+if (h2o_running()) {
   mod <- auto_ml() \%>\%
     set_engine("h2o", max_runtime_secs = 10) \%>\%
     set_mode("regression") \%>\%

@@ -2,17 +2,24 @@
 #'
 #' @description
 #' `rank_automl()` returns a tibble ranking cross validation performances
-#'  of different algorithms on a metric. `tidy()` returns the leaderboard
-#'  in tidy format.
+#' of different algorithms on a metric. `tidy()` returns the leaderboard
+#' in tidy format.
+#'
+#' @details
+#' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
+#' component is a "fake" parsnip `model_fit` object constructed
+#' from the h2o model. These objects are meant to be used for prediction only,
+#' i.e., `predict(object, new_data = data)`, and should not be used as a
+#' regular parsnip model.
 #'
 #' @param object A `model_fit` or fitted `workflow` object.
 #' @param n The number of individual models to extract from `auto_ml` results,
 #'  ranked descendingly by performance. Default to all.
-#' @param id Model id.
-#' @return A [tibble::tibble()] of model's cross validation performances.
+#' @param ... Not used.
+#' @return A [tibble::tibble()] cross validation performances.
 #' @rdname automl-tools
 #' @examples
-#' if (h2o_running) {
+#' if (h2o_running()) {
 #'   mod <- auto_ml() %>%
 #'     set_engine("h2o", max_runtime_secs = 10) %>%
 #'     set_mode("regression") %>%
@@ -39,7 +46,7 @@ rank_automl.default <- function(object, ...) {
 
 #' @rdname automl-tools
 #' @export
-rank_automl.workflow <- function(object, n = NULL) {
+rank_automl.workflow <- function(object, n = NULL, ...) {
   object <- object$fit$fit$fit
   if (!("H2OAutoML" %in% class(object))) {
     msg <- paste0(
@@ -49,12 +56,12 @@ rank_automl.workflow <- function(object, n = NULL) {
     rlang::abort(msg)
   }
 
-  rank_automl.H2OAutoML(object, n = n)
+  rank_automl.H2OAutoML(object, n = n, ...)
 }
 
 #' @rdname automl-tools
 #' @export
-rank_automl.model_fit <- function(object, n = NULL) {
+rank_automl.model_fit <- function(object, n = NULL, ...) {
   if (!("H2OAutoML" %in% class(object$fit))) {
     msg <- paste0(
       "The first argument to [rank_automl()] should be ",
@@ -63,12 +70,12 @@ rank_automl.model_fit <- function(object, n = NULL) {
     rlang::abort(msg)
   }
 
-  rank_automl.H2OAutoML(object$fit, n = n)
+  rank_automl.H2OAutoML(object$fit, n = n, ...)
 }
 
 #' @rdname automl-tools
 #' @export
-rank_automl.H2OAutoML <- function(object, n = NULL) {
+rank_automl.H2OAutoML <- function(object, n = NULL, ...) {
   leaderboard <- object@leaderboard
   n_models <- nrow(leaderboard)
   if (!is.null(n)) {
@@ -142,14 +149,17 @@ metric_info <- tibble::tribble(
 )
 
 #' @rdname automl-tools
+#' @param keep_model A logical value for whether individual models by
+#'  `auto_ml()` should be retrieved from the server. Defaults to `TRUE`.
+#'
 #' @export
-tidy._H2OAutoML <- function(object, get_model = TRUE, ...) {
+tidy._H2OAutoML <- function(object, keep_model = TRUE, ...) {
   leaderboard <- tibble::as_tibble(object$fit@leaderboard)
   res <- leaderboard %>%
     tidyr::pivot_longer(-c(model_id),
                         names_to = ".metric",
                         values_to = "mean")
-  if (!get_model) {
+  if (!keep_model) {
     return(res)
   }
 
