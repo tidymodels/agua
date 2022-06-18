@@ -824,7 +824,9 @@ add_auto_ml_h2o <- function() {
       interface = "data.frame",
       protect = c("x", "y", "weights"),
       func = c(pkg = "agua", fun = "h2o_train_auto"),
-      defaults = list()
+      defaults = list(
+        verbosity = NULL
+      )
     )
   )
   parsnip::set_fit(

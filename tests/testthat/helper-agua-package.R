@@ -1,6 +1,6 @@
 data(two_class_dat, package = "modeldata")
 
-helper_objects_agua <- function() {
+helper_objects_tune <- function() {
   set.seed(1)
   folds <- rsample::vfold_cv(two_class_dat, v = 5)
 
@@ -33,11 +33,11 @@ helper_objects_agua <- function() {
   )
 }
 
-expect_h2o_fit <- function(spec, ..., .data = NULL, .formula = NULL) {
+expect_h2o_fit <- function(spec, data = NULL, formula = NULL, ...) {
   spec <- spec %>% set_engine("h2o", ...)
   if (spec$mode == "regression") {
-    data <- if (is.null(.data)) mtcars else .data
-    formula <- if (is.null(.formula)) (mpg ~ .) else .formula
+    data <- if (is.null(data)) mtcars else data
+    formula <- if (is.null(formula)) (mpg ~ .) else formula
     mod <- spec %>%
       fit(formula, data = data)
     preds <- predict(mod, head(data))
@@ -46,8 +46,8 @@ expect_h2o_fit <- function(spec, ..., .data = NULL, .formula = NULL) {
   }
 
   else if (spec$mode == "classification") {
-    data <- if (is.null(.data)) two_class_dat else .data
-    formula <- if (is.null(.formula)) (Class ~ .) else .formula
+    data <- if (is.null(data)) two_class_dat else data
+    formula <- if (is.null(formula)) (Class ~ .) else formula
     mod <- spec %>%
       fit(formula, data = data)
     spec_class <- class(spec)[1]

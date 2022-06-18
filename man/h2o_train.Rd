@@ -55,7 +55,7 @@ h2o_train_rule(
   ...
 )
 
-h2o_train_auto(x, y, ...)
+h2o_train_auto(x, y, verbosity = NULL, ...)
 }
 \arguments{
 \item{x}{A data frame of predictors}
@@ -118,6 +118,9 @@ amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-B
 \item{rule_generation_ntrees}{Specifies the number of trees to build in the tree model. Defaults to 50. Defaults to 50.}
 
 \item{max_rule_length}{Maximum length of rules. Defaults to 3.}
+
+\item{verbosity}{Verbosity of the backend messages printed during training; Optional.
+Must be one of NULL (live log disabled), "debug", "info", "warn", "error". Defaults to "warn".}
 }
 \value{
 An h2o model object.

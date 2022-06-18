@@ -9,6 +9,7 @@
 #' @inheritParams h2o::h2o.deeplearning
 #' @inheritParams h2o::h2o.rulefit
 #' @inheritParams h2o::h2o.naiveBayes
+#' @inheritParams h2o::h2o.automl
 #' @param x A data frame of predictors
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
@@ -270,7 +271,7 @@ h2o_train_rule <- function(x, y,
 
 #' @export
 #' @rdname h2o_train
-h2o_train_auto <- function(x, y,...) {
+h2o_train_auto <- function(x, y, verbosity = NULL, ...) {
   opts <- list(...)
 
   if (!is.null(opts$leaderboard_frame)) {
@@ -286,6 +287,7 @@ h2o_train_auto <- function(x, y,...) {
     x = quote(x),
     y = quote(y),
     model = "automl",
+    verbosity = verbosity,
     !!!opts,
   )
 

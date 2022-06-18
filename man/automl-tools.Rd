@@ -15,11 +15,11 @@ rank_automl(object, ...)
 
 \method{rank_automl}{default}(object, ...)
 
-\method{rank_automl}{workflow}(object, n = NULL)
+\method{rank_automl}{workflow}(object, n = NULL, ...)
 
-\method{rank_automl}{model_fit}(object, n = NULL)
+\method{rank_automl}{model_fit}(object, n = NULL, ...)
 
-\method{rank_automl}{H2OAutoML}(object, n = NULL)
+\method{rank_automl}{H2OAutoML}(object, n = NULL, ...)
 
 \method{tidy}{`_H2OAutoML`}(object, keep_model = TRUE, ...)
 
@@ -29,6 +29,8 @@ rank_automl(object, ...)
 }
 \arguments{
 \item{object}{A \code{model_fit} or fitted \code{workflow} object.}
+
+\item{...}{Not used.}
 
 \item{n}{The number of individual models to extract from \code{auto_ml} results,
 ranked descendingly by performance. Default to all.}
