@@ -53,8 +53,8 @@ rank_automl.workflow <- function(object, n = NULL, ...) {
   object <- object$fit$fit$fit
   if (!("H2OAutoML" %in% class(object))) {
     msg <- paste0(
-      "The first argument to [rank_automl()] should be ",
-      "a fitted workflow object with `auto_ml()` specs."
+      "The first argument should be ",
+      "a fitted model or workflow with `auto_ml()`."
     )
     rlang::abort(msg)
   }
@@ -69,8 +69,7 @@ rank_automl.workflow <- function(object, n = NULL, ...) {
 rank_automl.model_fit <- function(object, n = NULL, ...) {
   if (!("H2OAutoML" %in% class(object$fit))) {
     msg <- paste0(
-      "The first argument to [rank_automl()] should be ",
-      "a `model_fit` object with `auto_ml()` specs."
+      "The first argument should be a fitted `auto_ml()` model."
     )
     rlang::abort(msg)
   }
@@ -152,7 +151,7 @@ tidy._H2OAutoML <- function(object,
                             model_id = NULL,
                             n = NULL,
                             ...) {
-  leaderboard <- tibble::as_tibble(object$fit@leaderboard)
+  leaderboard <- get_leaderboard(object)
   if (!is.null(model_id) && is.character(model_id)) {
     n <- NULL
     leaderboard <- leaderboard %>%
@@ -183,6 +182,14 @@ tidy._H2OAutoML <- function(object,
       algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm)
     )
 }
+
+get_leaderboard <- function(x) {
+  if (!("_H2OAutoML" %in% class(x))) {
+    rlang::abort("The first argument should be a fitted `auto_ml()` model.")
+  }
+  tibble::as_tibble(x$fit@leaderboard)
+}
+
 
 check_leaderboard_n <- function(leaderboard, n) {
   n_models <- nrow(leaderboard)
