@@ -43,9 +43,7 @@ expect_h2o_fit <- function(spec, data = NULL, formula = NULL, ...) {
     preds <- predict(mod, head(data))
     eval(bquote(expect_s3_class(mod, "_H2ORegressionModel")))
     eval(bquote(expect_type(preds[[1]], "double")))
-  }
-
-  else if (spec$mode == "classification") {
+  } else if (spec$mode == "classification") {
     data <- if (is.null(data)) two_class_dat else data
     formula <- if (is.null(formula)) (Class ~ .) else formula
     mod <- spec %>%

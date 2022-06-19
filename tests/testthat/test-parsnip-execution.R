@@ -3,10 +3,10 @@ test_that("random forest execution", {
   h2o_start()
 
   expect_h2o_fit(rand_forest(mtry = 2, trees = 5) %>%
-                   set_mode("regression"))
+    set_mode("regression"))
 
   expect_h2o_fit(rand_forest(mtry = 2, trees = 20) %>%
-                   set_mode("classification"))
+    set_mode("classification"))
 })
 
 
@@ -29,8 +29,9 @@ test_that("poisson regression execution", {
   h2o_start()
 
   expect_h2o_fit(poisson_reg(engine = "h2o"),
-             data = as.data.frame(Titanic),
-             formula = Freq ~ .)
+    data = as.data.frame(Titanic),
+    formula = Freq ~ .
+  )
 })
 
 test_that("multinomial regression execution", {
@@ -38,8 +39,8 @@ test_that("multinomial regression execution", {
   h2o_start()
 
   expect_h2o_fit(multinom_reg(),
-               data = iris,
-               formula = Species ~ .
+    data = iris,
+    formula = Species ~ .
   )
 })
 
@@ -55,9 +56,9 @@ test_that("mlp execution", {
   h2o_start()
 
   expect_h2o_fit(mlp(hidden_units = 100) %>%
-                   set_mode("regression"))
+    set_mode("regression"))
   expect_h2o_fit(mlp(hidden_units = 100) %>%
-                   set_mode("classification"))
+    set_mode("classification"))
 })
 
 test_that("rule fit execution", {
@@ -65,9 +66,9 @@ test_that("rule fit execution", {
   h2o_start()
 
   expect_h2o_fit(rule_fit(engine = "h2o", trees = 10, tree_depth = 3) %>%
-                   set_mode("regression"))
+    set_mode("regression"))
   expect_h2o_fit(rule_fit(engine = "h2o", trees = 10, tree_depth = 3) %>%
-                   set_mode("classification"))
+    set_mode("classification"))
 })
 
 test_that("xgboost execution", {
@@ -76,9 +77,9 @@ test_that("xgboost execution", {
 
   skip_if_not(h2o::h2o.xgboost.available())
   expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
-                   set_mode("regression"))
+    set_mode("regression"))
   expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
-                   set_mode("classification"))
+    set_mode("classification"))
 })
 
 
@@ -89,7 +90,8 @@ test_that("automl execution", {
   data(two_class_dat, package = "modeldata")
   set.seed(1)
   spec <- auto_ml() %>% set_engine("h2o",
-                                   max_runtime_secs = 10)
+    max_runtime_secs = 10
+  )
   spec_reg <- spec %>% set_mode("regression")
   spec_cls <- spec %>% set_mode("classification")
 
@@ -111,16 +113,17 @@ test_that("automl tools", {
 
   spec <- auto_ml() %>%
     set_engine("h2o",
-               max_runtime_secs = 10) %>%
+      max_runtime_secs = 10
+    ) %>%
     set_mode("regression")
   mod <- spec %>% fit(mpg ~ ., data = mtcars)
   ranks <- rank_automl(mod)
-  mod_tidy <- tidy(mod)
+  mod_tidy <- tidy(mod, n = 10)
   single_mod <- mod_tidy[[".model"]][[1]]
 
+  expect_equal(nrow(mod_tidy), 10)
   expect_s3_class(ranks, "tbl_df")
   expect_s3_class(mod_tidy, "tbl_df")
   expect_warning(print(single_mod))
   expect_s3_class(single_mod, c("automl_fit", "model_fit"))
 })
-

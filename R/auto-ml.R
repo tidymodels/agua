@@ -6,8 +6,10 @@
 #' in tidy format.
 #'
 #' @details
-#' The names of algorithms comes from h2o, see the details section in [h2o::h2o.automl()] for
-#' more information.
+#' Typical algorithms in h2o's automatic machine learning includes xgboost,
+#' gradient boosting (`"GBM"`), random forest and variants (`"DRF"`, `"XRT"`),
+#' generalized linear model (`"GLM"`), and neural network (`"deeplearning"`).
+#' See the details section in [h2o::h2o.automl()] for more information.
 #'
 #' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
 #' component is a "fake" parsnip `model_fit` object constructed
@@ -16,8 +18,6 @@
 #' regular parsnip model.
 #'
 #' @param object A `model_fit` or fitted `workflow` object.
-#' @param n The number of individual models to extract from `auto_ml` results,
-#'  ranked descendingly by performance. Default to all.
 #' @param ... Not used.
 #' @return A [tibble::tibble()] cross validation performances.
 #' @rdname automl-tools
@@ -63,6 +63,8 @@ rank_automl.workflow <- function(object, n = NULL, ...) {
 }
 
 #' @rdname automl-tools
+#' @param n The number of models to extract from `auto_ml()` results,
+#'  ranked descendingly by performance. Default to all.
 #' @export
 rank_automl.model_fit <- function(object, n = NULL, ...) {
   if (!("H2OAutoML" %in% class(object$fit))) {
@@ -79,24 +81,10 @@ rank_automl.model_fit <- function(object, n = NULL, ...) {
 #' @rdname automl-tools
 #' @export
 rank_automl.H2OAutoML <- function(object, n = NULL, ...) {
-  leaderboard <- object@leaderboard
-  n_models <- nrow(leaderboard)
-  if (!is.null(n)) {
-    if (n > n_models) {
-      msg <- paste0(
-        "`n` must be smaller or equal than the number of models (",
-        glue::glue({n_models}),
-        ")."
-      )
-      rlang::abort(msg)
-    }
-  } else {
-    n <- n_models
-  }
-
-  idx <- seq_len(n)
-  board <- tibble::as_tibble(leaderboard[idx, , drop = FALSE])
-  model_ids <- board$model_id
+  leaderboard <- tibble::as_tibble(object@leaderboard)
+  n <- check_leaderboard_n(leaderboard, n)
+  leaderboard <- leaderboard[seq_len(n), ]
+  model_ids <- leaderboard$model_id
   models <- purrr::map(model_ids, h2o::h2o.getModel)
   models_summary <- purrr::map_dfr(models, summarize_cv)
 
@@ -111,19 +99,22 @@ rank_automl.H2OAutoML <- function(object, n = NULL, ...) {
 summarize_cv <- function(x) {
   cv_summary <- x@model$cross_validation_metrics_summary
   df <- tibble::as_tibble(cv_summary) %>%
-    dplyr::mutate(algorithm = x@algorithm,
-                  model_id = x@model_id,
-                  .metric = rownames(cv_summary),
-                  .before = 1) %>%
+    dplyr::mutate(
+      algorithm = x@algorithm,
+      model_id = x@model_id,
+      .metric = rownames(cv_summary),
+      .before = 1
+    ) %>%
     tidyr::pivot_longer(dplyr::starts_with("cv"),
-                        names_to = "cv_id") %>%
+      names_to = "cv_id"
+    ) %>%
     tidyr::nest(cv_details = c(cv_id, value))
 
   df
 }
 
 metric_info <- tibble::tribble(
-  ~ .metric, ~ direction,
+  ~.metric, ~direction,
   "mae", 1,
   "mean_residual_deviance", 1,
   "mse", 1,
@@ -154,29 +145,67 @@ metric_info <- tibble::tribble(
 #' @rdname automl-tools
 #' @param keep_model A logical value for whether individual models by
 #'  `auto_ml()` should be retrieved from the server. Defaults to `TRUE`.
-#'
+#' @param model_id A character vector of model ids to retrieve.
 #' @export
-tidy._H2OAutoML <- function(object, keep_model = TRUE, ...) {
+tidy._H2OAutoML <- function(object,
+                            keep_model = TRUE,
+                            model_id = NULL,
+                            n = NULL,
+                            ...) {
   leaderboard <- tibble::as_tibble(object$fit@leaderboard)
-  res <- leaderboard %>%
-    tidyr::pivot_longer(-c(model_id),
-                        names_to = ".metric",
-                        values_to = "mean")
-  if (!keep_model) {
-    return(res)
+  if (!is.null(model_id) && is.character(model_id)) {
+    n <- NULL
+    leaderboard <- leaderboard %>%
+      dplyr::filter(.data[["model_id"]] %in% .env[["model_id"]])
+  }
+  if (!is.null(n)) {
+    n <- check_leaderboard_n(leaderboard, n)
+    leaderboard <- leaderboard[seq_len(n), ]
   }
 
-  res %>%
-    dplyr::mutate(.model = purrr::map(model_id, convert_model,
-                                      spec = object$spec))
+  leaderboard <- leaderboard %>%
+    tidyr::pivot_longer(-c(model_id),
+                        names_to = ".metric",
+                        values_to = "mean"
+    ) %>%
+    dplyr::nest_by(model_id, .key = ".metric") %>%
+    dplyr::ungroup()
+
+  if (!keep_model) {
+    return(leaderboard)
+  }
+
+  leaderboard %>%
+    dplyr::mutate(
+      .model = purrr::map(model_id,
+                         convert_model_parsnip,
+                         spec = object$spec),
+      algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm)
+    )
 }
 
-convert_model <- function(model_id, spec) {
+check_leaderboard_n <- function(leaderboard, n) {
+  n_models <- nrow(leaderboard)
+  if (!is.null(n) && n > n_models) {
+    msg <- paste0(
+      "`n` is larger than the number of models, ",
+      "returning all."
+    )
+    rlang::warn(msg)
+  }
+  min(n, n_models)
+}
+
+
+convert_model_parsnip <- function(model_id, spec) {
   h2o_model <- h2o::h2o.getModel(model_id)
-  res <- list(fit = h2o_model,
-              spec = spec,
-              elapsed = list(elapsed = NA_real_))
-  class(res) <- c("automl_fit", paste0("_", class(h2o_model)[1]), "model_fit")
+  res <- list(
+    fit = h2o_model,
+    spec = spec,
+    elapsed = list(elapsed = NA_real_)
+  )
+  class(res) <- c("automl_fit",
+                  paste0("_", class(h2o_model)[1]), "model_fit")
   res
 }
 
@@ -219,5 +248,5 @@ autoplot.H2OAutoML <- function(object, type = c("rank", "metric"), metric = NULL
   df %>%
     ggplot2::ggplot() +
     ggplot2::geom_col(ggplot2::aes(value, algorithm)) +
-    ggplot2::facet_wrap(~ .metric, scales = "free")
+    ggplot2::facet_wrap(~.metric, scales = "free")
 }

@@ -80,14 +80,18 @@ tune_grid_loop_iter_h2o <- function(split,
     )
     preprocessor <- hardhat::extract_preprocessor(workflow)
     # prep training and validation data
-    training_forged <- tune::forge_from_workflow(training_frame,
-                                                  workflow)
+    training_forged <- tune::forge_from_workflow(
+      training_frame,
+      workflow
+    )
     training_frame_processed <- dplyr::bind_cols(
       training_forged$predictors,
       training_forged$outcomes,
     )
-    val_forged <- tune::forge_from_workflow(val_frame,
-                                             workflow)
+    val_forged <- tune::forge_from_workflow(
+      val_frame,
+      workflow
+    )
     val_frame_processed <- dplyr::bind_cols(
       val_forged$predictors,
       val_forged$outcomes,
@@ -150,8 +154,10 @@ tune_grid_loop_iter_h2o <- function(split,
       fold_id = fold_id,
       orig_rows = orig_rows,
       mode = mode
-    ) %>% bind_predictions_iter_grid(iter_grid = iter_grid,
-                                     param_names = param_names)
+    ) %>% bind_predictions_iter_grid(
+      iter_grid = iter_grid,
+      param_names = param_names
+    )
     iter_predictions <- dplyr::bind_rows(!!!h2o_predictions)
 
     out_predictions <- append_h2o_predictions(
@@ -197,7 +203,8 @@ tune_grid_loop_iter_h2o <- function(split,
 bind_predictions_iter_grid <- function(predictions, iter_grid, param_names) {
   collections <- purrr::imap(
     predictions,
-    ~ .x %>% dplyr::bind_cols(iter_grid[.y, ]) %>%
+    ~ .x %>%
+      dplyr::bind_cols(iter_grid[.y, ]) %>%
       dplyr::rename(.config = .iter_config) %>%
       dplyr::relocate(
         dplyr::all_of(param_names),
@@ -240,8 +247,8 @@ pull_h2o_predictions <- function(h2o_model,
     h2o_preds <- parsnip::format_num(
       h2o_preds %>%
         purrr::pluck("predict")
-      ) %>%
-        dplyr::mutate(.row = orig_rows)
+    ) %>%
+      dplyr::mutate(.row = orig_rows)
   }
   h2o_preds %>% dplyr::bind_cols(val_truth, fold_id)
 }

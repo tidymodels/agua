@@ -21,7 +21,7 @@ rank_automl(object, ...)
 
 \method{rank_automl}{H2OAutoML}(object, n = NULL, ...)
 
-\method{tidy}{`_H2OAutoML`}(object, keep_model = TRUE, ...)
+\method{tidy}{`_H2OAutoML`}(object, keep_model = TRUE, model_id = NULL, n = NULL, ...)
 
 \method{print}{automl_fit}(object, ...)
 
@@ -32,11 +32,13 @@ rank_automl(object, ...)
 
 \item{...}{Not used.}
 
-\item{n}{The number of individual models to extract from \code{auto_ml} results,
+\item{n}{The number of models to extract from \code{auto_ml()} results,
 ranked descendingly by performance. Default to all.}
 
 \item{keep_model}{A logical value for whether individual models by
 \code{auto_ml()} should be retrieved from the server. Defaults to \code{TRUE}.}
+
+\item{model_id}{A character vector of model ids to retrieve.}
 
 \item{type}{A single character of choices of "rank" (plotting average ranking
 of algorithms within metrics) or "metric" (plotting average value of metrics).}
@@ -53,8 +55,10 @@ of different algorithms on a metric. \code{tidy()} returns the leaderboard
 in tidy format.
 }
 \details{
-The names of algorithms comes from h2o, see the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for
-more information.
+Typical algorithms in h2o's automatic machine learning includes xgboost,
+gradient boosting (\code{"GBM"}), random forest and variants (\code{"DRF"}, \code{"XRT"}),
+generalized linear model (\code{"GLM"}), and neural network (\code{"deeplearning"}).
+See the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for more information.
 
 When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
 component is a "fake" parsnip \code{model_fit} object constructed

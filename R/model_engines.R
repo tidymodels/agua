@@ -895,6 +895,3 @@ add_auto_ml_h2o <- function() {
     value = class_info_prob
   )
 }
-
-
-

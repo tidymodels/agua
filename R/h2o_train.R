@@ -150,7 +150,6 @@ h2o_train_glm <-
            lambda = NULL,
            alpha = NULL,
            ...) {
-
     opts <- list(...)
     if (length(opts) >= 1 && opts$family == "poisson") {
       all_positive <- all(sum(y > 0))
