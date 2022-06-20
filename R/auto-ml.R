@@ -58,15 +58,15 @@ rank_automl.default <- function(object, ...) {
 #' @param n The number of models to extract from `auto_ml()` results,
 #'  ranked descendingly by performance. Default to all.
 #' @export
-rank_automl.model_fit <- function(object, n = NULL, ...) {
+rank_automl.model_fit <- function(object, n = NULL, model_id = NULL, ...) {
   check_automl_fit(object)
-  rank_automl.H2OAutoML(object$fit, n = n, ...)
+  rank_automl.H2OAutoML(object$fit, n = n, model_id = model_id, ...)
 }
 
 #' @rdname automl-tools
 #' @export
-rank_automl.H2OAutoML <- function(object, n = NULL, ...) {
-  leaderboard <- get_leaderboard(object, n)
+rank_automl.H2OAutoML <- function(object, n = NULL, model_id = NULL, ...) {
+  leaderboard <- get_leaderboard(object, n, model_id)
   model_ids <- leaderboard$model_id
   models <- purrr::map(model_ids, h2o::h2o.getModel)
   models_summary <- purrr::map_dfr(models, summarize_cv)
@@ -130,6 +130,7 @@ check_automl_fit <- function(object) {
   if (!inherits(object, "_H2OAutoML")) {
     rlang::abort("The first argument should be a fitted `auto_ml()` model.")
   }
+  invisible(object)
 }
 
 #' @rdname automl-tools
@@ -145,8 +146,8 @@ tidy._H2OAutoML <- function(object,
   leaderboard <- get_leaderboard(object, n, model_id)
   leaderboard <- leaderboard %>%
     tidyr::pivot_longer(-c(model_id),
-                        names_to = ".metric",
-                        values_to = "mean"
+      names_to = ".metric",
+      values_to = "mean"
     ) %>%
     dplyr::nest_by(model_id, .key = ".metric") %>%
     dplyr::ungroup()
@@ -157,8 +158,10 @@ tidy._H2OAutoML <- function(object,
 
   leaderboard %>%
     dplyr::mutate(.model = purrr::map(model_id, ~ extract_automl_fit_parsnip(object, .x))) %>%
-    dplyr::mutate(algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm),
-                  .after = 1)
+    dplyr::mutate(
+      algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm),
+      .after = 1
+    )
 }
 
 #' @rdname automl-tools
@@ -172,25 +175,38 @@ autoplot.H2OAutoML <- function(object,
                                metric = NULL,
                                ...) {
   type <- match.arg(type)
-  results <- rank_automl(object) %>%
-    dplyr::group_by(algorithm, .metric)
-
+  results <- rank_automl(object, ...)
   if (!is.null(metric)) {
     results <- results %>% dplyr::filter(.metric %in% metric)
   }
+  results <- results %>% dplyr::group_by(.metric, algorithm)
 
   if (type == "rank") {
-    df <- results %>% dplyr::summarise(value = mean(rank))
+    results <- results %>% dplyr::summarise(value = mean(rank))
+  } else if (type == "metric") {
+    results <- results %>% dplyr::summarise(value = mean(mean))
   }
 
-  if (type == "metric") {
-    df <- results %>% dplyr::summarise(value = mean(mean))
-  }
-
-  df %>%
+  p <- results %>%
     ggplot2::ggplot() +
-    ggplot2::geom_col(ggplot2::aes(value, algorithm)) +
-    ggplot2::facet_wrap(~.metric, scales = "free")
+    ggplot2::geom_col(ggplot2::aes(value, algorithm))
+
+
+
+  num_metrics <- length(unique(results$.metric))
+  if (num_metrics > 1) {
+    xlab <- if (type == "rank") "Ranking" else "Metric"
+    results$.metric <- factor(results$.metric)
+    p <- p +
+      ggplot2::facet_wrap(~.metric, scales = "free_y", as.table = FALSE) +
+      ggplot2::labs(x = xlab, y = "Algorithm")
+  } else {
+    metric_name <- results$.metric[[1]]
+    xlab <- if (type == "rank") paste0("Ranking on ", metric_name) else metric_name
+    p <- p + ggplot2::labs(x = xlab, y = "Algorithm")
+  }
+
+  p
 }
 
 get_leaderboard <- function(object, n = NULL, model_id = NULL) {
@@ -245,9 +261,7 @@ check_leaderboard_n <- function(leaderboard, n) {
 #' @export
 #' @rdname automl-tools
 extract_automl_fit_parsnip <- function(object, model_id) {
-  if (!inherits(object, "_H2OAutoML")) {
-    rlang::abort("The first argument should be a fitted `auto_ml()` model.")
-  }
+  check_automl_fit(object)
   mod <- h2o::h2o.getModel(model_id)
   res <- list(
     fit = mod,
@@ -255,8 +269,10 @@ extract_automl_fit_parsnip <- function(object, model_id) {
     elapsed = list(elapsed = NA_real_),
     lvl = object$lvl
   )
-  class(res) <- c("automl_fit",
-                  paste0("_", class(mod)[1]), "model_fit")
+  class(res) <- c(
+    "automl_fit",
+    paste0("_", class(mod)[1]), "model_fit"
+  )
   res
 }
 
