@@ -68,7 +68,7 @@ rank_automl.model_fit <- function(object, n = NULL, model_id = NULL, ...) {
 rank_automl.H2OAutoML <- function(object, n = NULL, model_id = NULL, ...) {
   leaderboard <- get_leaderboard(object, n, model_id)
   model_ids <- leaderboard$model_id
-  models <- purrr::map(model_ids, h2o::h2o.getModel)
+  models <- purrr::map(model_ids, get_model)
   models_summary <- purrr::map_dfr(models, summarize_cv)
 
   models_summary %>%
@@ -157,7 +157,9 @@ tidy._H2OAutoML <- function(object,
   }
 
   leaderboard %>%
-    dplyr::mutate(.model = purrr::map(model_id, ~ extract_automl_fit_parsnip(object, .x))) %>%
+    dplyr::mutate(.model = purrr::map(model_id,
+                                      ~ extract_automl_fit_parsnip(object, .x),
+                                      )) %>%
     dplyr::mutate(
       algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm),
       .after = 1
@@ -241,8 +243,8 @@ model_importance <- function(object, ...) {
 }
 
 get_meta_learner_imp <- function(model_id) {
-  mod <- h2o::h2o.getModel(model_id)
-  meta_learner <- h2o::h2o.getModel(mod@model$metalearner$name)
+  mod <- get_model(model_id)
+  meta_learner <- get_model(mod@model$metalearner$name)
   tibble::as_tibble(h2o::h2o.varimp(meta_learner))
 }
 
@@ -262,23 +264,14 @@ check_leaderboard_n <- function(leaderboard, n) {
 #' @rdname automl-tools
 extract_automl_fit_parsnip <- function(object, model_id) {
   check_automl_fit(object)
-  mod <- h2o::h2o.getModel(model_id)
-  res <- list(
-    fit = mod,
-    spec = object$spec,
-    elapsed = list(elapsed = NA_real_),
-    lvl = object$lvl
-  )
-  class(res) <- c(
-    "automl_fit",
-    paste0("_", class(mod)[1]), "model_fit"
-  )
-  res
+  mod <- get_model(model_id)
+  mod <- convert_h2o_parsnip(mod, object$spec, object$lvl)
+  mod
 }
 
 #' @rdname automl-tools
 #' @export
-print.automl_fit <- function(object, ...) {
+print.h2o_fit <- function(object, ...) {
   msg <- paste0(
     "This is not a real parsnip `model_fit` object ",
     "and is only meant to be used for prediction with predict(). ",

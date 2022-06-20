@@ -112,7 +112,34 @@ h2o_start <- function() {
   invisible(res)
 }
 
-# ------------------------------------------------------------------------------
+# Retrieve model from h2o server
+get_model <- function(model_id) {
+  res <- tryCatch(
+    error = function(cnd) {
+      if (grepl("not found for argument: key", cnd$message)) {
+        rlang::abort("Model does not exist on the h2o server.")
+      }
+      rlang::abort(cnd$message)
+    },
+    h2o:::with_no_h2o_progress(h2o::h2o.getModel(model_id))
+  )
+  res
+}
+
+# convert a h2o model to parsnip `model_fit` object
+convert_h2o_parsnip <- function(x, spec, lvl = NULL, ...) {
+  res <- list(
+    fit = x,
+    spec = spec,
+    elapsed = list(elapsed = NA_real_),
+    lvl = lvl
+  )
+  class(res) <- c(
+    "h2o_fit",
+    paste0("_", class(mod)[1]), "model_fit"
+  )
+  res
+}
 
 #' Check if h2o cluster is initialized
 #'

@@ -137,7 +137,7 @@ tune_grid_loop_iter_h2o <- function(split,
     )
 
     h2o_model_ids <- as.character(h2o_res@model_ids)
-    h2o_models <- purrr::map(h2o_model_ids, h2o::h2o.getModel)
+    h2o_models <- purrr::map(h2o_model_ids, get_model)
     # remove objects from h2o server
     on.exit(h2o::h2o.rm(c(
       h2o_model_ids,

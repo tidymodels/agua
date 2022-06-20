@@ -9,16 +9,16 @@
 \alias{autoplot.H2OAutoML}
 \alias{model_importance}
 \alias{extract_automl_fit_parsnip}
-\alias{print.automl_fit}
+\alias{print.h2o_fit}
 \title{Tools for working with h2o auto_ml results}
 \usage{
 rank_automl(object, ...)
 
 \method{rank_automl}{default}(object, ...)
 
-\method{rank_automl}{model_fit}(object, n = NULL, ...)
+\method{rank_automl}{model_fit}(object, n = NULL, model_id = NULL, ...)
 
-\method{rank_automl}{H2OAutoML}(object, n = NULL, ...)
+\method{rank_automl}{H2OAutoML}(object, n = NULL, model_id = NULL, ...)
 
 \method{tidy}{`_H2OAutoML`}(object, n = NULL, model_id = NULL, keep_model = TRUE, ...)
 
@@ -28,7 +28,7 @@ model_importance(object, ...)
 
 extract_automl_fit_parsnip(object, model_id)
 
-\method{print}{automl_fit}(object, ...)
+\method{print}{h2o_fit}(object, ...)
 }
 \arguments{
 \item{object}{A fitted \code{auto_ml()} model.}
