@@ -1,25 +1,32 @@
 #' Tools for working with h2o auto_ml results
 #'
 #' @description
-#' `rank_automl()` returns a tibble ranking cross validation performances
-#' of different algorithms on a metric. `tidy()` returns the leaderboard
-#' in tidy format.
+#' `rank_automl()` ranks cross validation performances of different candidate models
+#' and algorithms on each metric. `autoplot()` uses this ranking table to plot performances
+#' via facets.
+#'
+#' `tidy()` returns a tibble with average performance for each candidate model. When
+#' `keep_model` is `TRUE`, `tidy()` adds a list column where each
+#' component is a "fake" parsnip `model_fit` object constructed
+#' from the h2o model. These objects are meant to be used for prediction only,
+#' i.e., `predict(object, new_data = data)`, and should not be used as a
+#' regular parsnip model.
+#'
+#' `model_importance()` computes variable importance for each stacked ensemble,
+#' i.e., the relative importance of base models in the meta-learner. This is
+#' typically the coefficient magnitude in the second-level GLM model.
+#'
+#' `extract_automl_fit_parsnip()` builds a fake parsnip fit object given a model
+#' id.
 #'
 #' @details
 #' Typical algorithms in h2o's automatic machine learning includes xgboost,
 #' gradient boosting (`"GBM"`), random forest and variants (`"DRF"`, `"XRT"`),
 #' generalized linear model (`"GLM"`), and neural network (`"deeplearning"`).
 #' See the details section in [h2o::h2o.automl()] for more information.
-#'
-#' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
-#' component is a "fake" parsnip `model_fit` object constructed
-#' from the h2o model. These objects are meant to be used for prediction only,
-#' i.e., `predict(object, new_data = data)`, and should not be used as a
-#' regular parsnip model.
-#'
-#' @param object A `model_fit` or fitted `workflow` object.
+#' @param object A fitted `auto_ml()` model.
 #' @param ... Not used.
-#' @return A [tibble::tibble()] cross validation performances.
+#' @return A [tibble::tibble()].
 #' @rdname automl-tools
 #' @examples
 #' if (h2o_running()) {
@@ -28,8 +35,9 @@
 #'     set_mode("regression") %>%
 #'     fit(mpg ~ ., data = mtcars)
 #'
-#'   tidy(mod)
 #'   rank_automl(mod)
+#'   tidy(mod)
+#'   model_importance(mod)
 #' }
 #'
 #' @export
@@ -41,25 +49,9 @@ rank_automl <- function(object, ...) {
 #' @export
 rank_automl.default <- function(object, ...) {
   msg <- paste0(
-    "The first argument to [rank_automl()] should be either ",
-    "a fitted `auto_ml()` model or workflow."
+    "The first argument should be a fitted `auto_ml()` model."
   )
   rlang::abort(msg)
-}
-
-#' @rdname automl-tools
-#' @export
-rank_automl.workflow <- function(object, n = NULL, ...) {
-  object <- object$fit$fit$fit
-  if (!("H2OAutoML" %in% class(object))) {
-    msg <- paste0(
-      "The first argument should be ",
-      "a fitted model or workflow with `auto_ml()`."
-    )
-    rlang::abort(msg)
-  }
-
-  rank_automl.H2OAutoML(object, n = n, ...)
 }
 
 #' @rdname automl-tools
@@ -67,22 +59,14 @@ rank_automl.workflow <- function(object, n = NULL, ...) {
 #'  ranked descendingly by performance. Default to all.
 #' @export
 rank_automl.model_fit <- function(object, n = NULL, ...) {
-  if (!("H2OAutoML" %in% class(object$fit))) {
-    msg <- paste0(
-      "The first argument should be a fitted `auto_ml()` model."
-    )
-    rlang::abort(msg)
-  }
-
+  check_automl_fit(object)
   rank_automl.H2OAutoML(object$fit, n = n, ...)
 }
 
 #' @rdname automl-tools
 #' @export
 rank_automl.H2OAutoML <- function(object, n = NULL, ...) {
-  leaderboard <- tibble::as_tibble(object@leaderboard)
-  n <- check_leaderboard_n(leaderboard, n)
-  leaderboard <- leaderboard[seq_len(n), ]
+  leaderboard <- get_leaderboard(object, n)
   model_ids <- leaderboard$model_id
   models <- purrr::map(model_ids, h2o::h2o.getModel)
   models_summary <- purrr::map_dfr(models, summarize_cv)
@@ -95,12 +79,13 @@ rank_automl.H2OAutoML <- function(object, n = NULL, ...) {
     dplyr::ungroup()
 }
 
+
 summarize_cv <- function(x) {
   cv_summary <- x@model$cross_validation_metrics_summary
   df <- tibble::as_tibble(cv_summary) %>%
     dplyr::mutate(
-      algorithm = x@algorithm,
       model_id = x@model_id,
+      algorithm = x@algorithm,
       .metric = rownames(cv_summary),
       .before = 1
     ) %>%
@@ -141,27 +126,23 @@ metric_info <- tibble::tribble(
   "specificity", -1
 )
 
+check_automl_fit <- function(object) {
+  if (!inherits(object, "_H2OAutoML")) {
+    rlang::abort("The first argument should be a fitted `auto_ml()` model.")
+  }
+}
+
 #' @rdname automl-tools
-#' @param keep_model A logical value for whether individual models by
-#'  `auto_ml()` should be retrieved from the server. Defaults to `TRUE`.
+#' @param keep_model A logical value for if the actual model object
+#'  should be retrieved from the server. Defaults to `TRUE`.
 #' @param model_id A character vector of model ids to retrieve.
 #' @export
 tidy._H2OAutoML <- function(object,
-                            keep_model = TRUE,
-                            model_id = NULL,
                             n = NULL,
+                            model_id = NULL,
+                            keep_model = TRUE,
                             ...) {
-  leaderboard <- get_leaderboard(object)
-  if (!is.null(model_id) && is.character(model_id)) {
-    n <- NULL
-    leaderboard <- leaderboard %>%
-      dplyr::filter(.data[["model_id"]] %in% .env[["model_id"]])
-  }
-  if (!is.null(n)) {
-    n <- check_leaderboard_n(leaderboard, n)
-    leaderboard <- leaderboard[seq_len(n), ]
-  }
-
+  leaderboard <- get_leaderboard(object, n, model_id)
   leaderboard <- leaderboard %>%
     tidyr::pivot_longer(-c(model_id),
                         names_to = ".metric",
@@ -175,58 +156,9 @@ tidy._H2OAutoML <- function(object,
   }
 
   leaderboard %>%
-    dplyr::mutate(
-      .model = purrr::map(model_id,
-                         convert_model_parsnip,
-                         spec = object$spec),
-      algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm)
-    )
-}
-
-get_leaderboard <- function(x) {
-  if (!("_H2OAutoML" %in% class(x))) {
-    rlang::abort("The first argument should be a fitted `auto_ml()` model.")
-  }
-  tibble::as_tibble(x$fit@leaderboard)
-}
-
-
-check_leaderboard_n <- function(leaderboard, n) {
-  n_models <- nrow(leaderboard)
-  if (!is.null(n) && n > n_models) {
-    msg <- paste0(
-      "`n` is larger than the number of models, ",
-      "returning all."
-    )
-    rlang::warn(msg)
-  }
-  min(n, n_models)
-}
-
-
-convert_model_parsnip <- function(model_id, spec) {
-  h2o_model <- h2o::h2o.getModel(model_id)
-  res <- list(
-    fit = h2o_model,
-    spec = spec,
-    elapsed = list(elapsed = NA_real_)
-  )
-  class(res) <- c("automl_fit",
-                  paste0("_", class(h2o_model)[1]), "model_fit")
-  res
-}
-
-#' @rdname automl-tools
-#' @export
-print.automl_fit <- function(object, ...) {
-  msg <- paste0(
-    "This is not a real parsnip `model_fit` object ",
-    "and is only meant to be used for prediction with predict(). ",
-    "Specifications are borrowed directly from the parent `auto_ml()` model."
-  )
-  rlang::warn(msg)
-
-  NextMethod()
+    dplyr::mutate(.model = purrr::map(model_id, ~ extract_automl_fit_parsnip(object, .x))) %>%
+    dplyr::mutate(algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm),
+                  .after = 1)
 }
 
 #' @rdname automl-tools
@@ -235,7 +167,10 @@ print.automl_fit <- function(object, ...) {
 #' @param metric A character vector or NULL for which metric to plot.
 #'  By default, all metrics will be shown via facets.
 #' @export
-autoplot.H2OAutoML <- function(object, type = c("rank", "metric"), metric = NULL, ...) {
+autoplot.H2OAutoML <- function(object,
+                               type = c("rank", "metric"),
+                               metric = NULL,
+                               ...) {
   type <- match.arg(type)
   results <- rank_automl(object) %>%
     dplyr::group_by(algorithm, .metric)
@@ -256,4 +191,84 @@ autoplot.H2OAutoML <- function(object, type = c("rank", "metric"), metric = NULL
     ggplot2::ggplot() +
     ggplot2::geom_col(ggplot2::aes(value, algorithm)) +
     ggplot2::facet_wrap(~.metric, scales = "free")
+}
+
+get_leaderboard <- function(object, n = NULL, model_id = NULL) {
+  if (inherits(object, "_H2OAutoML")) {
+    object <- object$fit
+  }
+  leaderboard <- tibble::as_tibble(object@leaderboard)
+  if (!is.null(model_id) && is.character(model_id)) {
+    n <- NULL
+    leaderboard <- leaderboard %>%
+      dplyr::filter(.data[["model_id"]] %in% .env[["model_id"]])
+  }
+  if (!is.null(n)) {
+    n <- check_leaderboard_n(leaderboard, n)
+    leaderboard <- leaderboard[seq_len(n), ]
+  }
+
+  leaderboard
+}
+
+#' @export
+#' @rdname automl-tools
+model_importance <- function(object, ...) {
+  check_automl_fit(object)
+  leaderboard <- get_leaderboard(object)
+  model_id <- leaderboard[grep("StackedEnsemble", leaderboard$model_id), ]$model_id
+
+  tibble::tibble(
+    stacked_model_id = model_id,
+    importance = purrr::map(model_id, get_meta_learner_imp)
+  )
+}
+
+get_meta_learner_imp <- function(model_id) {
+  mod <- h2o::h2o.getModel(model_id)
+  meta_learner <- h2o::h2o.getModel(mod@model$metalearner$name)
+  tibble::as_tibble(h2o::h2o.varimp(meta_learner))
+}
+
+check_leaderboard_n <- function(leaderboard, n) {
+  n_models <- nrow(leaderboard)
+  if (!is.null(n) && n > n_models) {
+    msg <- paste0(
+      "`n` is larger than the number of models, ",
+      "returning all."
+    )
+    rlang::warn(msg)
+  }
+  min(n, n_models)
+}
+
+#' @export
+#' @rdname automl-tools
+extract_automl_fit_parsnip <- function(object, model_id) {
+  if (!inherits(object, "_H2OAutoML")) {
+    rlang::abort("The first argument should be a fitted `auto_ml()` model.")
+  }
+  mod <- h2o::h2o.getModel(model_id)
+  res <- list(
+    fit = mod,
+    spec = object$spec,
+    elapsed = list(elapsed = NA_real_),
+    lvl = object$lvl
+  )
+  class(res) <- c("automl_fit",
+                  paste0("_", class(mod)[1]), "model_fit")
+  res
+}
+
+#' @rdname automl-tools
+#' @export
+print.automl_fit <- function(object, ...) {
+  msg <- paste0(
+    "This is not a real parsnip `model_fit` object ",
+    "and is only meant to be used for prediction with predict(). ",
+    "Specifications are borrowed directly from the parent `auto_ml()` model."
+  )
+  rlang::warn(msg)
+
+  NextMethod()
 }

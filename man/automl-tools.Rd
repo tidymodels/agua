@@ -3,42 +3,45 @@
 \name{rank_automl}
 \alias{rank_automl}
 \alias{rank_automl.default}
-\alias{rank_automl.workflow}
 \alias{rank_automl.model_fit}
 \alias{rank_automl.H2OAutoML}
 \alias{tidy._H2OAutoML}
-\alias{print.automl_fit}
 \alias{autoplot.H2OAutoML}
+\alias{model_importance}
+\alias{extract_automl_fit_parsnip}
+\alias{print.automl_fit}
 \title{Tools for working with h2o auto_ml results}
 \usage{
 rank_automl(object, ...)
 
 \method{rank_automl}{default}(object, ...)
 
-\method{rank_automl}{workflow}(object, n = NULL, ...)
-
 \method{rank_automl}{model_fit}(object, n = NULL, ...)
 
 \method{rank_automl}{H2OAutoML}(object, n = NULL, ...)
 
-\method{tidy}{`_H2OAutoML`}(object, keep_model = TRUE, model_id = NULL, n = NULL, ...)
-
-\method{print}{automl_fit}(object, ...)
+\method{tidy}{`_H2OAutoML`}(object, n = NULL, model_id = NULL, keep_model = TRUE, ...)
 
 \method{autoplot}{H2OAutoML}(object, type = c("rank", "metric"), metric = NULL, ...)
+
+model_importance(object, ...)
+
+extract_automl_fit_parsnip(object, model_id)
+
+\method{print}{automl_fit}(object, ...)
 }
 \arguments{
-\item{object}{A \code{model_fit} or fitted \code{workflow} object.}
+\item{object}{A fitted \code{auto_ml()} model.}
 
 \item{...}{Not used.}
 
 \item{n}{The number of models to extract from \code{auto_ml()} results,
 ranked descendingly by performance. Default to all.}
 
-\item{keep_model}{A logical value for whether individual models by
-\code{auto_ml()} should be retrieved from the server. Defaults to \code{TRUE}.}
-
 \item{model_id}{A character vector of model ids to retrieve.}
+
+\item{keep_model}{A logical value for if the actual model object
+should be retrieved from the server. Defaults to \code{TRUE}.}
 
 \item{type}{A single character of choices of "rank" (plotting average ranking
 of algorithms within metrics) or "metric" (plotting average value of metrics).}
@@ -47,24 +50,32 @@ of algorithms within metrics) or "metric" (plotting average value of metrics).}
 By default, all metrics will be shown via facets.}
 }
 \value{
-A \code{\link[tibble:tibble]{tibble::tibble()}} cross validation performances.
+A \code{\link[tibble:tibble]{tibble::tibble()}}.
 }
 \description{
-\code{rank_automl()} returns a tibble ranking cross validation performances
-of different algorithms on a metric. \code{tidy()} returns the leaderboard
-in tidy format.
+\code{rank_automl()} ranks cross validation performances of different candidate models
+and algorithms on each metric. \code{autoplot()} uses this ranking table to plot performances
+via facets.
+
+\code{tidy()} returns a tibble with average performance for each candidate model. When
+\code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
+component is a "fake" parsnip \code{model_fit} object constructed
+from the h2o model. These objects are meant to be used for prediction only,
+i.e., \code{predict(object, new_data = data)}, and should not be used as a
+regular parsnip model.
+
+\code{model_importance()} computes variable importance for each stacked ensemble,
+i.e., the relative importance of base models in the meta-learner. This is
+typically the coefficient magnitude in the second-level GLM model.
+
+\code{extract_automl_fit_parsnip()} builds a fake parsnip fit object given a model
+id.
 }
 \details{
 Typical algorithms in h2o's automatic machine learning includes xgboost,
 gradient boosting (\code{"GBM"}), random forest and variants (\code{"DRF"}, \code{"XRT"}),
 generalized linear model (\code{"GLM"}), and neural network (\code{"deeplearning"}).
 See the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for more information.
-
-When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
-component is a "fake" parsnip \code{model_fit} object constructed
-from the h2o model. These objects are meant to be used for prediction only,
-i.e., \code{predict(object, new_data = data)}, and should not be used as a
-regular parsnip model.
 }
 \examples{
 if (h2o_running()) {
@@ -73,8 +84,9 @@ if (h2o_running()) {
     set_mode("regression") \%>\%
     fit(mpg ~ ., data = mtcars)
 
-  tidy(mod)
   rank_automl(mod)
+  tidy(mod)
+  model_importance(mod)
 }
 
 }
