@@ -9,7 +9,6 @@
 \alias{autoplot.H2OAutoML}
 \alias{model_importance}
 \alias{extract_automl_fit_parsnip}
-\alias{print.h2o_fit}
 \title{Tools for working with h2o auto_ml results}
 \usage{
 rank_automl(object, ...)
@@ -27,8 +26,6 @@ rank_automl(object, ...)
 model_importance(object, ...)
 
 extract_automl_fit_parsnip(object, model_id)
-
-\method{print}{h2o_fit}(object, ...)
 }
 \arguments{
 \item{object}{A fitted \code{auto_ml()} model.}

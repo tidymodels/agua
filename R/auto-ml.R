@@ -157,9 +157,10 @@ tidy._H2OAutoML <- function(object,
   }
 
   leaderboard %>%
-    dplyr::mutate(.model = purrr::map(model_id,
-                                      ~ extract_automl_fit_parsnip(object, .x),
-                                      )) %>%
+    dplyr::mutate(.model = purrr::map(
+      model_id,
+      ~ extract_automl_fit_parsnip(object, .x),
+    )) %>%
     dplyr::mutate(
       algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm),
       .after = 1
@@ -267,17 +268,4 @@ extract_automl_fit_parsnip <- function(object, model_id) {
   mod <- get_model(model_id)
   mod <- convert_h2o_parsnip(mod, object$spec, object$lvl)
   mod
-}
-
-#' @rdname automl-tools
-#' @export
-print.h2o_fit <- function(object, ...) {
-  msg <- paste0(
-    "This is not a real parsnip `model_fit` object ",
-    "and is only meant to be used for prediction with predict(). ",
-    "Specifications are borrowed directly from the parent `auto_ml()` model."
-  )
-  rlang::warn(msg)
-
-  NextMethod()
 }
