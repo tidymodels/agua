@@ -11,7 +11,7 @@ m <- mod %>%
 m
 
 # rank all algorithms by cross validation performance
-rank_automl(m)
+rank_results_automl(m)
 
 # autoplot methdos
 # average ranking position of algorithms in each metric
@@ -22,16 +22,18 @@ ggplot2::autoplot(m, type = "rank",
 m_tidy <- tidy(m, n = 5)
 m_tidy
 
-# helper to extract single candidate model
-extract_automl_fit_parsnip(m, m_tidy[["model_id"]][[1]])
+# extract single candidate model, default to leader
+extract_fit_parsnip(m)
+extract_fit_parsnip(m, "GBM_5_AutoML_18_20220621_145456")
 
-# varibale importance in metalearner, i.e. model importance of base learner
-model_importance(m)
+
+# variable importance in metalearner, i.e. model importance of base learner
+imp_stacking(m) %>% tidyr::unnest(importance)
 
 # can join with tibbles from other functions
-model_importance(m) %>%
+imp_stacking(m) %>%
   left_join(
-    rank_automl(m) %>%
-      select(model_id, .metric, mean, rank),
-    by = c("stacked_model_id" = "model_id")
+    rank_results_automl(m) %>%
+      select(id, .metric, mean, rank),
+    by = c("stacked_model_id" = "id")
   )

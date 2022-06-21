@@ -111,9 +111,8 @@ h2o_start <- function() {
   ), "output")
   invisible(res)
 }
-
 # Retrieve model from h2o server
-get_model <- function(model_id) {
+get_model <- function(id) {
   res <- tryCatch(
     error = function(cnd) {
       if (grepl("not found for argument: key", cnd$message)) {
@@ -121,13 +120,13 @@ get_model <- function(model_id) {
       }
       rlang::abort(cnd$message)
     },
-    h2o:::with_no_h2o_progress(h2o::h2o.getModel(model_id))
+    h2o:::with_no_h2o_progress(h2o::h2o.getModel(id))
   )
   res
 }
 
 # convert a h2o model to parsnip `model_fit` object
-convert_h2o_parsnip <- function(x, spec, lvl = NULL, ...) {
+convert_h2o_parsnip <- function(x, spec, lvl = NULL, extra_class = "h2o_fit", ...) {
   res <- list(
     fit = x,
     spec = spec,
@@ -135,8 +134,9 @@ convert_h2o_parsnip <- function(x, spec, lvl = NULL, ...) {
     lvl = lvl
   )
   class(res) <- c(
-    "h2o_fit",
-    paste0("_", class(mod)[1]), "model_fit"
+    extra_class,
+    paste0("_", class(x)[1]),
+    "model_fit"
   )
   res
 }

@@ -2,10 +2,17 @@
 % Please edit documentation in R/print.R
 \name{print.h2o_fit}
 \alias{print.h2o_fit}
+\alias{print.H2OAutoML_fit}
+\alias{print.H2OAutoML}
 \title{Printing wrappers for h2o models}
 \usage{
 \method{print}{h2o_fit}(object, ...)
+
+\method{print}{H2OAutoML_fit}(object, ...)
+
+\method{print}{H2OAutoML}(object, ...)
 }
 \description{
 Printing wrappers for h2o models
 }
+\keyword{internal}

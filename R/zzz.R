@@ -9,6 +9,4 @@
   add_mlp_h2o()
   add_rule_fit_h2o()
   add_auto_ml_h2o()
-
-  vctrs::s3_register("ggplot2::autoplot", "H2OAutoML")
 }

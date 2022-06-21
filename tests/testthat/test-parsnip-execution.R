@@ -117,13 +117,13 @@ test_that("automl tools", {
     ) %>%
     set_mode("regression")
   mod <- spec %>% fit(mpg ~ ., data = mtcars)
-  ranks <- rank_automl(mod)
+  ranks <- rank_results_automl(mod)
   mod_tidy <- tidy(mod, n = 10)
-  single_mod <- mod_tidy[[".model"]][[1]]
+  leader <- extract_fit_parsnip(mod)
 
   expect_equal(nrow(mod_tidy), 10)
   expect_s3_class(ranks, "tbl_df")
   expect_s3_class(mod_tidy, "tbl_df")
-  expect_warning(print(single_mod))
-  expect_s3_class(single_mod, c("automl_fit", "model_fit"))
+  expect_warning(print(leader))
+  expect_s3_class(leader, c("h2o_fit", "model_fit"))
 })
