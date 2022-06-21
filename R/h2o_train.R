@@ -60,7 +60,11 @@ h2o_train <- function(x, y, model, weights = NULL, ...) {
   # if passed in validation, split x into train and validation set
   validation <- opts$validation
   opts$validation <- NULL
-  if (!is.null(validation) && validation > 0) {
+
+  if (!is.null(validation)) {
+    if (length(validation) > 1 || validation < 0 || validation > 1) {
+      rlang::abort("`validation` should be a number between 0 and 1")
+    }
     n <- nrow(x)
     m <- floor(n * (1 - validation)) + 1
     train_index <- sample(1:n, size = max(m, 2))
