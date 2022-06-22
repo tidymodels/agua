@@ -33,21 +33,19 @@ helper_objects_agua <- function() {
   )
 }
 
-expect_h2o_fit <- function(spec, ..., .data = NULL, .formula = NULL) {
-  spec <- spec %>% set_engine("h2o", ...)
+expect_h2o_fit <- function(spec, data = NULL, formula = NULL, engine = "h2o", ...) {
+  spec <- spec %>% set_engine(engine, ...)
   if (spec$mode == "regression") {
-    data <- if (is.null(.data)) mtcars else .data
-    formula <- if (is.null(.formula)) (mpg ~ .) else .formula
+    data <- if (is.null(data)) mtcars else data
+    formula <- if (is.null(formula)) (mpg ~ .) else formula
     mod <- spec %>%
       fit(formula, data = data)
     preds <- predict(mod, head(data))
     eval(bquote(expect_s3_class(mod, "_H2ORegressionModel")))
     eval(bquote(expect_type(preds[[1]], "double")))
-  }
-
-  else if (spec$mode == "classification") {
-    data <- if (is.null(.data)) two_class_dat else .data
-    formula <- if (is.null(.formula)) (Class ~ .) else .formula
+  } else if (spec$mode == "classification") {
+    data <- if (is.null(data)) two_class_dat else data
+    formula <- if (is.null(formula)) (Class ~ .) else formula
     mod <- spec %>%
       fit(formula, data = data)
     spec_class <- class(spec)[1]

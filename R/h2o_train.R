@@ -9,10 +9,11 @@
 #' @inheritParams h2o::h2o.deeplearning
 #' @inheritParams h2o::h2o.rulefit
 #' @inheritParams h2o::h2o.naiveBayes
-#' @param x A data frame of predictors
+#' @inheritParams h2o::h2o.gbm
+#' @param x A data frame of predictors.
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
-#' `"randomForest"`, `"xgboost"`, `"glm"`, `"deeplearning"`, `"rulefit"` and
+#' `"randomForest"`, `"xgboost"`, "`gbm`", `"glm"`, `"deeplearning"`, `"rulefit"` and
 #' `"naiveBayes"`. Use [h2o::h2o.xgboost.available()] to see if xgboost
 #' can be used on your OS/h2o server.
 #' @param weights A numeric vector of case weights.
@@ -44,7 +45,7 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
-h2o_train <- function(x, y, model, weights = NULL,  ...) {
+h2o_train <- function(x, y, model, weights = NULL, validation = NULL, ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
   x_names <- names(x)
@@ -56,10 +57,11 @@ h2o_train <- function(x, y, model, weights = NULL,  ...) {
     opts$weights_column <- ".weights"
   }
 
-  validation <- opts$validation
-  opts$validation <- NULL
   # if passed in validation, split x into train and validation set
-  if (!is.null(validation) && validation > 0) {
+  if (!is.null(validation)) {
+    if (length(validation) > 1 || validation < 0 || validation > 1) {
+      rlang::abort("`validation` should be a number between 0 and 1")
+    }
     n <- nrow(x)
     m <- floor(n * (1 - validation)) + 1
     train_index <- sample(1:n, size = max(m, 2))
@@ -87,7 +89,7 @@ h2o_train <- function(x, y, model, weights = NULL,  ...) {
 }
 
 get_fit_opts <- function(...) {
-  opts <- list(...)
+  opts <- rlang::list2(...)
   if (!any(names(opts) == "seed")) {
     opts$seed <- sample.int(10^5, 1)
   }
@@ -123,8 +125,15 @@ h2o_train_xgboost <-
            col_sample_rate = 1,
            min_split_improvement = 0,
            stopping_rounds = 0,
-           validation = 0,
+           validation = NULL,
            ...) {
+    if (!xgboost_available()) {
+      msg <- paste0("H2o's xgboost algorithm isn't available on this machine",
+                    "try using the 'h2o_gbm' engine for `boost_tree()` instead",
+                    "for gradient boosted trees instead.")
+      rlang::abort(msg)
+    }
+
     h2o_train(
       x,
       y,
@@ -143,13 +152,42 @@ h2o_train_xgboost <-
 
 #' @export
 #' @rdname h2o_train
+h2o_train_gbm <-
+  function(x,
+           y,
+           ntrees = 50,
+           max_depth = 6,
+           min_rows = 1,
+           learn_rate = 0.3,
+           sample_rate = 1,
+           col_sample_rate = 1,
+           min_split_improvement = 0,
+           stopping_rounds = 0,
+           ...) {
+    h2o_train(
+      x,
+      y,
+      model = "gbm",
+      ntrees = ntrees,
+      max_depth = max_depth,
+      min_rows = min_rows,
+      learn_rate = learn_rate,
+      sample_rate = sample_rate,
+      col_sample_rate = col_sample_rate,
+      stopping_rounds = stopping_rounds,
+      ...
+    )
+  }
+
+
+#' @export
+#' @rdname h2o_train
 h2o_train_glm <-
   function(x,
            y,
            lambda = NULL,
            alpha = NULL,
            ...) {
-
     opts <- list(...)
     if (length(opts) >= 1 && opts$family == "poisson") {
       all_positive <- all(sum(y > 0))
@@ -189,12 +227,12 @@ h2o_train_mlp <- function(x, y,
                           hidden_dropout_ratios = 0,
                           epochs = 10,
                           activation = "Rectifier",
-                          validation = 0,
+                          validation = NULL,
                           ...) {
   activation <- switch(activation,
-    relu = "Rectifier",
-    tanh = "Tanh",
-    activation
+                       relu = "Rectifier",
+                       tanh = "Tanh",
+                       activation
   )
 
   all_activations <- c(

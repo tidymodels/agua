@@ -14,7 +14,7 @@
       
       Model fit template:
       agua::h2o_train_rf(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          mtries = 2, ntrees = 1000)
+          validation_frame = missing_arg(), mtries = 2, ntrees = 1000)
 
 ---
 
@@ -36,7 +36,8 @@
       
       Model fit template:
       agua::h2o_train_rf(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          mtries = 2, ntrees = 1000, sample_rate = 1/3, distribution = "quantile")
+          validation_frame = missing_arg(), mtries = 2, ntrees = 1000, 
+          sample_rate = 1/3, distribution = "quantile")
 
 # xgboost specs
 
@@ -54,7 +55,8 @@
       
       Model fit template:
       agua::h2o_train_xgboost(x = missing_arg(), y = missing_arg(), 
-          weights = missing_arg(), ntrees = 1000, learn_rate = 0.1)
+          weights = missing_arg(), validation_frame = missing_arg(), 
+          ntrees = 1000, learn_rate = 0.1)
 
 ---
 
@@ -76,7 +78,48 @@
       
       Model fit template:
       agua::h2o_train_xgboost(x = missing_arg(), y = missing_arg(), 
-          weights = missing_arg(), ntrees = 1000, learn_rate = 0.1, 
+          weights = missing_arg(), validation_frame = missing_arg(), 
+          ntrees = 1000, learn_rate = 0.1, gamma = 1/3, validation = 0.1)
+
+# gbm specs
+
+    Code
+      boost_tree(learn_rate = 0.1, trees = 1000) %>% set_engine("h2o_gbm") %>%
+        set_mode("regression") %>% translate()
+    Output
+      Boosted Tree Model Specification (regression)
+      
+      Main Arguments:
+        trees = 1000
+        learn_rate = 0.1
+      
+      Computational engine: h2o_gbm 
+      
+      Model fit template:
+      agua::h2o_train_gbm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          validation_frame = missing_arg(), ntrees = 1000, learn_rate = 0.1)
+
+---
+
+    Code
+      boost_tree(learn_rate = 0.1, trees = 1000) %>% set_engine("h2o_gbm", gamma = 1 /
+        3, validation = 0.1) %>% set_mode("regression") %>% translate()
+    Output
+      Boosted Tree Model Specification (regression)
+      
+      Main Arguments:
+        trees = 1000
+        learn_rate = 0.1
+      
+      Engine-Specific Arguments:
+        gamma = 1/3
+        validation = 0.1
+      
+      Computational engine: h2o_gbm 
+      
+      Model fit template:
+      agua::h2o_train_gbm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          validation_frame = missing_arg(), ntrees = 1000, learn_rate = 0.1, 
           gamma = 1/3, validation = 0.1)
 
 # linear regression specs
@@ -95,7 +138,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, family = "gaussian")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          family = "gaussian")
 
 ---
 
@@ -116,7 +160,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, solver = "IRLSM", family = "gaussian")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          solver = "IRLSM", family = "gaussian")
 
 # logistic regression specs
 
@@ -134,7 +179,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, family = "binomial")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          family = "binomial")
 
 ---
 
@@ -155,7 +201,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, theta = 1e-05, family = "binomial")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          theta = 1e-05, family = "binomial")
 
 # poisson regression specs
 
@@ -173,7 +220,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, family = "poisson")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          family = "poisson")
 
 ---
 
@@ -194,7 +242,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, solver = "L_BFGS", family = "poisson")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          solver = "L_BFGS", family = "poisson")
 
 # multinomial regression specs
 
@@ -212,7 +261,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, family = "multinomial")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          family = "multinomial")
 
 ---
 
@@ -233,7 +283,8 @@
       
       Model fit template:
       agua::h2o_train_glm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          lambda = 0.01, alpha = 0.5, theta = 1e-05, family = "multinomial")
+          validation_frame = missing_arg(), lambda = 0.01, alpha = 0.5, 
+          theta = 1e-05, family = "multinomial")
 
 # naive bayes specs
 
@@ -250,7 +301,7 @@
       
       Model fit template:
       agua::h2o_train_nb(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          laplace = 1)
+          validation_frame = missing_arg(), laplace = 1)
 
 ---
 
@@ -271,7 +322,8 @@
       
       Model fit template:
       agua::h2o_train_nb(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          laplace = 1, min_sdev = 1e-10, min_prob = 1e-05)
+          validation_frame = missing_arg(), laplace = 1, min_sdev = 1e-10, 
+          min_prob = 1e-05)
 
 # mlp specs
 
@@ -290,7 +342,8 @@
       
       Model fit template:
       agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          hidden = 100, l2 = 0.5, activation = "relu")
+          validation_frame = missing_arg(), hidden = 100, l2 = 0.5, 
+          activation = "relu")
 
 ---
 
@@ -312,7 +365,8 @@
       
       Model fit template:
       agua::h2o_train_mlp(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          hidden = 100, l2 = 0.5, activation = "relu", standarize = FALSE)
+          validation_frame = missing_arg(), hidden = 100, l2 = 0.5, 
+          activation = "relu", standarize = FALSE)
 
 ---
 
@@ -330,7 +384,8 @@
       
       Model fit template:
       agua::h2o_train_rule(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          rule_generation_ntrees = 100, max_rule_length = 5)
+          validation_frame = missing_arg(), rule_generation_ntrees = 100, 
+          max_rule_length = 5)
 
 ---
 
@@ -351,5 +406,6 @@
       
       Model fit template:
       agua::h2o_train_rule(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
-          rule_generation_ntrees = 100, max_rule_length = 5, algorithm = "DRF")
+          validation_frame = missing_arg(), rule_generation_ntrees = 100, 
+          max_rule_length = 5, algorithm = "DRF")
 

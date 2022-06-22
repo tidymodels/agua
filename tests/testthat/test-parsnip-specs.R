@@ -30,6 +30,22 @@ test_that("xgboost specs", {
   )
 })
 
+test_that("gbm specs", {
+  expect_snapshot(
+    boost_tree(learn_rate = .1, trees = 1000) %>%
+      set_engine("h2o_gbm") %>%
+      set_mode("regression") %>%
+      translate()
+  )
+
+  expect_snapshot(
+    boost_tree(learn_rate = .1, trees = 1000) %>%
+      set_engine("h2o_gbm", gamma = 1 / 3, validation = 0.1) %>%
+      set_mode("regression") %>%
+      translate()
+  )
+})
+
 test_that("linear regression specs", {
   expect_snapshot(
     linear_reg(mixture = 0.5, penalty = 1e-2) %>%

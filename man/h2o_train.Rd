@@ -4,13 +4,14 @@
 \alias{h2o_train}
 \alias{h2o_train_rf}
 \alias{h2o_train_xgboost}
+\alias{h2o_train_gbm}
 \alias{h2o_train_glm}
 \alias{h2o_train_nb}
 \alias{h2o_train_mlp}
 \alias{h2o_train_rule}
 \title{Model wrappers for h2o}
 \usage{
-h2o_train(x, y, model, weights = NULL, ...)
+h2o_train(x, y, model, weights = NULL, validation = NULL, ...)
 
 h2o_train_rf(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...)
 
@@ -25,7 +26,21 @@ h2o_train_xgboost(
   col_sample_rate = 1,
   min_split_improvement = 0,
   stopping_rounds = 0,
-  validation = 0,
+  validation = NULL,
+  ...
+)
+
+h2o_train_gbm(
+  x,
+  y,
+  ntrees = 50,
+  max_depth = 6,
+  min_rows = 1,
+  learn_rate = 0.3,
+  sample_rate = 1,
+  col_sample_rate = 1,
+  min_split_improvement = 0,
+  stopping_rounds = 0,
   ...
 )
 
@@ -41,7 +56,7 @@ h2o_train_mlp(
   hidden_dropout_ratios = 0,
   epochs = 10,
   activation = "Rectifier",
-  validation = 0,
+  validation = NULL,
   ...
 )
 
@@ -55,16 +70,19 @@ h2o_train_rule(
 )
 }
 \arguments{
-\item{x}{A data frame of predictors}
+\item{x}{A data frame of predictors.}
 
 \item{y}{A vector of outcomes.}
 
 \item{model}{A character string for the model. Current selections are
-\code{"randomForest"}, \code{"xgboost"}, \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
+\code{"randomForest"}, \code{"xgboost"}, "\code{gbm}", \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
 \code{"naiveBayes"}. Use \code{\link[h2o:h2o.xgboost.available]{h2o::h2o.xgboost.available()}} to see if xgboost
 can be used on your OS/h2o server.}
 
 \item{weights}{A numeric vector of case weights.}
+
+\item{validation}{The \emph{proportion} of the data that are used for performance
+assessment and potential early stopping.}
 
 \item{...}{Other options to pass to the h2o model functions (e.g.,
 \code{\link[h2o:h2o.randomForest]{h2o::h2o.randomForest()}}).}
@@ -88,9 +106,6 @@ classification and p/3 for regression (where p is the # of predictors Defaults t
 
 \item{stopping_rounds}{Early stopping based on convergence of stopping_metric. Stop if simple moving average of length k of the
 stopping_metric does not improve for k:=stopping_rounds scoring events (0 to disable) Defaults to 0.}
-
-\item{validation}{The \emph{proportion} of the data that are used for performance
-assessment and potential early stopping.}
 
 \item{lambda}{Regularization strength}
 
@@ -122,11 +137,6 @@ An h2o model object.
 \description{
 Basic model wrappers for h2o model functions that include data conversion,
 seed configuration, and so on.
-}
-\details{
-For fitting neural networks with \code{h2o_train_mlp()}, the underlying h2o
-function \code{\link[h2o:h2o.deeplearning]{h2o::h2o.deeplearning()}} ignores the seed and can produce different
-models that cannot be reproduced.
 }
 \examples{
 # start with h2o::h2o.init()
