@@ -147,6 +147,8 @@ convert_h2o_parsnip <- function(x, spec, lvl = NULL, extra_class = "h2o_fit", ..
     "model_fit"
   )
   res
+}
+
 xgboost_available <- function() {
   "XGBoost" %in% h2o::h2o.list_core_extensions()
 }

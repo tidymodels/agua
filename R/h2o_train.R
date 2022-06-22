@@ -5,6 +5,7 @@
 #'
 #' @inheritParams h2o::h2o.randomForest
 #' @inheritParams h2o::h2o.xgboost
+#' @inheritParams h2o::h2o.gbm
 #' @inheritParams h2o::h2o.glm
 #' @inheritParams h2o::h2o.deeplearning
 #' @inheritParams h2o::h2o.rulefit
@@ -45,11 +46,7 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
-<<<<<<< HEAD
-h2o_train <- function(x, y, model, weights = NULL, ...) {
-=======
 h2o_train <- function(x, y, model, weights = NULL, validation = NULL, ...) {
->>>>>>> gbm
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
   x_names <- names(x)
@@ -62,12 +59,6 @@ h2o_train <- function(x, y, model, weights = NULL, validation = NULL, ...) {
   }
 
   # if passed in validation, split x into train and validation set
-<<<<<<< HEAD
-  validation <- opts$validation
-  opts$validation <- NULL
-
-=======
->>>>>>> gbm
   if (!is.null(validation)) {
     if (length(validation) > 1 || validation < 0 || validation > 1) {
       rlang::abort("`validation` should be a number between 0 and 1")
