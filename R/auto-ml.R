@@ -1,8 +1,8 @@
 #' Tools for working with H2O AutoML results
 #'
 #' @description
-#' `rank_results_automl()` ranks average cross validation performances of different
-#' candidate models and algorithms on each metric.
+#' `rank_results_automl()` ranks average cross validation performances of
+#' candidate models on each metric.
 #'
 #' `tidy()` returns a tibble with average performance for each candidate model.
 #' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
@@ -19,16 +19,13 @@
 #' `auto_ml()` results. When `id` is null, it returns the leader model.
 #'
 #' @details
-#' Algorithms in h2o's automatic machine learning include xgboost,
+#' Algorithms in h2o's automatic machine learning process include xgboost,
 #' gradient boosting (`"GBM"`), random forest and variants (`"DRF"`, `"XRT"`),
 #' generalized linear model (`"GLM"`), and neural network (`"deeplearning"`).
 #' See the details section in [h2o::h2o.automl()] for more information.
 #' @param object A fitted `auto_ml()` model.
 #' @param n The number of models to extract from `auto_ml()` results,
 #'  default to all.
-#' @param summarize A logical value for should metrics be summarized over
-#' resamples. Rankings are always based on average performance even if
-#' `summarize` is `FALSE`.
 #'
 #' @param ... Not used.
 #' @return A [tibble::tibble()].
@@ -72,37 +69,24 @@ rank_results_automl.model_fit <- function(object, n = NULL, id = NULL, ...) {
 rank_results_automl.H2OAutoML <- function(object,
                                           n = NULL,
                                           id = NULL,
-                                          summarize = TRUE,
                                           ...) {
   leaderboard <- get_leaderboard(object, n, id)
   id <- leaderboard$model_id
   models <- purrr::map(id, get_model)
-  cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = summarize)
+  cv_metrics <- purrr::map_dfr(models, get_cv_metrics)
 
-  if (summarize) {
-    res <- cv_metrics %>%
-      dplyr::left_join(metric_info, by = ".metric") %>%
-      dplyr::group_by(.metric) %>%
-      dplyr::mutate(rank = rank(mean * direction, ties.method = "random"))
-
-  } else {
-    res_rank <- cv_metrics %>%
-      dplyr::group_by(.metric, id) %>%
-      dplyr::summarize(mean = mean(value)) %>%
-      dplyr::left_join(metric_info, by = c(".metric")) %>%
-      dplyr::mutate(rank = rank(mean * direction, ties.method = "random")) %>%
-      dplyr::select(-mean)
-
-    res <- cv_metrics %>% dplyr::left_join(res_rank, by = c("id", ".metric"))
-  }
-
-  res %>%
+  res <- cv_metrics %>%
+    dplyr::left_join(metric_info, by = ".metric") %>%
+    dplyr::group_by(.metric) %>%
+    dplyr::mutate(rank = rank(mean * direction, ties.method = "random")) %>%
     dplyr::select(-direction) %>%
     dplyr::ungroup()
+
+  res
 }
 
 
-get_cv_metrics <- function(x, summarize) {
+get_cv_metrics <- function(x) {
   cv_summary <- x@model$cross_validation_metrics_summary
   cv_summary[["sd"]] <- NULL
   cv_summary[["mean"]] <- NULL
@@ -116,17 +100,12 @@ get_cv_metrics <- function(x, summarize) {
     tidyr::pivot_longer(dplyr::starts_with("cv"),
       names_to = "cv_id",
       values_to = "value"
+    ) %>%
+    dplyr::group_by(id, algorithm, .metric) %>%
+    dplyr::summarize(
+      mean = mean(value, na.rm = TRUE),
+      .groups = "drop"
     )
-
-  if (summarize) {
-    res <- res %>%
-      dplyr::group_by(id, algorithm, .metric) %>%
-      dplyr::summarize(
-        std_err = sd(value, na.rm = TRUE) / sqrt(dplyr::n()),
-        mean = mean(value, na.rm = TRUE),
-        .groups = "drop"
-      )
-  }
 
   res
 }

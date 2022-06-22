@@ -17,7 +17,7 @@ rank_results_automl(object, ...)
 
 \method{rank_results_automl}{model_fit}(object, n = NULL, id = NULL, ...)
 
-\method{rank_results_automl}{H2OAutoML}(object, n = NULL, id = NULL, summarize = TRUE, ...)
+\method{rank_results_automl}{H2OAutoML}(object, n = NULL, id = NULL, ...)
 
 \method{tidy}{`_H2OAutoML`}(object, n = NULL, id = NULL, keep_model = TRUE, ...)
 
@@ -37,10 +37,6 @@ default to all.}
 
 \item{id}{A character vector of model ids to retrieve.}
 
-\item{summarize}{A logical value for should metrics be summarized over
-resamples. Rankings are always based on average performance even if
-\code{summarize} is \code{FALSE}.}
-
 \item{keep_model}{A logical value for if the actual model object
 should be retrieved from the server. Defaults to \code{TRUE}.}
 }
@@ -48,8 +44,8 @@ should be retrieved from the server. Defaults to \code{TRUE}.}
 A \code{\link[tibble:tibble]{tibble::tibble()}}.
 }
 \description{
-\code{rank_results_automl()} ranks average cross validation performances of different
-candidate models and algorithms on each metric.
+\code{rank_results_automl()} ranks average cross validation performances of
+candidate models on each metric.
 
 \code{tidy()} returns a tibble with average performance for each candidate model.
 When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
@@ -66,7 +62,7 @@ This is typically the coefficient magnitude in the second-level GLM model.
 \code{auto_ml()} results. When \code{id} is null, it returns the leader model.
 }
 \details{
-Algorithms in h2o's automatic machine learning include xgboost,
+Algorithms in h2o's automatic machine learning process include xgboost,
 gradient boosting (\code{"GBM"}), random forest and variants (\code{"DRF"}, \code{"XRT"}),
 generalized linear model (\code{"GLM"}), and neural network (\code{"deeplearning"}).
 See the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for more information.

@@ -78,11 +78,7 @@ h2o_train_auto(x, y, verbosity = NULL, ...)
 \item{y}{A vector of outcomes.}
 
 \item{model}{A character string for the model. Current selections are
-<<<<<<< HEAD
-\code{"automl"}, \code{"randomForest"}, \code{"xgboost"}, \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
-=======
-\code{"randomForest"}, \code{"xgboost"}, "\code{gbm}", \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
->>>>>>> gbm
+\code{"automl"}, \code{"randomForest"}, \code{"xgboost"}, \code{"gbm"}, \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
 \code{"naiveBayes"}. Use \code{\link[h2o:h2o.xgboost.available]{h2o::h2o.xgboost.available()}} to see if xgboost
 can be used on your OS/h2o server.}
 

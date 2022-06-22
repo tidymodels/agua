@@ -14,7 +14,6 @@ m
 
 # rank all algorithms by cross validation performance
 rank_results_automl(m)
-rank_results_automl(m, summarize = FALSE)
 
 # autoplot methods for plotting cross validation performances
 # plot ranking
