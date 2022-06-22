@@ -33,8 +33,8 @@ helper_objects_tune <- function() {
   )
 }
 
-expect_h2o_fit <- function(spec, data = NULL, formula = NULL, ...) {
-  spec <- spec %>% set_engine("h2o", ...)
+expect_h2o_fit <- function(spec, data = NULL, formula = NULL, engine = "h2o", ...) {
+  spec <- spec %>% set_engine(engine, ...)
   if (spec$mode == "regression") {
     data <- if (is.null(data)) mtcars else data
     formula <- if (is.null(formula)) (mpg ~ .) else formula

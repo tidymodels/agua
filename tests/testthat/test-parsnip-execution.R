@@ -75,13 +75,22 @@ test_that("xgboost execution", {
   skip_if(!interactive())
   h2o_start()
 
-  skip_if_not(h2o::h2o.xgboost.available())
+  skip_if(!xgboost_available())
   expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
     set_mode("regression"))
   expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
     set_mode("classification"))
 })
 
+test_that("gbm execution", {
+  skip_if(!interactive())
+  h2o_start()
+
+  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
+                   set_mode("regression"), engine = "h2o_gbm")
+  expect_h2o_fit(boost_tree(learn_rate = .1, trees = 5) %>%
+                   set_mode("classification"), engine = "h2o_gbm")
+})
 
 test_that("automl execution", {
   skip_if(!interactive())
@@ -127,3 +136,5 @@ test_that("automl tools", {
   expect_warning(print(leader))
   expect_s3_class(leader, c("h2o_fit", "model_fit"))
 })
+
+
