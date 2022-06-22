@@ -149,6 +149,10 @@ convert_h2o_parsnip <- function(x, spec, lvl = NULL, extra_class = "h2o_fit", ..
   res
 }
 
+xgboost_available <- function() {
+  "XGBoost" %in% h2o::h2o.list_core_extensions()
+}
+
 #' Check if h2o cluster is initialized
 #'
 #' @param verbose Print out the message if no cluster is available.

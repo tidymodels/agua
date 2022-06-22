@@ -81,6 +81,47 @@
           weights = missing_arg(), validation_frame = missing_arg(), 
           ntrees = 1000, learn_rate = 0.1, gamma = 1/3, validation = 0.1)
 
+# gbm specs
+
+    Code
+      boost_tree(learn_rate = 0.1, trees = 1000) %>% set_engine("h2o_gbm") %>%
+        set_mode("regression") %>% translate()
+    Output
+      Boosted Tree Model Specification (regression)
+      
+      Main Arguments:
+        trees = 1000
+        learn_rate = 0.1
+      
+      Computational engine: h2o_gbm 
+      
+      Model fit template:
+      agua::h2o_train_gbm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          validation_frame = missing_arg(), ntrees = 1000, learn_rate = 0.1)
+
+---
+
+    Code
+      boost_tree(learn_rate = 0.1, trees = 1000) %>% set_engine("h2o_gbm", gamma = 1 /
+        3, validation = 0.1) %>% set_mode("regression") %>% translate()
+    Output
+      Boosted Tree Model Specification (regression)
+      
+      Main Arguments:
+        trees = 1000
+        learn_rate = 0.1
+      
+      Engine-Specific Arguments:
+        gamma = 1/3
+        validation = 0.1
+      
+      Computational engine: h2o_gbm 
+      
+      Model fit template:
+      agua::h2o_train_gbm(x = missing_arg(), y = missing_arg(), weights = missing_arg(), 
+          validation_frame = missing_arg(), ntrees = 1000, learn_rate = 0.1, 
+          gamma = 1/3, validation = 0.1)
+
 # linear regression specs
 
     Code

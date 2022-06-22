@@ -376,7 +376,7 @@ add_rand_forest_h2o <- function() {
   )
 }
 
-add_boost_tree_h2o <- function() {
+add_xgboost_h2o <- function() {
   parsnip::set_model_engine("boost_tree", "classification", "h2o")
   parsnip::set_model_engine("boost_tree", "regression", "h2o")
   parsnip::set_dependency("boost_tree", "h2o", "h2o")
@@ -521,6 +521,154 @@ add_boost_tree_h2o <- function() {
     value = class_info_prob
   )
 }
+
+add_gbm_h2o <- function() {
+  parsnip::set_model_engine("boost_tree", "classification", "h2o_gbm")
+  parsnip::set_model_engine("boost_tree", "regression", "h2o_gbm")
+  parsnip::set_dependency("boost_tree", "h2o_gbm", "h2o")
+  parsnip::set_dependency("boost_tree", "h2o_gbm", "agua")
+
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "trees",
+    original = "ntrees",
+    func = list(pkg = "dials", fun = "trees"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "tree_depth",
+    original = "max_depth",
+    func = list(pkg = "dials", fun = "tree_depth"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "min_n",
+    original = "min_rows",
+    func = list(pkg = "dials", fun = "min_n"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "learn_rate",
+    original = "learn_rate",
+    func = list(pkg = "dials", fun = "learn_rate"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "sample_size",
+    original = "sample_rate",
+    func = list(pkg = "dials", fun = "sample_size"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "mtry",
+    original = "col_sample_rate",
+    func = list(pkg = "dials", fun = "mtry"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "loss_reduction",
+    original = "min_split_improvement",
+    func = list(pkg = "dials", fun = "loss_reduction"),
+    has_submodel = FALSE
+  )
+  parsnip::set_model_arg(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    parsnip = "stop_iter",
+    original = "stopping_rounds",
+    func = list(pkg = "dials", fun = "stop_iter"),
+    has_submodel = FALSE
+  )
+  parsnip::set_fit(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "regression",
+    value = list(
+      interface = "data.frame",
+      protect = c("x", "y", "weights", "validation_frame"),
+      func = c(pkg = "agua", fun = "h2o_train_gbm"),
+      defaults = list()
+    )
+  )
+  parsnip::set_fit(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "classification",
+    value = list(
+      interface = "data.frame",
+      protect = c("x", "y", "weights", "validation_frame"),
+      func = c(pkg = "agua", fun = "h2o_train_gbm"),
+      defaults = list()
+    )
+  )
+  parsnip::set_encoding(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "classification",
+    options = list(
+      predictor_indicators = "none",
+      compute_intercept = FALSE,
+      remove_intercept = FALSE,
+      allow_sparse_x = FALSE
+    )
+  )
+  parsnip::set_encoding(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "regression",
+    options = list(
+      predictor_indicators = "none",
+      compute_intercept = FALSE,
+      remove_intercept = FALSE,
+      allow_sparse_x = FALSE
+    )
+  )
+  # regression predict
+  parsnip::set_pred(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "regression",
+    type = "numeric",
+    value = reg_info
+  )
+  parsnip::set_pred(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "regression",
+    type = "raw",
+    value = reg_info_raw
+  )
+  # classification predict
+  parsnip::set_pred(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "classification",
+    type = "class",
+    value = class_info
+  )
+  parsnip::set_pred(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    mode = "classification",
+    type = "prob",
+    value = class_info_prob
+  )
+}
+
+
 
 add_naive_Bayes_h2o <- function() {
   parsnip::set_model_engine("naive_Bayes", "classification", "h2o")

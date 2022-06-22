@@ -10,10 +10,11 @@
 #' @inheritParams h2o::h2o.rulefit
 #' @inheritParams h2o::h2o.naiveBayes
 #' @inheritParams h2o::h2o.automl
+#' @inheritParams h2o::h2o.gbm
 #' @param x A data frame of predictors.
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
-#' `"automl"`, `"randomForest"`, `"xgboost"`, `"glm"`, `"deeplearning"`, `"rulefit"` and
+#' `"automl"`, `"randomForest"`, `"xgboost"`, "`gbm`", `"glm"`, `"deeplearning"`, `"rulefit"` and
 #' `"naiveBayes"`. Use [h2o::h2o.xgboost.available()] to see if xgboost
 #' can be used on your OS/h2o server.
 #' @param weights A numeric vector of case weights.
@@ -45,7 +46,7 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
-h2o_train <- function(x, y, model, weights = NULL, ...) {
+h2o_train <- function(x, y, model, weights = NULL, validation = NULL, ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
   x_names <- names(x)
@@ -58,9 +59,6 @@ h2o_train <- function(x, y, model, weights = NULL, ...) {
   }
 
   # if passed in validation, split x into train and validation set
-  validation <- opts$validation
-  opts$validation <- NULL
-
   if (!is.null(validation)) {
     if (length(validation) > 1 || validation < 0 || validation > 1) {
       rlang::abort("`validation` should be a number between 0 and 1")
@@ -128,8 +126,15 @@ h2o_train_xgboost <-
            col_sample_rate = 1,
            min_split_improvement = 0,
            stopping_rounds = 0,
-           validation = 0,
+           validation = NULL,
            ...) {
+    if (!xgboost_available()) {
+      msg <- paste0("H2o's xgboost algorithm isn't available on this machine",
+                    "try using the 'h2o_gbm' engine for `boost_tree()` instead",
+                    "for gradient boosted trees instead.")
+      rlang::abort(msg)
+    }
+
     h2o_train(
       x,
       y,
@@ -145,6 +150,36 @@ h2o_train_xgboost <-
       ...
     )
   }
+
+#' @export
+#' @rdname h2o_train
+h2o_train_gbm <-
+  function(x,
+           y,
+           ntrees = 50,
+           max_depth = 6,
+           min_rows = 1,
+           learn_rate = 0.3,
+           sample_rate = 1,
+           col_sample_rate = 1,
+           min_split_improvement = 0,
+           stopping_rounds = 0,
+           ...) {
+    h2o_train(
+      x,
+      y,
+      model = "gbm",
+      ntrees = ntrees,
+      max_depth = max_depth,
+      min_rows = min_rows,
+      learn_rate = learn_rate,
+      sample_rate = sample_rate,
+      col_sample_rate = col_sample_rate,
+      stopping_rounds = stopping_rounds,
+      ...
+    )
+  }
+
 
 #' @export
 #' @rdname h2o_train
@@ -193,7 +228,7 @@ h2o_train_mlp <- function(x, y,
                           hidden_dropout_ratios = 0,
                           epochs = 10,
                           activation = "Rectifier",
-                          validation = 0,
+                          validation = NULL,
                           ...) {
   activation <- switch(activation,
     relu = "Rectifier",
