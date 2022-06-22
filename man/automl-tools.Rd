@@ -6,10 +6,10 @@
 \alias{rank_results_automl.model_fit}
 \alias{rank_results_automl.H2OAutoML}
 \alias{tidy._H2OAutoML}
-\alias{autoplot.H2OAutoML}
-\alias{imp_stacking}
+\alias{get_leaderboard}
+\alias{member_weights}
 \alias{extract_fit_parsnip._H2OAutoML}
-\title{Tools for working with h2o auto_ml results}
+\title{Tools for working with H2O AutoML results}
 \usage{
 rank_results_automl(object, ...)
 
@@ -17,15 +17,15 @@ rank_results_automl(object, ...)
 
 \method{rank_results_automl}{model_fit}(object, n = NULL, id = NULL, ...)
 
-\method{rank_results_automl}{H2OAutoML}(object, n = NULL, id = NULL, ...)
+\method{rank_results_automl}{H2OAutoML}(object, n = NULL, id = NULL, summarize = TRUE, ...)
 
 \method{tidy}{`_H2OAutoML`}(object, n = NULL, id = NULL, keep_model = TRUE, ...)
 
-\method{autoplot}{H2OAutoML}(object, type = c("rank", "metric"), metric = NULL, ...)
+get_leaderboard(object, n = NULL, id = NULL)
 
-imp_stacking(object, ...)
+member_weights(object, ...)
 
-\method{extract_fit_parsnip}{`_H2OAutoML`}(x, id = NULL)
+\method{extract_fit_parsnip}{`_H2OAutoML`}(object, id = NULL, ...)
 }
 \arguments{
 \item{object}{A fitted \code{auto_ml()} model.}
@@ -33,26 +33,23 @@ imp_stacking(object, ...)
 \item{...}{Not used.}
 
 \item{n}{The number of models to extract from \code{auto_ml()} results,
-ranked descendingly by performance. Default to all.}
+default to all.}
 
 \item{id}{A character vector of model ids to retrieve.}
 
+\item{summarize}{A logical value for should metrics be summarized over
+resamples. Rankings are always based on average performance even if
+\code{summarize} is \code{FALSE}.}
+
 \item{keep_model}{A logical value for if the actual model object
 should be retrieved from the server. Defaults to \code{TRUE}.}
-
-\item{type}{A single character of choices of "rank" (plotting average ranking
-of algorithms within metrics) or "metric" (plotting average value of metrics).}
-
-\item{metric}{A character vector or NULL for which metric to plot.
-By default, all metrics will be shown via facets.}
 }
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}}.
 }
 \description{
-\code{rank_results_automl()} ranks cross validation performances of different
-candidate models and algorithms on each metric. \code{autoplot()} uses the
-ranking table to plot performances via facets.
+\code{rank_results_automl()} ranks average cross validation performances of different
+candidate models and algorithms on each metric.
 
 \code{tidy()} returns a tibble with average performance for each candidate model.
 When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
@@ -61,7 +58,7 @@ from the h2o model. These objects are meant to be used for prediction only,
 i.e., \code{predict(object, new_data = data)}, and should not be used as a
 regular parsnip model.
 
-\code{imp_stacking()} computes variable importance for all stacked ensemble
+\code{member_weights()} computes variable importance for all stacked ensemble
 models, i.e., the relative importance of base models in the meta-learner.
 This is typically the coefficient magnitude in the second-level GLM model.
 

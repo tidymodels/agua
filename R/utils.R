@@ -6,6 +6,7 @@ all_algos <- c(
   "multinom_reg", "mlp", "naive_Bayes", "auto_ml"
 )
 
+
 extract_h2o_algorithm <- function(workflow, ...) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
   model_class <- class(model_spec)[1]
@@ -123,6 +124,13 @@ get_model <- function(id) {
     h2o:::with_no_h2o_progress(h2o::h2o.getModel(id))
   )
   res
+}
+
+# extract algorithm from model id
+id_to_algorithm <- function(id) {
+  algo <- tolower(sub("_.+", "", id))
+  algo[algo == "xrt"] <- "drf"
+  algo
 }
 
 # convert a h2o model to parsnip `model_fit` object

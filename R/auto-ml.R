@@ -1,9 +1,8 @@
-#' Tools for working with h2o auto_ml results
+#' Tools for working with H2O AutoML results
 #'
 #' @description
-#' `rank_results_automl()` ranks cross validation performances of different
-#' candidate models and algorithms on each metric. `autoplot()` uses the
-#' ranking table to plot performances via facets.
+#' `rank_results_automl()` ranks average cross validation performances of different
+#' candidate models and algorithms on each metric.
 #'
 #' `tidy()` returns a tibble with average performance for each candidate model.
 #' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
@@ -12,7 +11,7 @@
 #' i.e., `predict(object, new_data = data)`, and should not be used as a
 #' regular parsnip model.
 #'
-#' `imp_stacking()` computes variable importance for all stacked ensemble
+#' `member_weights()` computes variable importance for all stacked ensemble
 #' models, i.e., the relative importance of base models in the meta-learner.
 #' This is typically the coefficient magnitude in the second-level GLM model.
 #'
@@ -25,6 +24,12 @@
 #' generalized linear model (`"GLM"`), and neural network (`"deeplearning"`).
 #' See the details section in [h2o::h2o.automl()] for more information.
 #' @param object A fitted `auto_ml()` model.
+#' @param n The number of models to extract from `auto_ml()` results,
+#'  default to all.
+#' @param summarize A logical value for should metrics be summarized over
+#' resamples. Rankings are always based on average performance even if
+#' `summarize` is `FALSE`.
+#'
 #' @param ... Not used.
 #' @return A [tibble::tibble()].
 #' @examples
@@ -55,34 +60,53 @@ rank_results_automl.default <- function(object, ...) {
 }
 
 #' @rdname automl-tools
-#' @param n The number of models to extract from `auto_ml()` results,
-#'  ranked descendingly by performance. Default to all.
 #' @export
 rank_results_automl.model_fit <- function(object, n = NULL, id = NULL, ...) {
   check_automl_fit(object)
   rank_results_automl.H2OAutoML(object$fit, n = n, id = id, ...)
 }
 
+
 #' @rdname automl-tools
 #' @export
-rank_results_automl.H2OAutoML <- function(object, n = NULL, id = NULL, ...) {
+rank_results_automl.H2OAutoML <- function(object,
+                                          n = NULL,
+                                          id = NULL,
+                                          summarize = TRUE,
+                                          ...) {
   leaderboard <- get_leaderboard(object, n, id)
   id <- leaderboard$model_id
   models <- purrr::map(id, get_model)
-  models_summary <- purrr::map_dfr(models, summarize_cv)
+  cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = summarize)
 
-  models_summary %>%
-    dplyr::left_join(metric_info, by = ".metric") %>%
-    dplyr::group_by(.metric) %>%
-    dplyr::mutate(rank = rank(mean * direction, ties.method = "random")) %>%
+  if (summarize) {
+    res <- cv_metrics %>%
+      dplyr::left_join(metric_info, by = ".metric") %>%
+      dplyr::group_by(.metric) %>%
+      dplyr::mutate(rank = rank(mean * direction, ties.method = "random"))
+
+  } else {
+    res_rank <- cv_metrics %>%
+      dplyr::group_by(.metric, id) %>%
+      dplyr::summarize(mean = mean(value)) %>%
+      dplyr::left_join(metric_info, by = c(".metric")) %>%
+      dplyr::mutate(rank = rank(mean * direction, ties.method = "random")) %>%
+      dplyr::select(-mean)
+
+    res <- cv_metrics %>% dplyr::left_join(res_rank, by = c("id", ".metric"))
+  }
+
+  res %>%
     dplyr::select(-direction) %>%
     dplyr::ungroup()
 }
 
 
-summarize_cv <- function(x) {
+get_cv_metrics <- function(x, summarize) {
   cv_summary <- x@model$cross_validation_metrics_summary
-  df <- tibble::as_tibble(cv_summary) %>%
+  cv_summary[["sd"]] <- NULL
+  cv_summary[["mean"]] <- NULL
+  res <- tibble::as_tibble(cv_summary) %>%
     dplyr::mutate(
       id = x@model_id,
       algorithm = x@algorithm,
@@ -90,11 +114,21 @@ summarize_cv <- function(x) {
       .before = 1
     ) %>%
     tidyr::pivot_longer(dplyr::starts_with("cv"),
-      names_to = "cv_id"
-    ) %>%
-    tidyr::nest(cv_details = c(cv_id, value))
+      names_to = "cv_id",
+      values_to = "value"
+    )
 
-  df
+  if (summarize) {
+    res <- res %>%
+      dplyr::group_by(id, algorithm, .metric) %>%
+      dplyr::summarize(
+        std_err = sd(value, na.rm = TRUE) / sqrt(dplyr::n()),
+        mean = mean(value, na.rm = TRUE),
+        .groups = "drop"
+      )
+  }
+
+  res
 }
 
 metric_info <- tibble::tribble(
@@ -149,9 +183,9 @@ tidy._H2OAutoML <- function(object,
       names_to = ".metric",
       values_to = "mean"
     ) %>%
-    dplyr::nest_by(model_id, .key = ".metric") %>%
-    dplyr::ungroup() %>%
-    dplyr::rename(id = model_id)
+    dplyr::rename(id = model_id) %>%
+    tidyr::nest(.metric = c(.metric, mean)) %>%
+    dplyr::ungroup()
 
   if (!keep_model) {
     return(leaderboard)
@@ -169,48 +203,7 @@ tidy._H2OAutoML <- function(object,
 }
 
 #' @rdname automl-tools
-#' @param type A single character of choices of "rank" (plotting average ranking
-#'  of algorithms within metrics) or "metric" (plotting average value of metrics).
-#' @param metric A character vector or NULL for which metric to plot.
-#'  By default, all metrics will be shown via facets.
 #' @export
-autoplot.H2OAutoML <- function(object,
-                               type = c("rank", "metric"),
-                               metric = NULL,
-                               ...) {
-  type <- match.arg(type)
-  results <- rank_results_automl(object, ...)
-  if (!is.null(metric)) {
-    results <- results %>% dplyr::filter(.metric %in% metric)
-  }
-  results <- results %>% dplyr::group_by(.metric, algorithm)
-
-  if (type == "rank") {
-    results <- results %>% dplyr::summarise(value = mean(rank))
-  } else if (type == "metric") {
-    results <- results %>% dplyr::summarise(value = mean(mean))
-  }
-
-  p <- results %>%
-    ggplot2::ggplot() +
-    ggplot2::geom_col(ggplot2::aes(value, algorithm))
-
-  num_metrics <- length(unique(results$.metric))
-  if (num_metrics > 1) {
-    xlab <- if (type == "rank") "Ranking" else "Metric"
-    results$.metric <- factor(results$.metric)
-    p <- p +
-      ggplot2::facet_wrap(~.metric, scales = "free_y", as.table = FALSE) +
-      ggplot2::labs(x = xlab, y = "Algorithm")
-  } else {
-    metric_name <- results$.metric[[1]]
-    xlab <- if (type == "rank") paste0("Ranking on ", metric_name) else metric_name
-    p <- p + ggplot2::labs(x = xlab, y = "Algorithm")
-  }
-
-  p
-}
-
 get_leaderboard <- function(object, n = NULL, id = NULL) {
   if (inherits(object, "_H2OAutoML")) {
     object <- object$fit
@@ -230,25 +223,29 @@ get_leaderboard <- function(object, n = NULL, id = NULL) {
 
 #' @rdname automl-tools
 #' @export
-imp_stacking <- function(object, ...) {
+member_weights <- function(object, ...) {
   check_automl_fit(object)
   leaderboard <- get_leaderboard(object)
   model_id <- leaderboard[grep("StackedEnsemble", leaderboard$model_id), ]$model_id
+  ranks <- match(model_id, leaderboard$model_id)
+
 
   tibble::tibble(
-    stacked_model_id = model_id,
-    importance = purrr::map(model_id, get_stacking_imp)
+    ensemble_id = model_id,
+    rank = ranks,
+    importance = purrr::map(ensemble_id, get_stacking_imp)
   )
 }
 
 get_stacking_imp <- function(id) {
   mod <- get_model(id)
   meta_learner <- get_model(mod@model$metalearner$name)
-  res <-  tibble::as_tibble(h2o::h2o.varimp(meta_learner))
+  res <- tibble::as_tibble(h2o::h2o.varimp(meta_learner))
 
   res %>%
-    dplyr::rename(id = variable) %>%
-    tidyr::pivot_longer(-id, names_to = "type", values_to = "value")
+    dplyr::rename(member = variable) %>%
+    dplyr::mutate(algorithm = id_to_algorithm(member)) %>%
+    tidyr::pivot_longer(-c(member, algorithm), names_to = "type", values_to = "value")
 }
 
 check_leaderboard_n <- function(leaderboard, n) {
@@ -265,14 +262,14 @@ check_leaderboard_n <- function(leaderboard, n) {
 
 #' @export
 #' @rdname automl-tools
-extract_fit_parsnip._H2OAutoML <- function(x, id = NULL) {
+extract_fit_parsnip._H2OAutoML <- function(object, id = NULL, ...) {
   if (is.null(id)) {
-    id <- m$fit@leader@model_id
+    id <- object$fit@leader@model_id
   }
   mod <- get_model(id)
-  leaderboard <- get_leaderboard(x)
+  leaderboard <- get_leaderboard(object)
   automl_rank <- match(id, leaderboard$model_id)
-  mod <- convert_h2o_parsnip(mod, x$spec, x$lvl, extra_class = NULL)
+  mod <- convert_h2o_parsnip(mod, object$spec, object$lvl, extra_class = NULL)
   class(mod) <- c("h2o_fit", "H2OAutoML_fit", class(mod))
   attr(mod, "automl_rank") <- automl_rank
   mod

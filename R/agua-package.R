@@ -12,7 +12,7 @@
 ## usethis namespace: start
 #' @importFrom parsnip set_model_arg
 #' @importFrom tune tune
-#' @importFrom stats predict
+#' @importFrom stats predict qnorm
 ## usethis namespace: end
 NULL
 
@@ -21,6 +21,6 @@ utils::globalVariables(
     ".iter_config", ".iter_preprocessor", ".iter_model", "data", "engine",
     "out_notes", "role", "parsnip", ".msg_model", "original", "predict", "name",
     ".metric", "algorithm", "value", "direction", "cv_id", "model_id", "id",
-    "variable", ".model"
+    "variable", ".model", "sd", "std_err", "mean", "member", "ensemble_id"
   )
 )

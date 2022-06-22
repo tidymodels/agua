@@ -1,4 +1,4 @@
-#' Printing wrappers for h2o models
+#' Print wrappers for H2O models
 #' @rdname print-h2o
 #' @export
 #' @keywords internal
