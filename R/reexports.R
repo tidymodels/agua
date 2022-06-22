@@ -17,3 +17,7 @@ ggplot2::autoplot
 #' @importFrom hardhat extract_fit_parsnip
 #' @export
 hardhat::extract_fit_parsnip
+
+#' @importFrom tune collect_metrics
+#' @export
+tune::collect_metrics

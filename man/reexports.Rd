@@ -8,6 +8,7 @@
 \alias{tidy}
 \alias{autoplot}
 \alias{extract_fit_parsnip}
+\alias{collect_metrics}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -24,5 +25,7 @@ below to see their documentation.
   \item{hardhat}{\code{\link[hardhat:hardhat-extract]{extract_fit_parsnip}}}
 
   \item{tibble}{\code{\link[tibble]{as_tibble}}}
+
+  \item{tune}{\code{\link[tune:collect_predictions]{collect_metrics}}}
 }}
 

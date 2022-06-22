@@ -15,8 +15,8 @@
 \arguments{
 \item{object}{A fitted \code{auto_ml()} model.}
 
-\item{type}{A single character of choices of "rank" (plotting average ranking
-of algorithms within metrics) or "metric" (plotting average value of metrics).}
+\item{type}{A character value for whether to plot average ranking ("rank")
+or metrics ("metric").}
 
 \item{metric}{A character vector or NULL for which metric to plot.
 By default, all metrics will be shown via facets.}

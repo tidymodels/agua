@@ -4,6 +4,9 @@
 #' `rank_results_automl()` ranks average cross validation performances of
 #' candidate models on each metric.
 #'
+#' `collect_metrics()` returns average statistics of performance metrics
+#'  (summarized) per model, or raw value in each resample (unsummarized).
+#'
 #' `tidy()` returns a tibble with average performance for each candidate model.
 #' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
 #' component is a "fake" parsnip `model_fit` object constructed
@@ -26,7 +29,7 @@
 #' @param object A fitted `auto_ml()` model.
 #' @param n The number of models to extract from `auto_ml()` results,
 #'  default to all.
-#'
+#' @param id A character vector of model ids to retrieve.
 #' @param ... Not used.
 #' @return A [tibble::tibble()].
 #' @examples
@@ -58,9 +61,8 @@ rank_results_automl.default <- function(object, ...) {
 
 #' @rdname automl-tools
 #' @export
-rank_results_automl.model_fit <- function(object, n = NULL, id = NULL, ...) {
-  check_automl_fit(object)
-  rank_results_automl.H2OAutoML(object$fit, n = n, id = id, ...)
+rank_results_automl._H2OAutoML <- function(object, ...) {
+  rank_results_automl.H2OAutoML(object$fit, ...)
 }
 
 
@@ -71,9 +73,8 @@ rank_results_automl.H2OAutoML <- function(object,
                                           id = NULL,
                                           ...) {
   leaderboard <- get_leaderboard(object, n, id)
-  id <- leaderboard$model_id
-  models <- purrr::map(id, get_model)
-  cv_metrics <- purrr::map_dfr(models, get_cv_metrics)
+  models <- purrr::map(leaderboard$model_id, get_model)
+  cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = TRUE)
 
   res <- cv_metrics %>%
     dplyr::left_join(metric_info, by = ".metric") %>%
@@ -85,8 +86,7 @@ rank_results_automl.H2OAutoML <- function(object,
   res
 }
 
-
-get_cv_metrics <- function(x) {
+get_cv_metrics <- function(x, summarize = TRUE) {
   cv_summary <- x@model$cross_validation_metrics_summary
   cv_summary[["sd"]] <- NULL
   cv_summary[["mean"]] <- NULL
@@ -98,14 +98,16 @@ get_cv_metrics <- function(x) {
       .before = 1
     ) %>%
     tidyr::pivot_longer(dplyr::starts_with("cv"),
-      names_to = "cv_id",
-      values_to = "value"
-    ) %>%
-    dplyr::group_by(id, algorithm, .metric) %>%
-    dplyr::summarize(
-      mean = mean(value, na.rm = TRUE),
-      .groups = "drop"
-    )
+                        names_to = "cv_id",
+                        values_to = "value")
+  if (summarize) {
+    res <- res %>%
+      dplyr::group_by(id, algorithm, .metric) %>%
+      dplyr::summarize(
+        mean = mean(value, na.rm = TRUE),
+        .groups = "drop"
+      )
+  }
 
   res
 }
@@ -146,10 +148,48 @@ check_automl_fit <- function(object) {
   invisible(object)
 }
 
+
+#' @rdname automl-tools
+#' @export
+collect_metrics._H2OAutoML <- function(object, ...) {
+  collect_metrics.H2OAutoML(object$fit, ...)
+}
+
+#' @param summarize A logical; should metrics be summarized over resamples
+#'  (TRUE) or return the values for each individual resample.
+#' @rdname automl-tools
+#' @export
+collect_metrics.H2OAutoML <- function(object, summarize = TRUE, n = NULL, id = NULL) {
+  leaderboard <- get_leaderboard(object, n = n, id = id)
+  # for preserving row order in summarize
+  lvl <- leaderboard$model_id
+  models <- purrr::map(leaderboard$model_id, get_model)
+  cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = FALSE)
+
+  if (summarize) {
+    res <- cv_metrics %>%
+      dplyr::mutate(id = factor(id, levels = lvl)) %>%
+      dplyr::group_by(id, algorithm, .metric) %>%
+      dplyr::summarize(
+        mean = mean(value, na.rm = TRUE),
+        std_err = sd(value) / sqrt(dplyr::n()),
+        n = dplyr::n(),
+        .groups = "drop"
+      ) %>%
+      dplyr::mutate(id = as.character(id))
+  }
+  else {
+    res <- cv_metrics %>%
+      dplyr::rename(.estimate = value)
+  }
+
+  res
+}
+
+
 #' @rdname automl-tools
 #' @param keep_model A logical value for if the actual model object
 #'  should be retrieved from the server. Defaults to `TRUE`.
-#' @param id A character vector of model ids to retrieve.
 #' @export
 tidy._H2OAutoML <- function(object,
                             n = NULL,
@@ -208,7 +248,6 @@ member_weights <- function(object, ...) {
   model_id <- leaderboard[grep("StackedEnsemble", leaderboard$model_id), ]$model_id
   ranks <- match(model_id, leaderboard$model_id)
 
-
   tibble::tibble(
     ensemble_id = model_id,
     rank = ranks,
@@ -252,4 +291,10 @@ extract_fit_parsnip._H2OAutoML <- function(object, id = NULL, ...) {
   class(mod) <- c("h2o_fit", "H2OAutoML_fit", class(mod))
   attr(mod, "automl_rank") <- automl_rank
   mod
+}
+
+#' @export
+#' @rdname automl-tools
+retrain._H2OAutoML <- function(object, ...) {
+
 }

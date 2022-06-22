@@ -10,10 +10,17 @@ mod <- auto_ml() %>%
 
 m <- mod %>%
   fit(mpg ~ ., data = mtcars)
-m
+
+m2 <- auto_ml() %>%
+  set_engine("h2o", project_name = m$fit@project_name,
+             max_runtime_secs = 10) %>%
+  set_mode("regression") %>%
+  fit(mpg ~ ., data = mtcars)
 
 # rank all algorithms by cross validation performance
 rank_results_automl(m)
+collect_metrics(m)
+collect_metrics(m, summarize = FALSE)
 
 # autoplot methods for plotting cross validation performances
 # plot ranking

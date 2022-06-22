@@ -3,21 +3,28 @@
 \name{rank_results_automl}
 \alias{rank_results_automl}
 \alias{rank_results_automl.default}
-\alias{rank_results_automl.model_fit}
+\alias{rank_results_automl._H2OAutoML}
 \alias{rank_results_automl.H2OAutoML}
+\alias{collect_metrics._H2OAutoML}
+\alias{collect_metrics.H2OAutoML}
 \alias{tidy._H2OAutoML}
 \alias{get_leaderboard}
 \alias{member_weights}
 \alias{extract_fit_parsnip._H2OAutoML}
+\alias{retrain._H2OAutoML}
 \title{Tools for working with H2O AutoML results}
 \usage{
 rank_results_automl(object, ...)
 
 \method{rank_results_automl}{default}(object, ...)
 
-\method{rank_results_automl}{model_fit}(object, n = NULL, id = NULL, ...)
+\method{rank_results_automl}{`_H2OAutoML`}(object, ...)
 
 \method{rank_results_automl}{H2OAutoML}(object, n = NULL, id = NULL, ...)
+
+\method{collect_metrics}{`_H2OAutoML`}(object, ...)
+
+\method{collect_metrics}{H2OAutoML}(object, summarize = TRUE, n = NULL, id = NULL)
 
 \method{tidy}{`_H2OAutoML`}(object, n = NULL, id = NULL, keep_model = TRUE, ...)
 
@@ -26,6 +33,8 @@ get_leaderboard(object, n = NULL, id = NULL)
 member_weights(object, ...)
 
 \method{extract_fit_parsnip}{`_H2OAutoML`}(object, id = NULL, ...)
+
+retrain._H2OAutoML(object, ...)
 }
 \arguments{
 \item{object}{A fitted \code{auto_ml()} model.}
@@ -37,6 +46,9 @@ default to all.}
 
 \item{id}{A character vector of model ids to retrieve.}
 
+\item{summarize}{A logical; should metrics be summarized over resamples
+(TRUE) or return the values for each individual resample.}
+
 \item{keep_model}{A logical value for if the actual model object
 should be retrieved from the server. Defaults to \code{TRUE}.}
 }
@@ -46,6 +58,9 @@ A \code{\link[tibble:tibble]{tibble::tibble()}}.
 \description{
 \code{rank_results_automl()} ranks average cross validation performances of
 candidate models on each metric.
+
+\code{collect_metrics()} returns average statistics of performance metrics
+(summarized) per model, or raw value in each resample (unsummarized).
 
 \code{tidy()} returns a tibble with average performance for each candidate model.
 When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each

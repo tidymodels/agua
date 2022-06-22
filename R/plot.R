@@ -4,8 +4,8 @@
 #' models in H2O AutoML output via facets on each metric.
 #'
 #' @param object A fitted `auto_ml()` model.
-#' @param type A single character of choices of "rank" (plotting average ranking
-#'  of algorithms within metrics) or "metric" (plotting average value of metrics).
+#' @param type A character value for whether to plot average ranking ("rank")
+#' or metrics ("metric").
 #' @param metric A character vector or NULL for which metric to plot.
 #'  By default, all metrics will be shown via facets.
 #' @param std_errs The number of standard errors to plot.
@@ -28,34 +28,31 @@ autoplot.H2OAutoML <- function(object,
                                ...) {
   type <- match.arg(type)
 
-
   if (type == "rank") {
-    results <- rank_results_automl(object, summarize = TRUE, ...)
+    res <- rank_results_automl(object, ...)
     if (!is.null(metric)) {
-      results <- results %>% dplyr::filter(.metric %in% metric)
+      res <- res %>% dplyr::filter(.metric %in% metric)
     }
-    res <- results %>%
-      dplyr::group_by(algorithm, .metric) %>%
-      dplyr::summarize(
-        mean = mean(rank, na.rm = TRUE),
-        std_err = sd(rank, na.rm = TRUE) / sqrt(dplyr::n()),
-        .groups = "drop"
-      )
+    y_var <- "rank"
+    width_factor <- 100
     facet_scales <- "free_y"
   } else if (type == "metric") {
-    results <- rank_results_automl(object, summarize = FALSE, ...)
+    res <- collect_metrics(object, summarize = FALSE, ...)
     if (!is.null(metric)) {
-      results <- results %>% dplyr::filter(.metric %in% metric)
+      res <- res %>% dplyr::filter(.metric %in% metric)
     }
-    res <- results %>%
-      dplyr::group_by(algorithm, .metric) %>%
-      dplyr::summarize(
-        mean = mean(value, na.rm = TRUE),
-        std_err = sd(value, na.rm = TRUE) / sqrt(dplyr::n()),
-        .groups = "drop"
-      )
+    y_var <- ".estimate"
+    width_factor <- 400
     facet_scales <- "free"
   }
+
+  res <- res %>%
+    dplyr::group_by(algorithm, .metric) %>%
+    dplyr::summarize(
+      mean = mean(.data[[y_var]], na.rm = TRUE),
+      std_err = sd(.data[[y_var]], na.rm = TRUE) / sqrt(dplyr::n()),
+      .groups = "drop"
+    )
 
   p <- res %>%
     ggplot2::ggplot(ggplot2::aes(mean, algorithm, color = algorithm)) +
@@ -64,7 +61,7 @@ autoplot.H2OAutoML <- function(object,
       ggplot2::aes(
         xmin = mean - std_errs * std_err,
         xmax = mean + std_errs * std_err,
-        width = diff(range(results$rank)) / 100
+        width = diff(range(mean)) / width_factor
       )
     )
 
