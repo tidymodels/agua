@@ -26,14 +26,14 @@ print.H2OAutoML_fit <- function(object, ...) {
 #' @export
 #' @keywords internal
 print.H2OAutoML <- function(object, ...) {
-  cat("H2O AutoML Summary\n")
+  leaderboard <- object@leaderboard
+
+  cat("H2O AutoML Summary:", nrow(leaderboard), "models\n")
   cat("==============\n")
   cat("Leader Algorithm:", object@leader@algorithm, "\n")
   cat("Leader ID:", object@leader@model_id, "\n\n")
-
-  leaderboard <- get_leaderboard(object, ...)
-  cat("Leaderboard of", nrow(leaderboard), "models\n")
-  print(leaderboard)
+  cat("Leaderboard Preview\n")
+  print(head(leaderboard))
 }
 
 print_automl_fit <- function(object, rank, ...) {
