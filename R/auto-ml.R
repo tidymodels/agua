@@ -8,24 +8,33 @@
 #'  (summarized) per model, or raw value in each resample (unsummarized).
 #'
 #' `tidy()` returns a tibble with average performance for each candidate model.
-#' When `keep_model` is `TRUE`, `tidy()` adds a list column where each
-#' component is a "fake" parsnip `model_fit` object constructed
-#' from the h2o model. These objects are meant to be used for prediction only,
-#' i.e., `predict(object, new_data = data)`, and should not be used as a
-#' regular parsnip model.
 #'
 #' `member_weights()` computes variable importance for all stacked ensemble
 #' models, i.e., the relative importance of base models in the meta-learner.
 #' This is typically the coefficient magnitude in the second-level GLM model.
 #'
-#' `extract_fit_parsnip()` is a s3 method to extract candidate model from
-#' `auto_ml()` results. When `id` is null, it returns the leader model.
+#' `extract_fit_engine()` extracts single candidate model from `auto_ml()`
+#' results. When `id` is null, it returns the leader model.
+#'
+#' `refit()` re-fits an existing AutoML model to add more candidates. The model to be
+#' re-fitted needs to have engine argument `save_data = TRUE`, and
+#' `keep_cross_validation_predictions = TRUE` if stacked ensembles is needed for
+#' later models.
 #'
 #' @details
-#' Algorithms in h2o's automatic machine learning process include xgboost,
+#' H2O associates with each model in AutoML an unique id. This can be used for
+#' model extraction and prediction, i.e., `extract_fit_engine(object, id)`
+#' returns the model and `predict(object, id = id)` will predict for that model.
+#' `extract_fit_parsnip(object, id)` wraps the h2o model with parsnip
+#  classes to enable predict and print methods, other usage of this "fake"
+#' parsnip model object is discouraged.
+#'
+#' The `algorithm` column corresponds to the model family H2O use for a
+#' particular model, including xgboost (`"XGBOOST"`),
 #' gradient boosting (`"GBM"`), random forest and variants (`"DRF"`, `"XRT"`),
 #' generalized linear model (`"GLM"`), and neural network (`"deeplearning"`).
 #' See the details section in [h2o::h2o.automl()] for more information.
+#'
 #' @param object A fitted `auto_ml()` model.
 #' @param n The number of models to extract from `auto_ml()` results,
 #'  default to all.
@@ -73,7 +82,7 @@ rank_results_automl.H2OAutoML <- function(object,
                                           id = NULL,
                                           ...) {
   leaderboard <- get_leaderboard(object, n, id)
-  models <- purrr::map(leaderboard$model_id, get_model)
+  models <- purrr::map(leaderboard$model_id, h2o_get_model)
   cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = TRUE)
 
   res <- cv_metrics %>%
@@ -159,11 +168,15 @@ collect_metrics._H2OAutoML <- function(object, ...) {
 #'  (TRUE) or return the values for each individual resample.
 #' @rdname automl-tools
 #' @export
-collect_metrics.H2OAutoML <- function(object, summarize = TRUE, n = NULL, id = NULL) {
+collect_metrics.H2OAutoML <- function(object,
+                                      summarize = TRUE,
+                                      n = NULL,
+                                      id = NULL,
+                                      ...) {
   leaderboard <- get_leaderboard(object, n = n, id = id)
   # for preserving row order in summarize
   lvl <- leaderboard$model_id
-  models <- purrr::map(leaderboard$model_id, get_model)
+  models <- purrr::map(leaderboard$model_id, h2o_get_model)
   cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = FALSE)
 
   if (summarize) {
@@ -227,7 +240,7 @@ get_leaderboard <- function(object, n = NULL, id = NULL) {
   if (inherits(object, "_H2OAutoML")) {
     object <- object$fit
   }
-  leaderboard <- tibble::as_tibble(object@leaderboard)
+  leaderboard <- as.data.frame(object@leaderboard)
   if (!is.null(id) && is.character(id)) {
     n <- NULL
     leaderboard <- leaderboard %>% dplyr::filter(model_id %in% id)
@@ -237,7 +250,7 @@ get_leaderboard <- function(object, n = NULL, id = NULL) {
     leaderboard <- leaderboard[seq_len(n), ]
   }
 
-  leaderboard
+  tibble::as_tibble(leaderboard)
 }
 
 #' @rdname automl-tools
@@ -256,8 +269,8 @@ member_weights <- function(object, ...) {
 }
 
 get_stacking_imp <- function(id) {
-  mod <- get_model(id)
-  meta_learner <- get_model(mod@model$metalearner$name)
+  mod <- h2o_get_model(id)
+  meta_learner <- h2o_get_model(mod@model$metalearner$name)
   res <- tibble::as_tibble(h2o::h2o.varimp(meta_learner))
 
   res %>%
@@ -284,7 +297,7 @@ extract_fit_parsnip._H2OAutoML <- function(object, id = NULL, ...) {
   if (is.null(id)) {
     id <- object$fit@leader@model_id
   }
-  mod <- get_model(id)
+  mod <- h2o_get_model(id)
   leaderboard <- get_leaderboard(object)
   automl_rank <- match(id, leaderboard$model_id)
   mod <- convert_h2o_parsnip(mod, object$spec, object$lvl, extra_class = NULL)
@@ -295,6 +308,48 @@ extract_fit_parsnip._H2OAutoML <- function(object, id = NULL, ...) {
 
 #' @export
 #' @rdname automl-tools
-retrain._H2OAutoML <- function(object, ...) {
+extract_fit_engine._H2OAutoML <- function(object, id = NULL, ...) {
+  if (is.null(id)) {
+    id <- object$fit@leader@model_id
+  }
+  mod <- h2o_get_model(id)
+  mod
+}
 
+
+#' @export
+#' @param verbosity Verbosity of the backend messages printed during training;
+#' Must be one of NULL (live log disabled), "debug", "info", "warn", "error".
+#' Defaults to NULL.
+#' @rdname automl-tools
+refit._H2OAutoML <- function(object, verbosity = NULL, ...) {
+  check_automl_fit(object)
+  x <- object$fit
+  params <- x@leader@allparameters
+  project_name <- x@project_name
+  training_frame <- h2o_get_frame(params$training_frame)
+  if (is.null(training_frame)) {
+    msg <- paste0(
+      "The model needs to be trained with `save_data = TRUE` to ",
+      "enable re-fitting, also set `keep_cross_validation_predictions = TRUE` ",
+      "if you need stacked ensembles in later models."
+    )
+    rlang::abort(msg)
+  }
+  x_names <- params$x
+  y <- params$y
+
+  cl <- rlang::call2(
+    "h2o.automl",
+    .ns = "h2o",
+    x = quote(x_names),
+    y = y,
+    training_frame = quote(training_frame),
+    project_name = project_name,
+    verbosity = verbosity,
+    ...
+  )
+  res <- h2o:::with_no_h2o_progress(rlang::eval_tidy(cl))
+  object$fit <- res
+  object
 }

@@ -4,7 +4,7 @@
 \alias{print.h2o_fit}
 \alias{print.H2OAutoML_fit}
 \alias{print.H2OAutoML}
-\title{Print wrappers for H2O models}
+\title{Print wrappers for h2o models}
 \usage{
 \method{print}{h2o_fit}(object, ...)
 
@@ -13,6 +13,6 @@
 \method{print}{H2OAutoML}(object, ...)
 }
 \description{
-Print wrappers for H2O models
+Print wrappers for h2o models
 }
 \keyword{internal}

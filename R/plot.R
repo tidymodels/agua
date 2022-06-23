@@ -34,7 +34,6 @@ autoplot.H2OAutoML <- function(object,
       res <- res %>% dplyr::filter(.metric %in% metric)
     }
     y_var <- "rank"
-    width_factor <- 100
     facet_scales <- "free_y"
   } else if (type == "metric") {
     res <- collect_metrics(object, summarize = FALSE, ...)
@@ -42,7 +41,6 @@ autoplot.H2OAutoML <- function(object,
       res <- res %>% dplyr::filter(.metric %in% metric)
     }
     y_var <- ".estimate"
-    width_factor <- 400
     facet_scales <- "free"
   }
 
@@ -61,7 +59,7 @@ autoplot.H2OAutoML <- function(object,
       ggplot2::aes(
         xmin = mean - std_errs * std_err,
         xmax = mean + std_errs * std_err,
-        width = diff(range(mean)) / width_factor
+        width = 0.3
       )
     )
 

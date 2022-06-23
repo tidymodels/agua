@@ -10,6 +10,10 @@ dplyr::`%>%`
 #' @export
 generics::tidy
 
+#' @importFrom generics refit
+#' @export
+generics::refit
+
 #' @importFrom ggplot2 autoplot
 #' @export
 ggplot2::autoplot
@@ -17,6 +21,10 @@ ggplot2::autoplot
 #' @importFrom hardhat extract_fit_parsnip
 #' @export
 hardhat::extract_fit_parsnip
+
+#' @importFrom hardhat extract_fit_engine
+#' @export
+hardhat::extract_fit_engine
 
 #' @importFrom tune collect_metrics
 #' @export

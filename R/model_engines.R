@@ -1006,9 +1006,9 @@ add_auto_ml_h2o <- function() {
     eng = "h2o",
     mode = "regression",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )

@@ -11,7 +11,8 @@
 \alias{get_leaderboard}
 \alias{member_weights}
 \alias{extract_fit_parsnip._H2OAutoML}
-\alias{retrain._H2OAutoML}
+\alias{extract_fit_engine._H2OAutoML}
+\alias{refit._H2OAutoML}
 \title{Tools for working with H2O AutoML results}
 \usage{
 rank_results_automl(object, ...)
@@ -24,7 +25,7 @@ rank_results_automl(object, ...)
 
 \method{collect_metrics}{`_H2OAutoML`}(object, ...)
 
-\method{collect_metrics}{H2OAutoML}(object, summarize = TRUE, n = NULL, id = NULL)
+\method{collect_metrics}{H2OAutoML}(object, summarize = TRUE, n = NULL, id = NULL, ...)
 
 \method{tidy}{`_H2OAutoML`}(object, n = NULL, id = NULL, keep_model = TRUE, ...)
 
@@ -34,7 +35,9 @@ member_weights(object, ...)
 
 \method{extract_fit_parsnip}{`_H2OAutoML`}(object, id = NULL, ...)
 
-retrain._H2OAutoML(object, ...)
+\method{extract_fit_engine}{`_H2OAutoML`}(object, id = NULL, ...)
+
+\method{refit}{`_H2OAutoML`}(object, verbosity = NULL, ...)
 }
 \arguments{
 \item{object}{A fitted \code{auto_ml()} model.}
@@ -51,6 +54,10 @@ default to all.}
 
 \item{keep_model}{A logical value for if the actual model object
 should be retrieved from the server. Defaults to \code{TRUE}.}
+
+\item{verbosity}{Verbosity of the backend messages printed during training;
+Must be one of NULL (live log disabled), "debug", "info", "warn", "error".
+Defaults to NULL.}
 }
 \value{
 A \code{\link[tibble:tibble]{tibble::tibble()}}.
@@ -63,21 +70,28 @@ candidate models on each metric.
 (summarized) per model, or raw value in each resample (unsummarized).
 
 \code{tidy()} returns a tibble with average performance for each candidate model.
-When \code{keep_model} is \code{TRUE}, \code{tidy()} adds a list column where each
-component is a "fake" parsnip \code{model_fit} object constructed
-from the h2o model. These objects are meant to be used for prediction only,
-i.e., \code{predict(object, new_data = data)}, and should not be used as a
-regular parsnip model.
 
 \code{member_weights()} computes variable importance for all stacked ensemble
 models, i.e., the relative importance of base models in the meta-learner.
 This is typically the coefficient magnitude in the second-level GLM model.
 
-\code{extract_fit_parsnip()} is a s3 method to extract candidate model from
-\code{auto_ml()} results. When \code{id} is null, it returns the leader model.
+\code{extract_fit_engine()} extracts single candidate model from \code{auto_ml()}
+results. When \code{id} is null, it returns the leader model.
+
+\code{refit()} re-fits an existing AutoML model to add more candidates. The model to be
+re-fitted needs to have engine argument \code{save_data = TRUE}, and
+\code{keep_cross_validation_predictions = TRUE} if stacked ensembles is needed for
+later models.
 }
 \details{
-Algorithms in h2o's automatic machine learning process include xgboost,
+H2O associates with each model in AutoML an unique id. This can be used for
+model extraction and prediction, i.e., \code{extract_fit_engine(object, id)}
+returns the model and \code{predict(object, id = id)} will predict for that model.
+\code{extract_fit_parsnip(object, id)} wraps the h2o model with parsnip
+parsnip model object is discouraged.
+
+The \code{algorithm} column corresponds to the model family H2O use for a
+particular model, including xgboost (\code{"XGBOOST"}),
 gradient boosting (\code{"GBM"}), random forest and variants (\code{"DRF"}, \code{"XRT"}),
 generalized linear model (\code{"GLM"}), and neural network (\code{"deeplearning"}).
 See the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for more information.

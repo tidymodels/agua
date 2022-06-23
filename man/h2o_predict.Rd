@@ -4,6 +4,7 @@
 \alias{h2o_predict}
 \alias{h2o_predict_classification}
 \alias{h2o_predict_regression}
+\alias{predict._H2OAutoML}
 \title{Prediction wrappers for h2o}
 \usage{
 h2o_predict(object, new_data, ...)
@@ -11,6 +12,8 @@ h2o_predict(object, new_data, ...)
 h2o_predict_classification(object, new_data, type = "class", ...)
 
 h2o_predict_regression(object, new_data, type = "numeric", ...)
+
+\method{predict}{`_H2OAutoML`}(object, new_data, id = NULL, ...)
 }
 \arguments{
 \item{object}{An object of class \code{model_fit}}
@@ -23,6 +26,8 @@ h2o_predict_regression(object, new_data, type = "numeric", ...)
 are "numeric", "class", "prob", "conf_int", "pred_int", "quantile", "time",
 "hazard", "survival", or "raw". When \code{NULL}, \code{predict()} will choose an
 appropriate value based on the model's mode.}
+
+\item{id}{Model id in AutoML results.}
 }
 \value{
 For type != "raw", a prediction data frame with the same number of

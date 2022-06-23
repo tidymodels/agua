@@ -1,5 +1,5 @@
-#' Print wrappers for H2O models
-#' @rdname print-h2o
+#' Print wrappers for h2o models
+#' @rdname h2o-print
 #' @export
 #' @keywords internal
 print.h2o_fit <- function(object, ...) {
@@ -12,17 +12,15 @@ print.h2o_fit <- function(object, ...) {
   NextMethod()
 }
 
-#' @rdname print-h2o
+#' @rdname h2o-print
 #' @export
 #' @keywords internal
 print.H2OAutoML_fit <- function(object, ...) {
   cat("parsnip model object\n\n")
   print_automl_fit(object$fit, rank = attributes(object)$automl_rank, ...)
-
-  invisible(object)
 }
 
-#' @rdname print-h2o
+#' @rdname h2o-print
 #' @export
 #' @keywords internal
 print.H2OAutoML <- function(object, ...) {

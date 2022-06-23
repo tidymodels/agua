@@ -6,8 +6,10 @@
 \alias{as_tibble}
 \alias{\%>\%}
 \alias{tidy}
+\alias{refit}
 \alias{autoplot}
 \alias{extract_fit_parsnip}
+\alias{extract_fit_engine}
 \alias{collect_metrics}
 \title{Objects exported from other packages}
 \keyword{internal}
@@ -18,11 +20,11 @@ below to see their documentation.
 \describe{
   \item{dplyr}{\code{\link[dplyr:reexports]{\%>\%}}}
 
-  \item{generics}{\code{\link[generics]{tidy}}}
+  \item{generics}{\code{\link[generics]{refit}}, \code{\link[generics]{tidy}}}
 
   \item{ggplot2}{\code{\link[ggplot2]{autoplot}}}
 
-  \item{hardhat}{\code{\link[hardhat:hardhat-extract]{extract_fit_parsnip}}}
+  \item{hardhat}{\code{\link[hardhat:hardhat-extract]{extract_fit_engine}}, \code{\link[hardhat:hardhat-extract]{extract_fit_parsnip}}}
 
   \item{tibble}{\code{\link[tibble]{as_tibble}}}
 
