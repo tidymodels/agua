@@ -206,11 +206,26 @@ h2o_train_glm <-
            alpha = NULL,
            ...) {
     opts <- list(...)
-    if (length(opts) >= 1 && opts$family == "poisson") {
+    # check for poisson reg
+    if (opts$family == "poisson") {
       all_positive <- all(sum(y > 0))
       all_ints <- rlang::is_integerish(y)
       if (!(all_positive && all_ints)) {
-        rlang::abort("Poisson regression expects non-negative integer response.")
+        msg <- paste0(
+          "Poisson regression expects the outcome",
+          " to be non-negative integers."
+        )
+        rlang::abort()
+      }
+    }
+    # check for multinom reg
+    if (opts$family == "multinomial") {
+      if (nlevels(y) < 3) {
+        msg <- paste0(
+          "Multinomial regression expects the outcome ",
+          "to be a factor with at least 3 levels."
+        )
+        rlang::abort(msg)
       }
     }
 
