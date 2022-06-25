@@ -8,7 +8,7 @@
 \alias{h2o_get_model}
 \alias{h2o_get_frame}
 \alias{h2o_xgboost_available}
-\title{Utility functions for working with the h2o server}
+\title{Utility functions for interacting with the h2o server}
 \usage{
 h2o_start()
 
@@ -30,7 +30,7 @@ h2o_xgboost_available()
 \item{id}{Model or frame id.}
 }
 \description{
-Utility functions for working with the h2o server
+Utility functions for interacting with the h2o server
 }
 \examples{
 if (!h2o_running()) {

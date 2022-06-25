@@ -49,7 +49,7 @@ weights <- member_weights(m) %>%
 
 weights
 
-ggplot(weights, aes(algorithm, value)) +
+ggplot(weights, aes(value, algorithm)) +
   geom_boxplot() +
   facet_wrap(~ type)
 

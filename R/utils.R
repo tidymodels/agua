@@ -99,7 +99,7 @@ rename_grid_h2o <- function(grid, workflow) {
     dplyr::rename(!!!rn$parsnip_to_engine)
 }
 
-eval_silent <- function(expr, envir = NULL) {
+eval_silently <- function(expr, envir = NULL) {
   junk <- capture.output(res <- try(rlang::eval_tidy(expr), silent = TRUE))
   if (length(junk) == 0) {
     return(res)
@@ -107,9 +107,14 @@ eval_silent <- function(expr, envir = NULL) {
 }
 
 # extract algorithm from model id
-id_to_algorithm <- function(id) {
+id_to_algorithm <- function(id, recode = TRUE) {
   algo <- tolower(sub("_.+", "", id))
-  algo[algo == "xrt"] <- "drf"
+  if (recode) {
+    algo[algo == "xrt" | algo == "drf"] <- "random forests"
+    algo[algo == "deeplearning"] <- "neural nets"
+    algo[algo == "gbm"] <- "gradient boosting"
+    algo[algo == "stackedensemble"] <- "stacking"
+  }
   algo
 }
 

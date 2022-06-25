@@ -102,7 +102,7 @@ get_cv_metrics <- function(x, summarize = TRUE) {
   res <- tibble::as_tibble(cv_summary) %>%
     dplyr::mutate(
       id = x@model_id,
-      algorithm = x@algorithm,
+      algorithm = id_to_algorithm(id),
       .metric = rownames(cv_summary),
       .before = 1
     ) %>%
@@ -229,7 +229,7 @@ tidy._H2OAutoML <- function(object,
       ~ extract_fit_parsnip(object, .x),
     )) %>%
     dplyr::mutate(
-      algorithm = purrr::map_chr(.model, ~ .x$fit@algorithm),
+      algorithm = purrr::map_chr(id, id_to_algorithm),
       .after = 1
     )
 }
