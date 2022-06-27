@@ -206,6 +206,9 @@ h2o_train_glm <-
            alpha = NULL,
            ...) {
     opts <- list(...)
+    if (is.null(opts$family)) {
+      opts$family <- "AUTO"
+    }
     # check for poisson reg
     if (opts$family == "poisson") {
       all_positive <- all(sum(y > 0))

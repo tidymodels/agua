@@ -44,8 +44,8 @@ member_weights(object, ...)
 
 \item{...}{Not used.}
 
-\item{n}{The number of models to extract from \code{auto_ml()} results,
-default to all.}
+\item{n}{An integer for the number of top models to extract from AutoML
+results, default to all.}
 
 \item{id}{A character vector of model ids to retrieve.}
 
@@ -69,7 +69,7 @@ candidate models on each metric.
 \code{collect_metrics()} returns average statistics of performance metrics
 (summarized) per model, or raw value in each resample (unsummarized).
 
-\code{tidy()} returns a tibble with average performance for each candidate model.
+\code{tidy()} returns a tibble with average performance for each model.
 
 \code{member_weights()} computes variable importance for all stacked ensemble
 models, i.e., the relative importance of base models in the meta-learner.
@@ -78,8 +78,8 @@ This is typically the coefficient magnitude in the second-level GLM model.
 \code{extract_fit_engine()} extracts single candidate model from \code{auto_ml()}
 results. When \code{id} is null, it returns the leader model.
 
-\code{refit()} re-fits an existing AutoML model to add more candidates. The model to be
-re-fitted needs to have engine argument \code{save_data = TRUE}, and
+\code{refit()} re-fits an existing AutoML model to add more candidates. The model
+to be re-fitted needs to have engine argument \code{save_data = TRUE}, and
 \code{keep_cross_validation_predictions = TRUE} if stacked ensembles is needed for
 later models.
 }

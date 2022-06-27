@@ -7,7 +7,7 @@
 #' `collect_metrics()` returns average statistics of performance metrics
 #'  (summarized) per model, or raw value in each resample (unsummarized).
 #'
-#' `tidy()` returns a tibble with average performance for each candidate model.
+#' `tidy()` returns a tibble with average performance for each model.
 #'
 #' `member_weights()` computes variable importance for all stacked ensemble
 #' models, i.e., the relative importance of base models in the meta-learner.
@@ -16,8 +16,8 @@
 #' `extract_fit_engine()` extracts single candidate model from `auto_ml()`
 #' results. When `id` is null, it returns the leader model.
 #'
-#' `refit()` re-fits an existing AutoML model to add more candidates. The model to be
-#' re-fitted needs to have engine argument `save_data = TRUE`, and
+#' `refit()` re-fits an existing AutoML model to add more candidates. The model
+#'  to be re-fitted needs to have engine argument `save_data = TRUE`, and
 #' `keep_cross_validation_predictions = TRUE` if stacked ensembles is needed for
 #' later models.
 #'
@@ -36,8 +36,8 @@
 #' See the details section in [h2o::h2o.automl()] for more information.
 #'
 #' @param object A fitted `auto_ml()` model.
-#' @param n The number of models to extract from `auto_ml()` results,
-#'  default to all.
+#' @param n An integer for the number of top models to extract from AutoML
+#'  results, default to all.
 #' @param id A character vector of model ids to retrieve.
 #' @param ... Not used.
 #' @return A [tibble::tibble()].
@@ -174,7 +174,6 @@ collect_metrics.H2OAutoML <- function(object,
                                       id = NULL,
                                       ...) {
   leaderboard <- get_leaderboard(object, n = n, id = id)
-  # for preserving row order in summarize
   lvl <- leaderboard$model_id
   models <- purrr::map(leaderboard$model_id, h2o_get_model)
   cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = FALSE)
@@ -323,7 +322,6 @@ extract_fit_engine._H2OAutoML <- function(object, id = NULL, ...) {
 #' Defaults to NULL.
 #' @rdname automl-tools
 refit._H2OAutoML <- function(object, verbosity = NULL, ...) {
-  check_automl_fit(object)
   x <- object$fit
   params <- x@leader@allparameters
   project_name <- x@project_name

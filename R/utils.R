@@ -1,6 +1,4 @@
-# ------------------------------------------------------------------------------
-# Tools for using the h2o model functions
-
+# tools for tuning
 all_algos <- c(
   "boost_tree", "rand_forest", "linear_reg", "logistic_reg",
   "multinom_reg", "mlp", "naive_Bayes", "auto_ml"

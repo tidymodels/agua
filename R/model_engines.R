@@ -1,4 +1,4 @@
-# TODO: model types: automl, h2o.gam, h2o.coxph
+# TODO: model types: h2o.gam, h2o.coxph
 # raw prediction type for predict
 class_info <- list(
   pre = NULL,
