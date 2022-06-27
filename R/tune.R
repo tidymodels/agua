@@ -33,8 +33,11 @@ tune_grid_loop_iter_h2o <- function(split,
   out_extracts <- NULL
   out_predictions <- NULL
   out_all_outcome_names <- list()
-  out_notes <-
-    tibble::tibble(location = character(0), type = character(0), note = character(0))
+  out_notes <- tibble::tibble(
+    location = character(0),
+    type = character(0),
+    note = character(0)
+  )
 
   event_level <- control$event_level
   orig_rows <- as.integer(split, data = "assessment")

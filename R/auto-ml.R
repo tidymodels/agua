@@ -62,7 +62,7 @@ rank_results_automl <- function(x, ...) {
 #' @rdname automl-tools
 #' @export
 rank_results_automl.workflow <- function(x, ...) {
-  rank_results_automl(x$fit$fit)
+  rank_results_automl(extract_fit_parsnip(x))
 }
 
 

@@ -98,6 +98,11 @@ rename_grid_h2o <- function(grid, workflow) {
     dplyr::rename(!!!rn$parsnip_to_engine)
 }
 
+workflow_uses_automl <- function(x) {
+  model_spec <- extract_spec_parsnip(x)
+  identical(class(model_spec)[1], "auto_ml")
+}
+
 eval_silently <- function(expr, envir = NULL) {
   junk <- capture.output(res <- try(rlang::eval_tidy(expr), silent = TRUE))
   if (length(junk) == 0) {
