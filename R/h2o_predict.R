@@ -11,7 +11,7 @@
 #'   output
 #' @export
 #' @details
-#' For `auto_ml()` models, prediction is based on the best performing model.
+#' For AutoML, prediction is based on the best performing model.
 #' @examples
 #' if (h2o_running()) {
 #'   spec <-

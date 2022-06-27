@@ -5,13 +5,16 @@
 \alias{rank_results_automl.workflow}
 \alias{rank_results_automl._H2OAutoML}
 \alias{rank_results_automl.H2OAutoML}
+\alias{collect_metrics.workflow}
 \alias{collect_metrics._H2OAutoML}
 \alias{collect_metrics.H2OAutoML}
+\alias{tidy.workflow}
 \alias{tidy._H2OAutoML}
 \alias{get_leaderboard}
 \alias{member_weights}
 \alias{extract_fit_parsnip._H2OAutoML}
 \alias{extract_fit_engine._H2OAutoML}
+\alias{refit.workflow}
 \alias{refit._H2OAutoML}
 \title{Tools for working with H2O AutoML results}
 \usage{
@@ -23,9 +26,13 @@ rank_results_automl(x, ...)
 
 \method{rank_results_automl}{H2OAutoML}(x, n = NULL, id = NULL, ...)
 
+\method{collect_metrics}{workflow}(x, ...)
+
 \method{collect_metrics}{`_H2OAutoML`}(x, ...)
 
 \method{collect_metrics}{H2OAutoML}(x, summarize = TRUE, n = NULL, id = NULL, ...)
+
+\method{tidy}{workflow}(x, ...)
 
 \method{tidy}{`_H2OAutoML`}(x, n = NULL, id = NULL, keep_model = TRUE, ...)
 
@@ -36,6 +43,8 @@ member_weights(x, ...)
 \method{extract_fit_parsnip}{`_H2OAutoML`}(x, id = NULL, ...)
 
 \method{extract_fit_engine}{`_H2OAutoML`}(x, id = NULL, ...)
+
+\method{refit}{workflow}(object, ...)
 
 \method{refit}{`_H2OAutoML`}(object, verbosity = NULL, ...)
 }
@@ -98,14 +107,15 @@ See the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for m
 }
 \examples{
 if (h2o_running()) {
-  mod <- auto_ml() \%>\%
+  auto_fit <- auto_ml() \%>\%
     set_engine("h2o", max_runtime_secs = 10) \%>\%
     set_mode("regression") \%>\%
     fit(mpg ~ ., data = mtcars)
 
-  rank_results_automl(mod)
-  tidy(mod)
-  imp_stacking(mod)
+  rank_results_automl(auto_fit, n = 5)
+  collect_metrics(auto_fit, summarize = FALSE)
+  tidy(auto_fit)
+  member_weights(auto_fit)
 }
 
 }

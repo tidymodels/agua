@@ -1,6 +1,6 @@
-#' Plot the results of H2o AutoML
+#' Plot rankings and metrics of H2O AutoML results
 #'
-#' This `autoplot()` method plots cross validation performances of candidate
+#' The `autoplot()` method plots cross validation performances of candidate
 #' models in H2O AutoML output via facets on each metric.
 #'
 #' @param object A fitted `auto_ml()` model.
@@ -11,23 +11,31 @@
 #' @param std_errs The number of standard errors to plot.
 #' @param ... Other options to pass to `autoplot()`.
 #' @return A ggplot object.
-#' @export
 #' @examples
 #' if (h2o_running()) {
-#'   m <- auto_ml() %>%
+#'   auto_fit <- auto_ml() %>%
 #'     set_engine("h2o", max_runtime_secs = 10) %>%
 #'     set_mode("regression") %>%
 #'     fit(mpg ~ ., data = mtcars)
 #'
-#'   autoplot(m)
+#'   autoplot(auto_fit)
 #' }
+#' @rdname automl-autoplot
+#' @export
+autoplot.workflow <- function(object, ...) {
+  autoplot(extract_fit_parsnip(object), ...)
+}
+
+# no need for autoplot._H2oAutoML
+# parsnip:::autoplot.model_fit will dispatch
+#' @rdname automl-autoplot
+#' @export
 autoplot.H2OAutoML <- function(object,
                                type = c("rank", "metric"),
                                metric = NULL,
                                std_errs = qnorm(0.95),
                                ...) {
   type <- match.arg(type)
-
   if (type == "rank") {
     res <- rank_results_automl(object, ...)
     if (!is.null(metric)) {

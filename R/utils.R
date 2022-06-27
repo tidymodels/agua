@@ -99,7 +99,7 @@ rename_grid_h2o <- function(grid, workflow) {
 }
 
 workflow_uses_automl <- function(x) {
-  model_spec <- extract_spec_parsnip(x)
+  model_spec <- hardhat::extract_spec_parsnip(x)
   identical(class(model_spec)[1], "auto_ml")
 }
 

@@ -43,14 +43,15 @@
 #' @return A [tibble::tibble()].
 #' @examples
 #' if (h2o_running()) {
-#'   mod <- auto_ml() %>%
+#'   auto_fit <- auto_ml() %>%
 #'     set_engine("h2o", max_runtime_secs = 10) %>%
 #'     set_mode("regression") %>%
 #'     fit(mpg ~ ., data = mtcars)
 #'
-#'   rank_results_automl(mod)
-#'   tidy(mod)
-#'   imp_stacking(mod)
+#'   rank_results_automl(auto_fit, n = 5)
+#'   collect_metrics(auto_fit, summarize = FALSE)
+#'   tidy(auto_fit)
+#'   member_weights(auto_fit)
 #' }
 #'
 #' @export
@@ -62,7 +63,7 @@ rank_results_automl <- function(x, ...) {
 #' @rdname automl-tools
 #' @export
 rank_results_automl.workflow <- function(x, ...) {
-  rank_results_automl(extract_fit_parsnip(x))
+  rank_results_automl(extract_fit_parsnip(x), ...)
 }
 
 
@@ -160,11 +161,16 @@ check_automl_fit <- function(x) {
   invisible(x)
 }
 
+#' @rdname automl-tools
+#' @export
+collect_metrics.workflow <- function(x, ...) {
+  collect_metrics(extract_fit_parsnip(x), ...)
+}
 
 #' @rdname automl-tools
 #' @export
 collect_metrics._H2OAutoML <- function(x, ...) {
-  collect_metrics.H2OAutoML(x$fit, ...)
+  collect_metrics(x$fit, ...)
 }
 
 #' @param summarize A logical; should metrics be summarized over resamples
@@ -201,6 +207,11 @@ collect_metrics.H2OAutoML <- function(x,
   res
 }
 
+#' @rdname automl-tools
+#' @export
+tidy.workflow <- function(x, ...) {
+  tidy(extract_fit_parsnip(x), ...)
+}
 
 #' @rdname automl-tools
 #' @param keep_model A logical value for if the actual model object
@@ -318,6 +329,11 @@ extract_fit_engine._H2OAutoML <- function(x, id = NULL, ...) {
   mod
 }
 
+#' @export
+#' @rdname automl-tools
+refit.workflow <- function(object, ...) {
+  refit(extract_fit_parsnip(object), ...)
+}
 
 #' @export
 #' @param verbosity Verbosity of the backend messages printed during training;
