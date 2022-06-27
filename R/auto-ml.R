@@ -35,7 +35,7 @@
 #' generalized linear model (`"GLM"`), and neural network (`"deeplearning"`).
 #' See the details section in [h2o::h2o.automl()] for more information.
 #'
-#' @param object,x A fitted `auto_ml()` model.
+#' @param object,x A fitted `auto_ml()` model or workflow.
 #' @param n An integer for the number of top models to extract from AutoML
 #'  results, default to all.
 #' @param id A character vector of model ids to retrieve.
@@ -61,17 +61,16 @@ rank_results_automl <- function(x, ...) {
 
 #' @rdname automl-tools
 #' @export
-rank_results_automl.default <- function(x, ...) {
-  msg <- paste0(
-    "The first argument should be a fitted `auto_ml()` model."
-  )
-  rlang::abort(msg)
+rank_results_automl.workflow <- function(x, ...) {
+  rank_results_automl(x$fit$fit)
 }
+
 
 #' @rdname automl-tools
 #' @export
 rank_results_automl._H2OAutoML <- function(x, ...) {
-  rank_results_automl.H2OAutoML(x$fit, ...)
+  check_automl_fit(x)
+  rank_results_automl(x$fit, ...)
 }
 
 
@@ -152,7 +151,11 @@ metric_info <- tibble::tribble(
 
 check_automl_fit <- function(x) {
   if (!inherits(x, "_H2OAutoML")) {
-    rlang::abort("The first argument should be a fitted `auto_ml()` model.")
+    msg <- paste0(
+      "The first argument should be a fitted ",
+      "`auto_ml()` model or workflow."
+    )
+    rlang::abort(msg)
   }
   invisible(x)
 }

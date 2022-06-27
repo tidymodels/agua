@@ -2,7 +2,7 @@
 % Please edit documentation in R/auto-ml.R
 \name{rank_results_automl}
 \alias{rank_results_automl}
-\alias{rank_results_automl.default}
+\alias{rank_results_automl.workflow}
 \alias{rank_results_automl._H2OAutoML}
 \alias{rank_results_automl.H2OAutoML}
 \alias{collect_metrics._H2OAutoML}
@@ -17,7 +17,7 @@
 \usage{
 rank_results_automl(x, ...)
 
-\method{rank_results_automl}{default}(x, ...)
+\method{rank_results_automl}{workflow}(x, ...)
 
 \method{rank_results_automl}{`_H2OAutoML`}(x, ...)
 
@@ -53,7 +53,7 @@ results, default to all.}
 \item{keep_model}{A logical value for if the actual model object
 should be retrieved from the server. Defaults to \code{TRUE}.}
 
-\item{object, x}{A fitted \code{auto_ml()} model.}
+\item{object, x}{A fitted \code{auto_ml()} model or workflow.}
 
 \item{verbosity}{Verbosity of the backend messages printed during training;
 Must be one of NULL (live log disabled), "debug", "info", "warn", "error".
