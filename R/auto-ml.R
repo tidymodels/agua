@@ -187,8 +187,8 @@ collect_metrics.H2OAutoML <- function(x,
       dplyr::group_by(id, algorithm, .metric) %>%
       dplyr::summarize(
         mean = mean(value, na.rm = TRUE),
-        std_err = sd(value) / sqrt(dplyr::n()),
-        n = dplyr::n(),
+        std_err = sd(value) / sqrt(sum(!is.na(value))),
+        n = sum(!is.na(value)),
         .groups = "drop"
       ) %>%
       dplyr::mutate(id = as.character(id))
