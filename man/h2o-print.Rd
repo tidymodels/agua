@@ -6,11 +6,11 @@
 \alias{print.H2OAutoML}
 \title{Print wrappers for h2o models}
 \usage{
-\method{print}{h2o_fit}(object, ...)
+\method{print}{h2o_fit}(x, ...)
 
-\method{print}{H2OAutoML_fit}(object, ...)
+\method{print}{H2OAutoML_fit}(x, ...)
 
-\method{print}{H2OAutoML}(object, ...)
+\method{print}{H2OAutoML}(x, ...)
 }
 \description{
 Print wrappers for h2o models

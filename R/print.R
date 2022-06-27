@@ -2,9 +2,9 @@
 #' @rdname h2o-print
 #' @export
 #' @keywords internal
-print.h2o_fit <- function(object, ...) {
+print.h2o_fit <- function(x, ...) {
   msg <- paste0(
-    "This is not a real parsnip `model_fit` object ",
+    "'x' is not a real parsnip `model_fit` object ",
     "and is only meant to be used for prediction with predict()."
   )
   rlang::warn(msg)
@@ -15,21 +15,21 @@ print.h2o_fit <- function(object, ...) {
 #' @rdname h2o-print
 #' @export
 #' @keywords internal
-print.H2OAutoML_fit <- function(object, ...) {
+print.H2OAutoML_fit <- function(x, ...) {
   cat("parsnip model object\n\n")
-  print_automl_fit(object$fit, rank = attributes(object)$automl_rank, ...)
+  print_automl_fit(x$fit, rank = attributes(x)$automl_rank, ...)
 }
 
 #' @rdname h2o-print
 #' @export
 #' @keywords internal
-print.H2OAutoML <- function(object, ...) {
-  leaderboard <- object@leaderboard
+print.H2OAutoML <- function(x, ...) {
+  leaderboard <- x@leaderboard
 
   cat("H2O AutoML Summary:", nrow(leaderboard), "models\n")
   cat("==============\n")
-  cat("Leader Algorithm:", object@leader@algorithm, "\n")
-  cat("Leader ID:", object@leader@model_id, "\n\n")
+  cat("Leader Algorithm:", x@leader@algorithm, "\n")
+  cat("Leader ID:", x@leader@model_id, "\n\n")
   cat("Leaderboard Preview\n")
   print(head(leaderboard))
 }

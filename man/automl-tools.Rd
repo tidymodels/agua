@@ -15,33 +15,31 @@
 \alias{refit._H2OAutoML}
 \title{Tools for working with H2O AutoML results}
 \usage{
-rank_results_automl(object, ...)
+rank_results_automl(x, ...)
 
-\method{rank_results_automl}{default}(object, ...)
+\method{rank_results_automl}{default}(x, ...)
 
-\method{rank_results_automl}{`_H2OAutoML`}(object, ...)
+\method{rank_results_automl}{`_H2OAutoML`}(x, ...)
 
-\method{rank_results_automl}{H2OAutoML}(object, n = NULL, id = NULL, ...)
+\method{rank_results_automl}{H2OAutoML}(x, n = NULL, id = NULL, ...)
 
-\method{collect_metrics}{`_H2OAutoML`}(object, ...)
+\method{collect_metrics}{`_H2OAutoML`}(x, ...)
 
-\method{collect_metrics}{H2OAutoML}(object, summarize = TRUE, n = NULL, id = NULL, ...)
+\method{collect_metrics}{H2OAutoML}(x, summarize = TRUE, n = NULL, id = NULL, ...)
 
-\method{tidy}{`_H2OAutoML`}(object, n = NULL, id = NULL, keep_model = TRUE, ...)
+\method{tidy}{`_H2OAutoML`}(x, n = NULL, id = NULL, keep_model = TRUE, ...)
 
-get_leaderboard(object, n = NULL, id = NULL)
+get_leaderboard(x, n = NULL, id = NULL)
 
-member_weights(object, ...)
+member_weights(x, ...)
 
-\method{extract_fit_parsnip}{`_H2OAutoML`}(object, id = NULL, ...)
+\method{extract_fit_parsnip}{`_H2OAutoML`}(x, id = NULL, ...)
 
-\method{extract_fit_engine}{`_H2OAutoML`}(object, id = NULL, ...)
+\method{extract_fit_engine}{`_H2OAutoML`}(x, id = NULL, ...)
 
 \method{refit}{`_H2OAutoML`}(object, verbosity = NULL, ...)
 }
 \arguments{
-\item{object}{A fitted \code{auto_ml()} model.}
-
 \item{...}{Not used.}
 
 \item{n}{An integer for the number of top models to extract from AutoML
@@ -54,6 +52,8 @@ results, default to all.}
 
 \item{keep_model}{A logical value for if the actual model object
 should be retrieved from the server. Defaults to \code{TRUE}.}
+
+\item{object, x}{A fitted \code{auto_ml()} model.}
 
 \item{verbosity}{Verbosity of the backend messages printed during training;
 Must be one of NULL (live log disabled), "debug", "info", "warn", "error".
@@ -85,9 +85,9 @@ later models.
 }
 \details{
 H2O associates with each model in AutoML an unique id. This can be used for
-model extraction and prediction, i.e., \code{extract_fit_engine(object, id)}
-returns the model and \code{predict(object, id = id)} will predict for that model.
-\code{extract_fit_parsnip(object, id)} wraps the h2o model with parsnip
+model extraction and prediction, i.e., \code{extract_fit_engine(x, id)}
+returns the model and \code{predict(x, id = id)} will predict for that model.
+\code{extract_fit_parsnip(x, id)} wraps the h2o model with parsnip
 parsnip model object is discouraged.
 
 The \code{algorithm} column corresponds to the model family H2O use for a

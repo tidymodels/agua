@@ -23,9 +23,9 @@
 #'
 #' @details
 #' H2O associates with each model in AutoML an unique id. This can be used for
-#' model extraction and prediction, i.e., `extract_fit_engine(object, id)`
-#' returns the model and `predict(object, id = id)` will predict for that model.
-#' `extract_fit_parsnip(object, id)` wraps the h2o model with parsnip
+#' model extraction and prediction, i.e., `extract_fit_engine(x, id)`
+#' returns the model and `predict(x, id = id)` will predict for that model.
+#' `extract_fit_parsnip(x, id)` wraps the h2o model with parsnip
 #  classes to enable predict and print methods, other usage of this "fake"
 #' parsnip model object is discouraged.
 #'
@@ -35,7 +35,7 @@
 #' generalized linear model (`"GLM"`), and neural network (`"deeplearning"`).
 #' See the details section in [h2o::h2o.automl()] for more information.
 #'
-#' @param object A fitted `auto_ml()` model.
+#' @param object,x A fitted `auto_ml()` model.
 #' @param n An integer for the number of top models to extract from AutoML
 #'  results, default to all.
 #' @param id A character vector of model ids to retrieve.
@@ -55,13 +55,13 @@
 #'
 #' @export
 #' @rdname automl-tools
-rank_results_automl <- function(object, ...) {
+rank_results_automl <- function(x, ...) {
   UseMethod("rank_results_automl")
 }
 
 #' @rdname automl-tools
 #' @export
-rank_results_automl.default <- function(object, ...) {
+rank_results_automl.default <- function(x, ...) {
   msg <- paste0(
     "The first argument should be a fitted `auto_ml()` model."
   )
@@ -70,18 +70,18 @@ rank_results_automl.default <- function(object, ...) {
 
 #' @rdname automl-tools
 #' @export
-rank_results_automl._H2OAutoML <- function(object, ...) {
-  rank_results_automl.H2OAutoML(object$fit, ...)
+rank_results_automl._H2OAutoML <- function(x, ...) {
+  rank_results_automl.H2OAutoML(x$fit, ...)
 }
 
 
 #' @rdname automl-tools
 #' @export
-rank_results_automl.H2OAutoML <- function(object,
+rank_results_automl.H2OAutoML <- function(x,
                                           n = NULL,
                                           id = NULL,
                                           ...) {
-  leaderboard <- get_leaderboard(object, n, id)
+  leaderboard <- get_leaderboard(x, n, id)
   models <- purrr::map(leaderboard$model_id, h2o_get_model)
   cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = TRUE)
 
@@ -150,30 +150,30 @@ metric_info <- tibble::tribble(
   "specificity", -1
 )
 
-check_automl_fit <- function(object) {
-  if (!inherits(object, "_H2OAutoML")) {
+check_automl_fit <- function(x) {
+  if (!inherits(x, "_H2OAutoML")) {
     rlang::abort("The first argument should be a fitted `auto_ml()` model.")
   }
-  invisible(object)
+  invisible(x)
 }
 
 
 #' @rdname automl-tools
 #' @export
-collect_metrics._H2OAutoML <- function(object, ...) {
-  collect_metrics.H2OAutoML(object$fit, ...)
+collect_metrics._H2OAutoML <- function(x, ...) {
+  collect_metrics.H2OAutoML(x$fit, ...)
 }
 
 #' @param summarize A logical; should metrics be summarized over resamples
 #'  (TRUE) or return the values for each individual resample.
 #' @rdname automl-tools
 #' @export
-collect_metrics.H2OAutoML <- function(object,
+collect_metrics.H2OAutoML <- function(x,
                                       summarize = TRUE,
                                       n = NULL,
                                       id = NULL,
                                       ...) {
-  leaderboard <- get_leaderboard(object, n = n, id = id)
+  leaderboard <- get_leaderboard(x, n = n, id = id)
   lvl <- leaderboard$model_id
   models <- purrr::map(leaderboard$model_id, h2o_get_model)
   cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = FALSE)
@@ -203,12 +203,12 @@ collect_metrics.H2OAutoML <- function(object,
 #' @param keep_model A logical value for if the actual model object
 #'  should be retrieved from the server. Defaults to `TRUE`.
 #' @export
-tidy._H2OAutoML <- function(object,
+tidy._H2OAutoML <- function(x,
                             n = NULL,
                             id = NULL,
                             keep_model = TRUE,
                             ...) {
-  leaderboard <- get_leaderboard(object, n, id)
+  leaderboard <- get_leaderboard(x, n, id)
   leaderboard <- leaderboard %>%
     tidyr::pivot_longer(-c(model_id),
       names_to = ".metric",
@@ -225,7 +225,7 @@ tidy._H2OAutoML <- function(object,
   leaderboard %>%
     dplyr::mutate(.model = purrr::map(
       id,
-      ~ extract_fit_parsnip(object, .x),
+      ~ extract_fit_parsnip(x, .x),
     )) %>%
     dplyr::mutate(
       algorithm = purrr::map_chr(id, id_to_algorithm),
@@ -235,11 +235,11 @@ tidy._H2OAutoML <- function(object,
 
 #' @rdname automl-tools
 #' @export
-get_leaderboard <- function(object, n = NULL, id = NULL) {
-  if (inherits(object, "_H2OAutoML")) {
-    object <- object$fit
+get_leaderboard <- function(x, n = NULL, id = NULL) {
+  if (inherits(x, "_H2OAutoML")) {
+    x <- x$fit
   }
-  leaderboard <- as.data.frame(object@leaderboard)
+  leaderboard <- as.data.frame(x@leaderboard)
   if (!is.null(id) && is.character(id)) {
     n <- NULL
     leaderboard <- leaderboard %>% dplyr::filter(model_id %in% id)
@@ -254,9 +254,9 @@ get_leaderboard <- function(object, n = NULL, id = NULL) {
 
 #' @rdname automl-tools
 #' @export
-member_weights <- function(object, ...) {
-  check_automl_fit(object)
-  leaderboard <- get_leaderboard(object)
+member_weights <- function(x, ...) {
+  check_automl_fit(x)
+  leaderboard <- get_leaderboard(x)
   model_id <- leaderboard[grep("StackedEnsemble", leaderboard$model_id), ]$model_id
   ranks <- match(model_id, leaderboard$model_id)
 
@@ -292,14 +292,14 @@ check_leaderboard_n <- function(leaderboard, n) {
 
 #' @export
 #' @rdname automl-tools
-extract_fit_parsnip._H2OAutoML <- function(object, id = NULL, ...) {
+extract_fit_parsnip._H2OAutoML <- function(x, id = NULL, ...) {
   if (is.null(id)) {
-    id <- object$fit@leader@model_id
+    id <- x$fit@leader@model_id
   }
   mod <- h2o_get_model(id)
-  leaderboard <- get_leaderboard(object)
+  leaderboard <- get_leaderboard(x)
   automl_rank <- match(id, leaderboard$model_id)
-  mod <- convert_h2o_parsnip(mod, object$spec, object$lvl, extra_class = NULL)
+  mod <- convert_h2o_parsnip(mod, x$spec, x$lvl, extra_class = NULL)
   class(mod) <- c("h2o_fit", "H2OAutoML_fit", class(mod))
   attr(mod, "automl_rank") <- automl_rank
   mod
@@ -307,9 +307,9 @@ extract_fit_parsnip._H2OAutoML <- function(object, id = NULL, ...) {
 
 #' @export
 #' @rdname automl-tools
-extract_fit_engine._H2OAutoML <- function(object, id = NULL, ...) {
+extract_fit_engine._H2OAutoML <- function(x, id = NULL, ...) {
   if (is.null(id)) {
-    id <- object$fit@leader@model_id
+    id <- x$fit@leader@model_id
   }
   mod <- h2o_get_model(id)
   mod
