@@ -44,7 +44,7 @@ Suggests:
     testthat (>= 3.0.0)
 Remotes: 
     tidymodels/tune,
-    tidymodels/parsnip#758,
+    tidymodels/parsnip,
     r-lib/generics#68
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
