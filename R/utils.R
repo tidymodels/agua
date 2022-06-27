@@ -15,6 +15,7 @@ extract_h2o_algorithm <- function(workflow, ...) {
     multinom_reg = "glm",
     mlp = "deeplearning",
     naive_Bayes = "naive_bayes",
+    auto_ml = "automl",
     rlang::abort(
       glue::glue("Model `{model_class}` is not supported by the h2o engine, use one of { toString(all_algos) }")
     )
