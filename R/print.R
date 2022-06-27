@@ -26,23 +26,34 @@ print.H2OAutoML_fit <- function(x, ...) {
 print.H2OAutoML <- function(x, ...) {
   leaderboard <- x@leaderboard
 
-  cat("H2O AutoML Summary:", nrow(leaderboard), "models\n")
-  cat("==============\n")
-  cat("Leader Algorithm:", x@leader@algorithm, "\n")
-  cat("Leader ID:", x@leader@model_id, "\n\n")
-  cat("Leaderboard Preview\n")
+  title <- paste("H2O AutoML Summary:", nrow(leaderboard), "models")
+  cat(cli::rule(center = title, line = 2), "\n")
+  cat(cli::cli_text(
+    paste("{.strong Leader Algorithm}:", x@leader@algorithm)
+  ), "\n")
+  cat(cli::cli_text(
+    paste("{.strong Leader ID}:", x@leader@model_id)
+  ), "\n")
+
+  cat(cli::rule(center = "Leaderboard", line = 2), "\n")
   print(head(leaderboard))
 }
 
-print_automl_fit <- function(object, rank, ...) {
-  cat("H2O AutoML Candidate Model\n")
-  cat("==============\n")
-  cat("Model Algorithm:", object@algorithm, "\n")
-  cat("Model ID:", object@model_id, "\n")
-  cat("Model Ranking: ", rank, "\n\n")
+print_automl_fit <- function(object, rank = NULL, ...) {
+  title <- "H2O AutoML Candidate Model"
+  cat(cli::rule(center = title, line = 2), "\n")
 
-  cat("Model Details", "\n")
-  cat("==============\n\n")
+  cat(cli::cli_text(
+    paste("{.strong Algorithm}:", object@algorithm)
+  ), "\n")
+  cat(cli::cli_text(
+    paste("{.strong Ranking}:", rank)
+  ), "\n")
+  cat(cli::cli_text(
+    paste("{.strong ID}:", object@model_id)
+  ), "\n")
+
+  cat(cli::rule(center = "Details", line = 2), "\n")
 
   model_summary <- object@model$model_summary
   cv_summary <- object@model$cross_validation_metrics

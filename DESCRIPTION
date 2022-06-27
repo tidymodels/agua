@@ -19,6 +19,7 @@ BugReports: https://github.com/tidymodels/agua/issues
 Depends: 
     parsnip
 Imports: 
+    cli,
     dials,
     dplyr,
     generics,
