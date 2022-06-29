@@ -1,11 +1,17 @@
 #' tidymodels integration with h2o
 #'
-#' agua has tools that allows users to fit and tune models using the h2o
-#' platform. Most functions in this package are not user facing; agua enables
-#' new parsnip model engines and sets up additional infrastructure for tune.
+#' agua allows users to fit and tune models using the H2O
+#' platform with tidymodels syntax. The package provides a new parsnip
+#' computational engine 'h2o' for various models and sets up additional
+#' infrastructure for tune.
 #'
 #' The package uses code initially written by Steven Pawley in his h2oparsnip
 #' package. Addition work was done by Qiushi Yan as an RStudio summer intern.
+#'
+#' @includeRmd man/rmd/agua-package-details.md details
+#'
+#' @docType package
+#' @aliases agua agua-package
 #' @keywords internal
 "_PACKAGE"
 

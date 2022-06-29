@@ -2,17 +2,78 @@
 % Please edit documentation in R/agua-package.R
 \docType{package}
 \name{agua-package}
-\alias{agua}
 \alias{agua-package}
+\alias{_PACKAGE}
+\alias{agua}
 \title{tidymodels integration with h2o}
 \description{
-agua has tools that allows users to fit and tune models using the h2o
-platform. Most functions in this package are not user facing; agua enables
-new parsnip model engines and sets up additional infrastructure for tune.
+agua allows users to fit and tune models using the H2O
+platform with tidymodels syntax. The package provides a new parsnip
+computational engine 'h2o' for various models and sets up additional
+infrastructure for tune.
 }
 \details{
 The package uses code initially written by Steven Pawley in his h2oparsnip
 package. Addition work was done by Qiushi Yan as an RStudio summer intern.
+
+There are two main components in agua:
+\itemize{
+\item new parsnip engine \code{'h2o'} for the following models:
+\itemize{
+\item \code{linear_reg()}
+\item \code{logistic_reg()}
+\item \code{poisson_reg()}
+\item \code{multinom_reg()}
+\item \code{rand_forest()}
+\item \code{boost_tree()} (use \code{'h2o'} for xgboost and \code{'h2o_gbm'} for
+classical gradient boosting)
+\item \code{naive_Bayes()}
+\item \code{rule_fit()}
+\item \code{auto_ml()}
+}
+\item Infrastructure for the tune package
+}
+
+When fitting a parsnip model, the data are passed to the h2o server
+directly. For tuning, the data are passed once and instructions are
+given to \code{h2o.grid()} to process them.
+
+The following code demonstrates how to create a single model on the h2o
+server and how to make predictions.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tidymodels)
+library(agua)
+library(h2o)
+tidymodels_prefer()
+
+# Start the h2o server before running models
+h2o_start()
+
+# Demonstrate fitting parsnip models: 
+# Specify the type of model and the h2o engine 
+spec <-
+  rand_forest(mtry = 3, trees = 1000) \%>\%
+  set_engine("h2o") \%>\%
+  set_mode("regression")
+
+# Fit the model on the h2o server
+set.seed(1)
+mod <- fit(spec, mpg ~ ., data = mtcars)
+
+# Predictions
+predict(mod, head(mtcars))
+
+# When done
+h2o::h2o.shutdown(prompt = FALSE)
+}\if{html}{\out{</div>}}
+
+Before using the \code{'h2o'} engine, users need to run \code{agua::h2o_start()}
+or \code{h2o::h2o.init()} to start the h2o server, which will be storing
+data, models, and other values passed from the R session. If connected
+to a local h2o instance, it will terminate automatically once R is
+closed. \code{h2o::h2o.shutdown(prompt = FALSE)} will explicitly shut down
+the server, after which querying, fitting and predicting with h2o models
+will no longer work.
 }
 \seealso{
 Useful links:
