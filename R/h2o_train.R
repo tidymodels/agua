@@ -114,6 +114,10 @@ get_fit_opts <- function(...) {
 #' @export
 #' @rdname h2o_train
 h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
+  if (mtries != -1 && mtries > ncol(x)) {
+    rlang::abort("`mtry` can't be greater than the number of predictors.")
+  }
+
   h2o_train(
     x,
     y,
@@ -144,8 +148,8 @@ h2o_train_xgboost <-
            ...) {
     if (!h2o_xgboost_available()) {
       msg <- paste0(
-        "H2o's xgboost algorithm isn't available on this machine",
-        "try using the 'h2o_gbm' engine for `boost_tree()` instead",
+        "H2O's xgboost isn't available on this machine ",
+        "try using the 'h2o_gbm' engine for `boost_tree()` ",
         "for gradient boosted trees instead."
       )
       rlang::abort(msg)
@@ -215,8 +219,8 @@ h2o_train_glm <-
       all_ints <- rlang::is_integerish(y)
       if (!(all_positive && all_ints)) {
         msg <- paste0(
-          "Poisson regression expects the outcome",
-          " to be non-negative integers."
+          "Poisson regression expects the outcome ",
+          "to be non-negative integers."
         )
         rlang::abort()
       }
@@ -275,11 +279,11 @@ h2o_train_mlp <- function(x, y,
     "RectifierWithDropout", "Maxout", "MaxoutWithDropout"
   )
   if (!(activation %in% all_activations)) {
-    rlang::abort(
-      glue::glue(
-        "Activation function `{activation}` is not supported by the h2o engine. Possible values are {toString(all_activations)}."
-      )
-    )
+    msg <- glue::glue(paste0(
+      "Activation function `{activation}` is not supported by the h2o engine. ",
+      "Possible values are {toString(all_activations)}."
+    ))
+    rlang::abort(msg)
   }
 
 
@@ -318,15 +322,19 @@ h2o_train_rule <- function(x, y,
                            ...) {
   opts <- list(...)
   if (!is.null(opts$min_rule_length) && max_rule_length < opts$min_rule_length) {
-    rlang::abort(
-      glue::glue("`tree_depth` ({max_rule_length}) must be greater than the engine argument `min_rule_length` ({opts$min_rule_length}).")
-    )
+    msg <- glue::glue(paste0(
+      "`tree_depth` ({max_rule_length}) must be greater than the ",
+      "engine argument `min_rule_length` ({opts$min_rule_length})."
+    ))
+    rlang::abort(msg)
   }
 
   if (is.null(opts$min_rule_length) && max_rule_length < 3) {
-    rlang::abort(
-      glue::glue("`tree_depth` ({max_rule_length}) must be greater than the engine argument `min_rule_length`'s default value of 3.")
-    )
+    msg <- glue::glue(paste0(
+      "`tree_depth` ({max_rule_length}) must be greater than the ",
+      "engine argument `min_rule_length`'s default value of 3."
+    ))
+    rlang::abort(msg)
   }
 
 

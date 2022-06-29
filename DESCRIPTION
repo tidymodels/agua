@@ -47,7 +47,7 @@ Remotes:
     tidymodels/tune,
     tidymodels/parsnip,
     r-lib/generics#68
-Config/Needs/website: 
+Config/Needs/website:
   tidyverse/tidytemplate,
   doParallel,
   tidymodels
