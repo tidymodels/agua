@@ -1,0 +1,8 @@
+---
+title: "Tuning with agua"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tuning with agua}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---

@@ -1,20 +1,14 @@
+There are two main components in agua: 
 
-There are two main components in agua:
+* New parsnip engine `'h2o'` for many models, see [Get started](https:://agua.tidymodels.org/articles/agua.html) for a complete list.  
 
--   New parsnip engine `'h2o'` for many models, see
-    \[<https:://agua.tidymodels.org/articles/agua.html#introduction>\]
-    for a complete list.
+* Infrastructure for the tune package. 
 
--   Infrastructure for the tune package.
+When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to `h2o.grid()` to process them. 
 
-When fitting a parsnip model, the data are passed to the h2o server
-directly. For tuning, the data are passed once and instructions are
-given to `h2o.grid()` to process them.
+The following code demonstrates how to create a single model on the h2o server and how to make predictions. 
 
-The following code demonstrates how to create a single model on the h2o
-server and how to make predictions.
-
-``` r
+```r
 library(tidymodels)
 library(agua)
 library(h2o)
@@ -41,10 +35,4 @@ predict(mod, head(mtcars))
 h2o::h2o.shutdown(prompt = FALSE)
 ```
 
-Before using the `'h2o'` engine, users need to run `agua::h2o_start()`
-or `h2o::h2o.init()` to start the h2o server, which will be storing
-data, models, and other values passed from the R session. If connected
-to a local h2o instance, it will terminate automatically once R is
-closed. `h2o::h2o.shutdown(prompt = FALSE)` will explicitly shut down
-the server, after which querying, fitting and predicting with h2o models
-will no longer work.
+Before using the `'h2o'` engine, users need to run `agua::h2o_start()` or `h2o::h2o.init()` to start the h2o server, which will be storing data, models, and other values passed from the R session. If connected to a local h2o instance, it will terminate automatically once R is closed.  `h2o::h2o.shutdown(prompt = FALSE)` will explicitly shut down the server, after which querying, fitting and predicting with h2o models will no longer work. 

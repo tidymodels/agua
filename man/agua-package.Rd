@@ -18,9 +18,8 @@ package. Addition work was done by Qiushi Yan as an RStudio summer intern.
 
 There are two main components in agua:
 \itemize{
-\item New parsnip engine \code{'h2o'} for many models, see
-$$<https:://agua.tidymodels.org/articles/agua.html#introduction>$$
-for a complete list.
+\item New parsnip engine \code{'h2o'} for many models, see \href{https:://agua.tidymodels.org/articles/agua.html}{Get started} for a
+complete list.
 \item Infrastructure for the tune package.
 }
 
