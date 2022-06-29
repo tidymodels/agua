@@ -1,18 +1,8 @@
 There are two main components in agua: 
 
-* new parsnip engine `'h2o'` for the following models: 
+* New parsnip engine `'h2o'` for many models, see [https:://agua.tidymodels.org/articles/agua.html#introduction] for a complete list. 
 
-  * `linear_reg()`
-  * `logistic_reg()`
-  * `poisson_reg()`
-  * `multinom_reg()`
-  * `rand_forest()`
-  * `boost_tree()` (use `'h2o'` for xgboost and `'h2o_gbm'` for classical gradient boosting)
-  * `naive_Bayes()`
-  * `rule_fit()` 
-  * `auto_ml()`
-
-* Infrastructure for the tune package
+* Infrastructure for the tune package. 
 
 When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to `h2o.grid()` to process them. 
 

@@ -18,20 +18,10 @@ package. Addition work was done by Qiushi Yan as an RStudio summer intern.
 
 There are two main components in agua:
 \itemize{
-\item new parsnip engine \code{'h2o'} for the following models:
-\itemize{
-\item \code{linear_reg()}
-\item \code{logistic_reg()}
-\item \code{poisson_reg()}
-\item \code{multinom_reg()}
-\item \code{rand_forest()}
-\item \code{boost_tree()} (use \code{'h2o'} for xgboost and \code{'h2o_gbm'} for
-classical gradient boosting)
-\item \code{naive_Bayes()}
-\item \code{rule_fit()}
-\item \code{auto_ml()}
-}
-\item Infrastructure for the tune package
+\item New parsnip engine \code{'h2o'} for many models, see
+$$<https:://agua.tidymodels.org/articles/agua.html#introduction>$$
+for a complete list.
+\item Infrastructure for the tune package.
 }
 
 When fitting a parsnip model, the data are passed to the h2o server
