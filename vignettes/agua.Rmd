@@ -29,18 +29,17 @@ The `agua` package provides tidymodels interface to the [H2O](https://h2o.ai/) p
 
     -   `linear_reg()`, `logistic_reg()`, `poisson_reg()`, `multinom_reg()`: All fit penalized generalized linear models. If the model parameters `penalty` and `mixture` are not specified, h2o will internally search for the optimal regularization settings. 
     
-    -   `boost_tree()`: Uses H2O's XGBOOST algorithm. Use `h2o::h2o.xgboost.available()` to see if XGBOOST is supported on your machine. For classical gradient boosting, use the `'h2o_gbm'` engine. 
+    -   `boost_tree()`: . Fits boosted trees via xgboost. Use `h2o::h2o.xgboost.available()` to see if h2o's xgboost is supported on your machine. For classical gradient boosting, use the `'h2o_gbm'` engine. 
 
-    -   `auto_ml()`
+    -   `rand_forest()`: Rnadom forest models. 
     
-    -   `rand_forest()`
+    -   `naive_Bayes()`: Naive Bayes models. 
     
-    -   `naive_Bayes()`
+    -   `rule_fit()`: RuleFit models. 
     
-    -   `rule_fit()`
+    -   `mlp()`: Multi-layer feedforward neural networks. 
     
-    -   `mlp()`
-    
+    -   `auto_ml()`: Automatic machine learning. 
 
 -   Infrastructure for the tune package, see [Tuning with agua](https:://agua.tidymodels.org/articles/tune.html) for more details. 
 
@@ -71,7 +70,7 @@ concrete
 
 Note that we need to call `h2o_start()` or `h2o::h2o.init()` to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects (data, models) on the server as possible. The h2o will automatically terminate once R session is closed. You can use `h2o::h2o.removeAll()` to remove all server-side objects and `h2o::h2o.shutdown()` to manually stop the server. 
 
-The rest syntax of model fitting and prediction are identical to the usage of any other engine in tidymodels. 
+The rest of the syntax of model fitting and prediction are identical to the usage of any other engine in tidymodels. 
 
 ```{r rf-fit}
 set.seed(1501)
@@ -97,36 +96,36 @@ rf_fit
 predict(rf_fit, new_data = concrete_test)
 ```
 
-Here we specify the engine argument `histogram_type = "Random"` to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for "h2o" of that model. For instance, the h2o link in the help page of `rand_forest()` shows that it uses `h2o::h2o.randomForest`, whose arguments can be passed as engine arguments in `set_engine()`. 
+Here we specify the engine argument `histogram_type = "Random"` to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for "h2o" of that model. For instance, the h2o link in the help page of `rand_forest()` shows that it uses `h2o::h2o.randomForest()`, whose arguments can be passed in as engine arguments in `set_engine()`. 
 
-You can also use `fit_resamples` with h2o models. 
+You can also use `fit_resamples()` with h2o models. 
 
 ```{r rf-fitresample, eval = FALSE}
 concrete_folds <-
-  vfold_cv(concrete_train, strata = compressive_strength, repeats = 5)
+  vfold_cv(concrete_train, strata = compressive_strength)
 
 fit_resamples(rf_wflow, resamples = concrete_folds)
-#> # A tibble: 119 × 5
-#>    id                                         algor…¹ .metric  .model   .predi…²
-#>    <chr>                                      <chr>   <list>   <list>   <list>  
-#>  1 StackedEnsemble_BestOfFamily_4_AutoML_5_2… stacki… <tibble> <fit[+]> <tibble>
-#>  2 StackedEnsemble_AllModels_2_AutoML_5_2022… stacki… <tibble> <fit[+]> <tibble>
-#>  3 StackedEnsemble_BestOfFamily_6_AutoML_5_2… stacki… <tibble> <fit[+]> <tibble>
-#>  4 GBM_grid_1_AutoML_5_20220629_160716_model… gradie… <tibble> <fit[+]> <tibble>
-#>  5 StackedEnsemble_BestOfFamily_3_AutoML_5_2… stacki… <tibble> <fit[+]> <tibble>
-#>  6 StackedEnsemble_AllModels_5_AutoML_5_2022… stacki… <tibble> <fit[+]> <tibble>
-#>  7 GBM_5_AutoML_5_20220629_160716             gradie… <tibble> <fit[+]> <tibble>
-#>  8 GBM_grid_1_AutoML_5_20220629_160716_model… gradie… <tibble> <fit[+]> <tibble>
-#>  9 StackedEnsemble_AllModels_1_AutoML_5_2022… stacki… <tibble> <fit[+]> <tibble>
-#> 10 GBM_grid_1_AutoML_5_20220629_160716_model… gradie… <tibble> <fit[+]> <tibble>
-#> # … with 109 more rows, and abbreviated variable names ¹​algorithm,
-#> #   ²​.predictions
+#> # Resampling results
+#> # 10-fold cross-validation using stratification 
+#> # A tibble: 10 × 4
+#>    splits           id     .metrics         .notes          
+#>    <list>           <chr>  <list>           <list>          
+#>  1 <split [667/76]> Fold01 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  2 <split [667/76]> Fold02 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  3 <split [667/76]> Fold03 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  4 <split [667/76]> Fold04 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  5 <split [667/76]> Fold05 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  6 <split [668/75]> Fold06 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  7 <split [671/72]> Fold07 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  8 <split [671/72]> Fold08 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  9 <split [671/72]> Fold09 <tibble [2 × 4]> <tibble [0 × 3]>
+#> 10 <split [671/72]> Fold10 <tibble [2 × 4]> <tibble [0 × 3]>
 ```
 
 
 ## Using H2O AutoML 
 
-Automatic machine learning (AutoML) is the process of automatically searching , screening and evaluating many models for a specific training set. AutoML could be particularly insightful as an first-round exploratory approach to identify model families and parameterization that is most likely to succeed in a given problem. You can use H2O's [AutoML](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html) algorithm via the `'h2o'` engine in `auto_ml()`. Additionally, ague provides several helper functions to quickly wrangle and visualize AutoML's results. 
+Automatic machine learning (AutoML) is the process of automatically searching , screening and evaluating many models for a specific dataset. AutoML could be particularly insightful as an first-round exploratory approach to identify model families and parameterization that is most likely to succeed. You can use H2O's [AutoML](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html) algorithm via the `'h2o'` engine in `auto_ml()`. Additionally, ague provides several helper functions to quickly wrangle and visualize AutoML's results. 
 
 Let's run an AutoML search on the concrete data. 
 
@@ -193,7 +192,7 @@ extract_fit_parsnip(auto_fit) %>%
 
 agua includes tools to work with AutoML results:
 
-- `rank_results_automl` returns the leaderboard in tidy format with rankings within each metric
+- `rank_results_automl()` returns the leaderboard in tidy format with rankings within each metric
 
 ```{r auto-rank, eval = FALSE}
 rank_results_automl(auto_fit) %>%
@@ -216,7 +215,7 @@ rank_results_automl(auto_fit) %>%
 ```
 
 
-- `collect_metrics` returns average statistics of performance metrics (summarized) per model, or raw value in each resample (unsummarized).
+- `collect_metrics()` returns average statistics of performance metrics (summarized) per model, or raw value in each resample (unsummarized).
 
 ```{r auto-metrics, eval = FALSE}
 collect_metrics(auto_fit, summarize = FALSE)
@@ -279,7 +278,7 @@ auto_fit %>%
 knitr::include_graphics("auto-stacked-1.png")
 ```
 
-You can also `autoplot()` on an AutoML object, which wraps functions above to plot
+You can also `autoplot()` an AutoML object, which wraps functions above to plot
 performance assessment and ranking. The lower the average ranking, the more likely the model type suits the data. 
 
 ```{r autoplot, eval = FALSE}
