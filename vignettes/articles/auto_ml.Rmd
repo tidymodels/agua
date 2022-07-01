@@ -1,0 +1,118 @@
+---
+title: "Automatic machine learning with h2o"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Automatic machine learning with h2o}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Using H2O AutoML 
+
+Automatic machine learning (AutoML) is the process of automatically searching , screening and evaluating many models for a specific dataset. AutoML could be particularly insightful as an first-round exploratory approach to identify model families and parameterization that is most likely to succeed. You can use H2O's [AutoML](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html) algorithm via the `'h2o'` engine in `auto_ml()`. Additionally, ague provides several helper functions to quickly wrangle and visualize AutoML's results. 
+
+Let's run an AutoML search on the concrete data. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5.75,
+  out.width = "95%"
+)
+options(digits = 3)
+```
+
+```{r auto-fit, message = FALSE}
+library(tidymodels)
+library(agua)
+library(ggplot2)
+h2o_start()
+
+data(concrete)
+set.seed(4595)
+concrete_split <- initial_split(concrete, strata = compressive_strength)
+concrete_train <- training(concrete_split)
+concrete_test  <- testing(concrete_split)
+
+# run for a maximum of 120 seconds
+auto_spec <-
+  auto_ml() %>%
+  set_engine("h2o", max_runtime_secs = 120, seed = 1) %>%
+  set_mode("regression")
+
+normalized_rec <-
+  recipe(compressive_strength ~ ., data = concrete_train) %>%
+  step_normalize(all_predictors())
+
+auto_wflow <-
+  workflow() %>%
+  add_model(auto_spec) %>%
+  add_recipe(normalized_rec)
+
+auto_fit <- fit(auto_wflow, data = concrete_train) 
+
+extract_fit_parsnip(auto_fit)
+```
+
+In 120 seconds, AutoML fitted `r nrow(as.data.frame(auto_fit$fit$fit$fit@leaderboard))` models. The parsnip fit object `extract_fit_parsnip(auto_fit)` shows the number of candidate models, the best performing algorithm and its corresponding model id, and a preview 
+of the leaderboard with cross validation performances.  The `model_id` column in the leaderboard is a unique model identifier for the h2o server. This can be useful when you need to predict on or extract a specific model, e.g. with `predict(auto_fit, id = id)` and `extract_fit_engine(auto_fit, id = id)`. By default, they will operate on the best performing leader model. 
+
+```{r}
+# predict with the best model 
+predict(auto_fit, new_data = concrete_test)
+```
+
+Typically, we use AutoML to get a quick sense of the range of our success metric, and algorithms that are likely to succeed. agua provides tools to work with H2O AutoML results. 
+
+- `rank_results_automl()` returns the leaderboard in tidy format with rankings within each metric. A low rank means good performance in a metric. 
+
+```{r auto-rank}
+rank_results_automl(auto_fit) %>%
+  filter(.metric == "mae") %>% 
+  arrange(rank)
+```
+
+
+- `collect_metrics()` returns average statistics of performance metrics (summarized) per model, or raw value in each resample (unsummarized).
+
+```{r auto-metrics}
+collect_metrics(auto_fit, summarize = FALSE)
+```
+
+- `tidy()` returns a tibble with performance and individual model objects. This is helpful if you just want to perform operations (e.g., predict) on all candidates. 
+
+```{r auto-tidy}
+tidy(auto_fit) %>%
+  mutate(
+    .predictions = purrr::map(.model, predict, new_data = head(concrete_test))
+  )
+```
+
+- `member_weights()` computes variable importance for all stacked ensemble models, i.e., the relative importance of base models in the meta-learner. This is typically the coefficient magnitude in the second-level GLM model. Here we show the scaled contribution of different algorithms in these stacking models. 
+
+```{r auto-stacked}
+auto_fit %>% 
+  extract_fit_parsnip() %>% 
+  member_weights() %>% 
+  tidyr::unnest(importance) %>%
+  filter(type == "scaled_importance") %>% 
+  ggplot() + 
+  geom_boxplot(aes(value, algorithm)) +
+  scale_x_sqrt() + 
+  labs(y = NULL, x = "scaled importance", title = "Variable importance in stacked ensembles")
+```
+
+
+You can also `autoplot()` an AutoML object, which essentially wraps functions above to plot
+performance assessment and ranking. The lower the average ranking, the more likely the model type suits the data. 
+
+```{r autoplot}
+autoplot(auto_fit, type = "rank", metric =c("mae", "rmse")) + 
+  theme(legend.position = "none")
+```
+
+One current limitation of H2O AutoML models is that they can't be used in tidymodels
+resampling mechanism. This means you can't use them with `fit_resamples()`, `tune_grid()`, `tune_bayes()`, etc. 
