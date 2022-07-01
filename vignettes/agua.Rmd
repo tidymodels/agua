@@ -31,7 +31,7 @@ The `agua` package provides tidymodels interface to the [H2O](https://h2o.ai/) p
     
     -   `boost_tree()`: . Fits boosted trees via xgboost. Use `h2o::h2o.xgboost.available()` to see if h2o's xgboost is supported on your machine. For classical gradient boosting, use the `'h2o_gbm'` engine. 
 
-    -   `rand_forest()`: Rnadom forest models. 
+    -   `rand_forest()`: Random forest models. 
     
     -   `naive_Bayes()`: Naive Bayes models. 
     

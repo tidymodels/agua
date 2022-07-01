@@ -80,7 +80,7 @@ candidate models on each metric.
 
 \code{tidy()} returns a tibble with average performance for each model.
 
-\code{member_weights()} computes variable importance for all stacked ensemble
+\code{member_weights()} computes member importance for stacked ensemble
 models, i.e., the relative importance of base models in the meta-learner.
 This is typically the coefficient magnitude in the second-level GLM model.
 
@@ -94,9 +94,9 @@ later models.
 }
 \details{
 H2O associates with each model in AutoML an unique id. This can be used for
-model extraction and prediction, i.e., \code{extract_fit_engine(x, id)}
+model extraction and prediction, i.e., \code{extract_fit_engine(x, id = id)}
 returns the model and \code{predict(x, id = id)} will predict for that model.
-\code{extract_fit_parsnip(x, id)} wraps the h2o model with parsnip
+\code{extract_fit_parsnip(x, id = id)} wraps the h2o model with parsnip
 parsnip model object is discouraged.
 
 The \code{algorithm} column corresponds to the model family H2O use for a

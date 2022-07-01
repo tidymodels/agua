@@ -43,7 +43,7 @@ extract_fit_engine(m, m_tidy$id[[2]])
 
 predict(leader, head(mtcars))
 
-# variable importance in metalearner, i.e. model importance of base learner
+# member importance in metalearner, i.e. model importance of base learner
 weights <- member_weights(m) %>%
   tidyr::unnest(importance)
 

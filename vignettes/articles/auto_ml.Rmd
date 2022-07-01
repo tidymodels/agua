@@ -10,7 +10,7 @@ vignette: >
 
 ## Using H2O AutoML 
 
-Automatic machine learning (AutoML) is the process of automatically searching , screening and evaluating many models for a specific dataset. AutoML could be particularly insightful as an first-round exploratory approach to identify model families and parameterization that is most likely to succeed. You can use H2O's [AutoML](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html) algorithm via the `'h2o'` engine in `auto_ml()`. Additionally, ague provides several helper functions to quickly wrangle and visualize AutoML's results. 
+Automatic machine learning (AutoML) is the process of automatically searching , screening and evaluating many models for a specific dataset. AutoML could be particularly insightful as an first-round exploratory approach to identify model families and parameterization that is most likely to succeed. You can use H2O's [AutoML](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html) algorithm via the `'h2o'` engine in `auto_ml()`. Additionally, agua provides several helper functions to quickly wrangle and visualize AutoML's results. 
 
 Let's run an AutoML search on the concrete data. 
 
@@ -67,7 +67,7 @@ predict(auto_fit, new_data = concrete_test)
 
 Typically, we use AutoML to get a quick sense of the range of our success metric, and algorithms that are likely to succeed. agua provides tools to work with H2O AutoML results. 
 
-- `rank_results_automl()` returns the leaderboard in tidy format with rankings within each metric. A low rank means good performance in a metric. 
+- `rank_results_automl()` returns the leaderboard in a tidy format with rankings within each metric. A low rank means good performance in a metric. 
 
 ```{r auto-rank}
 rank_results_automl(auto_fit) %>%
@@ -87,7 +87,7 @@ collect_metrics(auto_fit, summarize = FALSE)
 ```{r auto-tidy}
 tidy(auto_fit) %>%
   mutate(
-    .predictions = purrr::map(.model, predict, new_data = head(concrete_test))
+    .predictions = map(.model, predict, new_data = head(concrete_test))
   )
 ```
 
@@ -97,12 +97,12 @@ tidy(auto_fit) %>%
 auto_fit %>% 
   extract_fit_parsnip() %>% 
   member_weights() %>% 
-  tidyr::unnest(importance) %>%
+  unnest(importance) %>%
   filter(type == "scaled_importance") %>% 
   ggplot() + 
   geom_boxplot(aes(value, algorithm)) +
   scale_x_sqrt() + 
-  labs(y = NULL, x = "scaled importance", title = "Variable importance in stacked ensembles")
+  labs(y = NULL, x = "scaled importance", title = "Member importance in stacked ensembles")
 ```
 
 

@@ -9,7 +9,7 @@
 #'
 #' `tidy()` returns a tibble with average performance for each model.
 #'
-#' `member_weights()` computes variable importance for all stacked ensemble
+#' `member_weights()` computes member importance for stacked ensemble
 #' models, i.e., the relative importance of base models in the meta-learner.
 #' This is typically the coefficient magnitude in the second-level GLM model.
 #'
@@ -23,9 +23,9 @@
 #'
 #' @details
 #' H2O associates with each model in AutoML an unique id. This can be used for
-#' model extraction and prediction, i.e., `extract_fit_engine(x, id)`
+#' model extraction and prediction, i.e., `extract_fit_engine(x, id = id)`
 #' returns the model and `predict(x, id = id)` will predict for that model.
-#' `extract_fit_parsnip(x, id)` wraps the h2o model with parsnip
+#' `extract_fit_parsnip(x, id = id)` wraps the h2o model with parsnip
 #  classes to enable predict and print methods, other usage of this "fake"
 #' parsnip model object is discouraged.
 #'
