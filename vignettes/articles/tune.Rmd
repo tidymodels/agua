@@ -56,8 +56,13 @@ ames_res
 ```
 
 The syntax is the same, we provide a workflow and the grid of hyper-parameters, then `tune_grid()` returns cross validation 
-performances for every parameterization on the resamples. The only difference is calling `h2o_start()` 
-beforehand to use the `'h2o'` engine. Other functions in tune for working with tuning results such as `collect_metrics()`, `collect_predictions()` and `autoplot()` will also recognize `ames_res` and work as expected. 
+performances for every parameterization per resample. There are two small differences to note when tuning h2o models: 
+
+- Remember to call `h2o_start()` beforehand to enable all the h2o side of computations. 
+
+- h2o supports only a regular grid of hyper-parameters, as created by `expand.grid()`, see `?dials::grid_regular` for more details. As such we need to set `grid` in `tune_*()` functions explicitly to be a data frame of regular grid and prevent the default grid generation.  
+
+Other functions in tune for working with tuning results such as `collect_metrics()`, `collect_predictions()` and `autoplot()` will also recognize `ames_res` and work as expected. 
 
 ```{r}
 collect_metrics(ames_res, summarize = FALSE)
@@ -68,15 +73,11 @@ autoplot(ames_res, metric = "rmse")
 ```
 
 
-
-Currently, there are a couple of limitations when tuning h2o models with agua:
-
-- Only regular grid is supported, as created by `expand.grid()`, `dials::grid_regular()`,
-or `tidyr::crossing()`. We also need to set `grid` in `tune_*()` functions explicitly to prevent the default grid generation. 
-
-- Parallelization on the R side is over resamples, i.e., `control = control_grid(parallel_over = 'resamples')`. We can't set `parallel_over = 'everything'`
+One current limitation with parallel processing is that parallelization on the R side is done over resamples, i.e., `control = control_grid(parallel_over = 'resamples')`. We can't set `parallel_over = 'everything'`
 for an inner parallel loop of tuning parameters. Yet the h2o server by can build models 
 in parallel with adaptive parallelism. 
+
+**TODO**: how to use `parallelism` in `h2o::h2o.grid`
 
 ## Tuning internals 
 
@@ -94,13 +95,11 @@ extract_parameter_set_dials(lm_wflow)
 
 * tuning parameters in the preprocessor: `long df` and `lat df`. 
 
-Since `h2o.grid` only optimizes model parameters, agua or the h2o server does not interfere with tuning preprocessors. Possible values `long df` and `lat df` in the regular grid `grid` will be iterated as usual on the R side, once a certain combination of them is chosen, agua engineered all relevant features, then passes the data and model definitions to the h2o server for the rest of model tuning. Also, `h2o.grid()` only supports regular tuning grids, therefore we can't use grid of other types. 
+Since `h2o.grid` does not optimize parameters in the preprocessor, possible values of `long df` and `lat df` in `grid` will be iterated as usual on the R side. Once a certain combination of them is chosen, agua will engineer all the relevant features, convert `grid` to a list of hyper-parameters, then passes the data and model definitions to `h2o_grid()`. Next, `h2o.grid()` conducts a series of validations to prepare data for the server, one of which is an `expand.grid()` on the list of hyper-parameters to generate a regular grid. After this, we have completed computations on the R side and the rest of model tuning is now delegated to the h2o server. 
 
-If you have a parallel backend registered, models per resample will be optimized and evaluated 
-in parallel. The h2o server would still require R to pass in the complete set of parameters for one resample. For this reason, we can't have `parallel_over = 'everything'` on the R side. 
-
-**TODO**: how to use `parallelism` in `h2o::h2o.grid`
+If you have a parallel backend registered, models will be optimized and evaluated 
+in parallel per resample. The h2o server would still require the complete set of parameters for one resample. For this reason, agua does not support `parallel_over = 'everything'` on the R side. 
 
 Regarding the performance of model evaluation, `h2o.grid()` supports passing in a validation
 frame but does not return predictions on that data. In order to compute metrics on the holdout sample, we have to retrieve the model,
-convert validation data into the desired format, predict on it, and convert the results back to data frames. In the future we hope it can return the predictions directly thus eliminating excessive data conversions. 
+convert validation data into the desired format, predict on it, and convert the results back to data frames. In the future we hope to get validation predictions directly thus eliminating excessive data conversions. 
