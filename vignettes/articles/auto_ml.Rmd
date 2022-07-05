@@ -1,8 +1,8 @@
 ---
-title: "Automatic machine learning with h2o"
+title: "Automatic machine learning"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Automatic machine learning with h2o}
+  %\VignetteIndexEntry{Automatic machine learning}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -110,7 +110,7 @@ You can also `autoplot()` an AutoML object, which essentially wraps functions ab
 performance assessment and ranking. The lower the average ranking, the more likely the model type suits the data. 
 
 ```{r autoplot}
-autoplot(auto_fit, type = "rank", metric =c("mae", "rmse")) + 
+autoplot(auto_fit, type = "rank", metric = c("mae", "rmse")) + 
   theme(legend.position = "none")
 ```
 
