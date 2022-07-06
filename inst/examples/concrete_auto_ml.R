@@ -55,9 +55,9 @@ ctrl_fit <- control_workflow(control_parsnip = control_parsnip(verbosity = 2))
 h2o_auto_fit <- fit(h2o_auto_wflow, data = concrete_train,
                     control = ctrl_fit)
 
-# Links to the ?rank_results_automl docs (and wherever we put an example article)
+# Links to the ?rank_results docs (and wherever we put an example article)
 # What happens with parallel processing?
-# Need rank_results_automl.workflow (and other methods like collect metrics)
+# Need rank_results.workflow (and other methods like collect metrics)
 # Note that recipes will not be resampled if given via a workflow. The engine doc might say something like:
 # "When using autoML, h2o does internal cross-validation of the model fits (for
 # the leaderboard and ranking). When using agua’s `auto_ml()` function with a
@@ -66,7 +66,7 @@ h2o_auto_fit <- fit(h2o_auto_wflow, data = concrete_train,
 # by the internal resampling may be optimistic."
 stack_summary <-
   h2o_auto_fit %>%
-  rank_results_automl() %>%
+  rank_results() %>%
   filter(.metric == "mse")
 stack_summary %>%
   filter(rank <= 20) %>%

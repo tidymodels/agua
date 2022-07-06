@@ -16,7 +16,7 @@ m <- mod %>%
 
 # rank all algorithms by cross validation performance
 # workflowsets::rank_results
-rank_results_automl(m)
+rank_results(m)
 
 # tune::collect_metrics
 collect_metrics(m)
@@ -56,7 +56,7 @@ ggplot(weights, aes(value, algorithm)) +
 # can join with tibbles from other functions
 member_weights(m) %>%
   left_join(
-    rank_results_automl(m) %>%
+    rank_results(m) %>%
       select(id, .metric, mean, rank),
     by = c("ensemble_id" = "id")
   )

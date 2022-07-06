@@ -14,6 +14,14 @@ generics::tidy
 #' @export
 generics::refit
 
+#' @importFrom generics refit
+#' @export
+generics::refit
+
+#' @importFrom generics rank_results
+#' @export
+generics::rank_results
+
 #' @importFrom ggplot2 autoplot
 #' @export
 ggplot2::autoplot

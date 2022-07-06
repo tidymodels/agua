@@ -106,7 +106,7 @@ workflow_uses_automl <- function(x) {
 eval_silently <- function(expr) {
   junk <- capture.output(res <- try(rlang::eval_tidy(expr), silent = TRUE))
   if (inherits(res, "try-error") && startsWith(res[1], "Error in h2o.getConnection()")) {
-      rlang::abort(as.character(res))
+    rlang::abort(as.character(res))
   }
   if (length(junk) == 0) {
     return(res)

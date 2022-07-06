@@ -37,7 +37,7 @@ autoplot.H2OAutoML <- function(object,
                                ...) {
   type <- match.arg(type)
   if (type == "rank") {
-    res <- rank_results_automl(object, ...)
+    res <- rank_results(object, ...)
     if (!is.null(metric)) {
       res <- res %>% dplyr::filter(.metric %in% metric)
     }

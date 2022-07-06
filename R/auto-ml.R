@@ -1,7 +1,7 @@
 #' Tools for working with H2O AutoML results
 #'
 #' @description
-#' `rank_results_automl()` ranks average cross validation performances of
+#' `rank_results()` ranks average cross validation performances of
 #' candidate models on each metric.
 #'
 #' `collect_metrics()` returns average statistics of performance metrics
@@ -48,7 +48,7 @@
 #'     set_mode("regression") %>%
 #'     fit(mpg ~ ., data = mtcars)
 #'
-#'   rank_results_automl(auto_fit, n = 5)
+#'   rank_results(auto_fit, n = 5)
 #'   collect_metrics(auto_fit, summarize = FALSE)
 #'   tidy(auto_fit)
 #'   member_weights(auto_fit)
@@ -56,31 +56,24 @@
 #'
 #' @export
 #' @rdname automl-tools
-rank_results_automl <- function(x, ...) {
-  UseMethod("rank_results_automl")
-}
-
-#' @rdname automl-tools
-#' @export
-rank_results_automl.workflow <- function(x, ...) {
-  rank_results_automl(extract_fit_parsnip(x), ...)
+rank_results.workflow <- function(x, ...) {
+  rank_results(hardhat::extract_fit_parsnip(x), ...)
 }
 
 
 #' @rdname automl-tools
 #' @export
-rank_results_automl._H2OAutoML <- function(x, ...) {
-  check_automl_fit(x)
-  rank_results_automl(x$fit, ...)
+rank_results._H2OAutoML <- function(x, ...) {
+  rank_results(x$fit, ...)
 }
 
 
 #' @rdname automl-tools
 #' @export
-rank_results_automl.H2OAutoML <- function(x,
-                                          n = NULL,
-                                          id = NULL,
-                                          ...) {
+rank_results.H2OAutoML <- function(x,
+                                   n = NULL,
+                                   id = NULL,
+                                   ...) {
   leaderboard <- get_leaderboard(x, n, id)
   models <- purrr::map(leaderboard$model_id, h2o_get_model)
   cv_metrics <- purrr::map_dfr(models, get_cv_metrics, summarize = TRUE)
@@ -107,8 +100,9 @@ get_cv_metrics <- function(x, summarize = TRUE) {
       .before = 1
     ) %>%
     tidyr::pivot_longer(dplyr::starts_with("cv"),
-                        names_to = "cv_id",
-                        values_to = "value")
+      names_to = "cv_id",
+      values_to = "value"
+    )
   if (summarize) {
     res <- res %>%
       dplyr::group_by(id, algorithm, .metric) %>%
@@ -198,8 +192,7 @@ collect_metrics.H2OAutoML <- function(x,
         .groups = "drop"
       ) %>%
       dplyr::mutate(id = as.character(id))
-  }
-  else {
+  } else {
     res <- cv_metrics %>%
       dplyr::rename(.estimate = value)
   }

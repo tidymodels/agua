@@ -126,7 +126,7 @@ test_that("automl tools", {
     ) %>%
     set_mode("regression")
   mod <- spec %>% fit(mpg ~ ., data = mtcars)
-  ranks <- rank_results_automl(mod)
+  ranks <- rank_results(mod)
   mod_tidy <- tidy(mod, n = 10)
   leader <- extract_fit_parsnip(mod)
 

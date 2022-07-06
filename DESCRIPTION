@@ -22,7 +22,7 @@ Imports:
     cli,
     dials,
     dplyr,
-    generics,
+    generics (>= 0.1.3),
     ggplot2,
     glue,
     h2o (>= 3.36.1.2),
@@ -45,8 +45,7 @@ Suggests:
     testthat (>= 3.0.0)
 Remotes: 
     tidymodels/tune,
-    tidymodels/parsnip,
-    r-lib/generics#68
+    tidymodels/parsnip
 Config/Needs/website:
   tidyverse/tidytemplate,
   doParallel,

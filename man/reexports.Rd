@@ -7,6 +7,7 @@
 \alias{\%>\%}
 \alias{tidy}
 \alias{refit}
+\alias{rank_results}
 \alias{autoplot}
 \alias{extract_fit_parsnip}
 \alias{extract_fit_engine}
@@ -20,7 +21,7 @@ below to see their documentation.
 \describe{
   \item{dplyr}{\code{\link[dplyr:reexports]{\%>\%}}}
 
-  \item{generics}{\code{\link[generics]{refit}}, \code{\link[generics]{tidy}}}
+  \item{generics}{\code{\link[generics]{rank_results}}, \code{\link[generics]{refit}}, \code{\link[generics]{refit}}, \code{\link[generics]{tidy}}}
 
   \item{ggplot2}{\code{\link[ggplot2]{autoplot}}}
 
