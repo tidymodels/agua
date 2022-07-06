@@ -125,10 +125,6 @@ There are several package vignettes including:
 - [Automatic machine learning](https://agua.tidymodels.org/articles/auto_ml.html)
 
 
-
-
-
-
 ## Code of Conduct
   
 Please note that the agua project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
