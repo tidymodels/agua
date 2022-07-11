@@ -303,18 +303,18 @@ extract_fit_parsnip._H2OAutoML <- function(x, id = NULL, ...) {
   leader <- try(slot(x$fit, "leader"), silent = TRUE)
   # for bundled objects, leaders are already extracted
   if (inherits(leader, "try-error")) {
-    return(x$fit)
+    mod <- x$fit
+  } else {
+    if (is.null(id)) {
+      id <- x$fit@leader@model_id
+      mod <- h2o_get_model(id)
+      leaderboard <- get_leaderboard(x)
+      automl_rank <- match(id, leaderboard$model_id)
+      attr(mod, "automl_rank") <- automl_rank
+    }
   }
-
-  if (is.null(id)) {
-    id <- x$fit@leader@model_id
-  }
-  mod <- h2o_get_model(id)
-  leaderboard <- get_leaderboard(x)
-  automl_rank <- match(id, leaderboard$model_id)
   mod <- convert_h2o_parsnip(mod, x$spec, x$lvl, extra_class = NULL)
   class(mod) <- c("h2o_fit", "H2OAutoML_fit", class(mod))
-  attr(mod, "automl_rank") <- automl_rank
   mod
 }
 
