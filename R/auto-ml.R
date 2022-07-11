@@ -319,7 +319,7 @@ extract_fit_engine._H2OAutoML <- function(x, id = NULL, ...) {
     leader <- try(slot(x$fit, "leader"), silent = TRUE)
     # for bundled objects, leaders are already extracted
     if (inherits(leader, "try-error")) {
-      id <- x$fit@model_id
+      return(x$fit)
     } else {
       id <- x$fit@leader@model_id
     }
