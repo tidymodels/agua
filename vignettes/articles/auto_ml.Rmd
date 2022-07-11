@@ -29,6 +29,7 @@ options(digits = 3)
 library(tidymodels)
 library(agua)
 library(ggplot2)
+theme_set(theme_bw())
 h2o_start()
 
 data(concrete)

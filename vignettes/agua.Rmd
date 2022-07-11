@@ -52,7 +52,9 @@ As an example, we will fit a random forest model to the `concrete` data. This wi
 ```{r startup, message = FALSE}
 library(tidymodels)
 library(agua)
+library(ggplot2)
 tidymodels_prefer()
+theme_set(theme_bw())
 
 # start h2o server
 h2o_start()
@@ -67,7 +69,7 @@ concrete <-
 concrete
 ```
 
-Note that we need to call `h2o_start()` or `h2o::h2o.init()` to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects (data, models) on the server as possible. The h2o will automatically terminate once R session is closed. You can use `h2o::h2o.removeAll()` to remove all server-side objects and `h2o::h2o.shutdown()` to manually stop the server. 
+Note that we need to call `h2o_start()` or `h2o::h2o.init()` to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects on the server as possible. The h2o server will automatically terminate once R session is closed. You can use `h2o::h2o.removeAll()` to remove all server-side objects and `h2o::h2o.shutdown()` to manually stop the server. 
 
 The rest of the syntax of model fitting and prediction are identical to the usage of any other engine in tidymodels. 
 
@@ -95,7 +97,7 @@ rf_fit
 predict(rf_fit, new_data = concrete_test)
 ```
 
-Here we specify the engine argument `histogram_type = "Random"` to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for "h2o" of that model. For instance, the h2o link in the help page of `rand_forest()` shows that it uses `h2o::h2o.randomForest()`, whose arguments can be passed in as engine arguments in `set_engine()`. 
+Here, we specify the engine argument `histogram_type = "Random"` to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for "h2o" of that model. For instance, the h2o link in the help page of `rand_forest()` shows that it uses `h2o::h2o.randomForest()`, whose arguments can be passed in as engine arguments in `set_engine()`. 
 
 You can also use `fit_resamples()` with h2o models. 
 
@@ -121,4 +123,13 @@ fit_resamples(rf_wflow, resamples = concrete_folds)
 #> 10 <split [671/72]> Fold10 <tibble [2 × 4]> <tibble [0 × 3]>
 ```
 
+Variable importance scores can be visualized by the vip package. 
+
+```{r}
+library(vip)
+
+rf_fit %>% 
+  extract_fit_parsnip() %>% 
+  vip()
+```
 
