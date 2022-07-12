@@ -18,8 +18,18 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/agua.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/auto_ml.html">Automatic machine learning</a>
+    <a class="dropdown-item" href="../articles/tune.html">Model tuning</a>
+  </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -58,22 +68,27 @@
         <dd>Data conversion tools</dd>
       </dl><dl><dt>
           
-          <code><a href="h2o_predict.html">h2o_predict()</a></code> <code><a href="h2o_predict.html">h2o_predict_classification()</a></code> <code><a href="h2o_predict.html">h2o_predict_regression()</a></code> 
+          <code><a href="automl-autoplot.html">autoplot(<i>&lt;workflow&gt;</i>)</a></code> <code><a href="automl-autoplot.html">autoplot(<i>&lt;H2OAutoML&gt;</i>)</a></code> 
+        </dt>
+        <dd>Plot rankings and metrics of H2O AutoML results</dd>
+      </dl><dl><dt>
+          
+          <code><a href="automl-tools.html">rank_results.workflow</a></code> 
+        </dt>
+        <dd>Tools for working with H2O AutoML results</dd>
+      </dl><dl><dt>
+          
+          <code><a href="h2o-server.html">h2o_start()</a></code> <code><a href="h2o-server.html">h2o_running()</a></code> <code><a href="h2o-server.html">h2o_remove()</a></code> <code><a href="h2o-server.html">h2o_remove_all()</a></code> <code><a href="h2o-server.html">h2o_get_model()</a></code> <code><a href="h2o-server.html">h2o_get_frame()</a></code> <code><a href="h2o-server.html">h2o_xgboost_available()</a></code> 
+        </dt>
+        <dd>Utility functions for interacting with the h2o server</dd>
+      </dl><dl><dt>
+          
+          <code><a href="h2o_predict.html">h2o_predict</a></code> 
         </dt>
         <dd>Prediction wrappers for h2o</dd>
       </dl><dl><dt>
           
-          <code><a href="h2o_running.html">h2o_running()</a></code> 
-        </dt>
-        <dd>Check if h2o cluster is initialized</dd>
-      </dl><dl><dt>
-          
-          <code><a href="h2o_start.html">h2o_start()</a></code> 
-        </dt>
-        <dd>Silently start h2o server</dd>
-      </dl><dl><dt>
-          
-          <code><a href="h2o_train.html">h2o_train()</a></code> <code><a href="h2o_train.html">h2o_train_rf()</a></code> <code><a href="h2o_train.html">h2o_train_xgboost()</a></code> <code><a href="h2o_train.html">h2o_train_glm()</a></code> <code><a href="h2o_train.html">h2o_train_nb()</a></code> <code><a href="h2o_train.html">h2o_train_mlp()</a></code> <code><a href="h2o_train.html">h2o_train_rule()</a></code> 
+          <code><a href="h2o_train.html">h2o_train()</a></code> <code><a href="h2o_train.html">h2o_train_rf()</a></code> <code><a href="h2o_train.html">h2o_train_xgboost()</a></code> <code><a href="h2o_train.html">h2o_train_gbm()</a></code> <code><a href="h2o_train.html">h2o_train_glm()</a></code> <code><a href="h2o_train.html">h2o_train_nb()</a></code> <code><a href="h2o_train.html">h2o_train_mlp()</a></code> <code><a href="h2o_train.html">h2o_train_rule()</a></code> <code><a href="h2o_train.html">h2o_train_auto()</a></code> 
         </dt>
         <dd>Model wrappers for h2o</dd>
       </dl></div>
@@ -87,7 +102,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
   </div></footer></body></html>
