@@ -73,7 +73,7 @@ h2o_train <- function(x,
   # if passed in validation, split x into train and validation set
   if (!is.null(validation)) {
     if (length(validation) > 1 || validation < 0 || validation > 1) {
-      rlang::abort("`validation` should be a number between 0 and 1")
+      rlang::abort("`validation` should be a number between 0 and 1.")
     }
     n <- nrow(x)
     m <- floor(n * (1 - validation)) + 1
@@ -115,7 +115,7 @@ get_fit_opts <- function(...) {
 #' @rdname h2o_train
 h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
   if (mtries != -1 && mtries > ncol(x)) {
-    rlang::abort("`mtry` can't be greater than the number of predictors.")
+    rlang::abort("`mtry` should be smaller than the number of predictors.")
   }
 
   h2o_train(
