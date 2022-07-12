@@ -56,7 +56,7 @@ autoplot.H2OAutoML <- function(object,
     dplyr::group_by(algorithm, .metric) %>%
     dplyr::summarize(
       mean = mean(.data[[y_var]], na.rm = TRUE),
-      std_err = sd(.data[[y_var]], na.rm = TRUE) / sqrt(sum(is.na(.data[[y_var]]))),
+      std_err = sd(.data[[y_var]], na.rm = TRUE) / sqrt(sum(!is.na(.data[[y_var]]))),
       .groups = "drop"
     )
 

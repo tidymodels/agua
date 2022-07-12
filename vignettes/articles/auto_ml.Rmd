@@ -115,5 +115,4 @@ autoplot(auto_fit, type = "rank", metric = c("mae", "rmse")) +
   theme(legend.position = "none")
 ```
 
-One current limitation of H2O AutoML models is that they can't be used in tidymodels
-resampling mechanism. This means you can't use them with `fit_resamples()`, `tune_grid()`, `tune_bayes()`, etc.
+One current limitation of H2O AutoML models is that they can't be used in resampling. This means you can't use them with `fit_resamples()`, `tune_grid()`, `tune_bayes()`, etc.
