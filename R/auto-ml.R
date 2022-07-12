@@ -300,9 +300,8 @@ check_leaderboard_n <- function(leaderboard, n) {
 #' @export
 #' @rdname automl-tools
 extract_fit_parsnip._H2OAutoML <- function(x, id = NULL, ...) {
-  leader <- try(slot(x$fit, "leader"), silent = TRUE)
   # for bundled objects, leaders are already extracted
-  if (inherits(leader, "try-error")) {
+  if (!"leader" %in% slotNames(x$fit)) {
     mod <- x$fit
   } else {
     if (is.null(id)) {
@@ -321,9 +320,8 @@ extract_fit_parsnip._H2OAutoML <- function(x, id = NULL, ...) {
 #' @export
 #' @rdname automl-tools
 extract_fit_engine._H2OAutoML <- function(x, id = NULL, ...) {
-  leader <- try(slot(x$fit, "leader"), silent = TRUE)
   # for bundled objects, leaders are already extracted
-  if (inherits(leader, "try-error")) {
+  if (!"leader" %in% slotNames(x$fit)) {
     return(x$fit)
   }
 
