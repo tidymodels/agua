@@ -156,5 +156,3 @@ test_that("mlp specs", {
       translate()
   )
 })
-
-

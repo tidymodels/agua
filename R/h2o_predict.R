@@ -4,11 +4,14 @@
 #' h2o server cleanup, and so on.
 #' @inheritParams parsnip::predict.model_fit
 #' @inheritParams h2o::h2o.predict
+#' @param id Model id in AutoML results.
 #' @param ... Other options passed to [h2o::h2o.predict()]
 #' @return For type != "raw", a prediction data frame with the same number of
 #'   rows as `new_data`. For type == "raw", return original [h2o::h2o.predict()]
 #'   output
 #' @export
+#' @details
+#' For AutoML, prediction is based on the best performing model.
 #' @examples
 #' if (h2o_running()) {
 #'   spec <-
@@ -45,15 +48,18 @@ h2o_predict_classification <- function(object, new_data, type = "class", ...) {
   res <- h2o_predict(object, new_data, ...)
   all_types <- c("class", "prob")
 
+  msg <- glue::glue(
+    paste0(
+      "Prediction type `{type}` is not supported by the h2o engine. ",
+      "Possible values are {toString(all_types)}."
+    )
+  )
+
   switch(type,
     "class" = res$predict,
     "prob" = res[, 2:ncol(res)],
     # TODO: type "raw", can h2o.predict return raw values?
-    rlang::abort(
-      glue::glue(
-        "Prediction type `{type}` is not supported by the h2o engine. Possible values are {toString{all_types}.}"
-      )
-    )
+    rlang::abort(msg)
   )
 }
 
@@ -63,13 +69,24 @@ h2o_predict_regression <- function(object, new_data, type = "numeric", ...) {
   res <- h2o_predict(object, new_data, ...)
   all_types <- c("numeric", "raw")
 
+  msg <- glue::glue(
+    paste0(
+      "Prediction type `{type}` is not supported by the h2o engine. ",
+      "Possible values are {toString(all_types)}."
+    )
+  )
+
   switch(type,
     "numeric" = res$predict,
     "raw" = res,
-    rlang::abort(
-      glue::glue(
-        "Prediction type `{type}` is not supported by the h2o engine. Possible values are {toString{all_types}.}"
-      )
-    )
+    rlang::abort(msg)
   )
+}
+
+#' @export
+#' @rdname h2o_predict
+predict._H2OAutoML <- function(object, new_data, id = NULL, ...) {
+  check_automl_fit(object)
+  object <- extract_fit_parsnip(object, id)
+  predict(object, new_data, ...)
 }

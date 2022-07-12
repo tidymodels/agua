@@ -11,16 +11,17 @@ coverage](https://codecov.io/gh/tidymodels/agua/branch/main/graph/badge.svg)](ht
 <!-- badges: end -->
 
 agua enables users to fit, optimize, and evaluate models via
-[h2o](https://h2o.ai) using a tidymodels interface.
-
-Most users will not have to use aqua directly; the features can be
-accessed via a parsnip engine value of `'h2o'`.
+[H2O](https://h2o.ai/) using tidymodels syntax. Most users will not have
+to use aqua directly; the features can be accessed via the new parsnip
+computational engine `'h2o'`.
 
 There are two main components in agua:
 
--   parsnip engine definitions for the following models:
--   Infrastructure for the tune and finetune packages (currently
-    in-process).
+-   New parsnip engine `'h2o'` for many models, see [Get
+    started](https:://agua.tidymodels.org/articles/agua.html) for a
+    complete list.
+
+-   Infrastructure for the tune package.
 
 When fitting a parsnip model, the data are passed to the h2o server
 directly. For tuning, the data are passed once and instructions are
@@ -47,7 +48,7 @@ require(pak)
 pak::pak("tidymodels/agua")
 ```
 
-## Example
+## Examples
 
 The following code demonstrates how to create a single model on the h2o
 server and how to make predictions.
@@ -55,34 +56,78 @@ server and how to make predictions.
 ``` r
 library(tidymodels)
 library(agua)
-
+library(h2o)
 tidymodels_prefer()
+```
 
+``` r
 # Start the h2o server before running models
-logging <- capture.output(h2o::h2o.init())
+h2o_start()
 
 # Demonstrate fitting parsnip models: 
+# Specify the type of model and the h2o engine 
+spec <-
+  rand_forest(mtry = 3, trees = 1000) %>%
+  set_engine("h2o") %>%
+  set_mode("regression")
 
-if (h2o_running()) {
+# Fit the model on the h2o server
+set.seed(1)
+mod <- fit(spec, mpg ~ ., data = mtcars)
+mod
+#> parsnip model object
+#> 
+#> Model Details:
+#> ==============
+#> 
+#> H2ORegressionModel: drf
+#> Model ID:  DRF_model_R_1656520956148_1 
+#> Model Summary: 
+#>   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
+#> 1            1000                     1000              285914         4
+#>   max_depth mean_depth min_leaves max_leaves mean_leaves
+#> 1        10    6.70600         10         27    18.04100
+#> 
+#> 
+#> H2ORegressionMetrics: drf
+#> ** Reported on training data. **
+#> ** Metrics reported on Out-Of-Bag training samples **
+#> 
+#> MSE:  4.354249
+#> RMSE:  2.086684
+#> MAE:  1.657823
+#> RMSLE:  0.09848976
+#> Mean Residual Deviance :  4.354249
 
-  # Specify the type of model
-  spec <-
-    rand_forest(mtry = 3, trees = 1000) %>%
-    set_engine("h2o") %>%
-    set_mode("regression")
+# Predictions
+predict(mod, head(mtcars))
+#> # A tibble: 6 × 1
+#>   .pred
+#>   <dbl>
+#> 1  20.9
+#> 2  20.8
+#> 3  23.3
+#> 4  20.4
+#> 5  17.9
+#> 6  18.7
 
-  # Fit the model on the h2o server
-  set.seed(1)
-  mod <- fit(spec, mpg ~ ., data = mtcars)
-  mod
-
-  # Predictions
-  predict(mod, head(mtcars))
-  
-  # When done
-  h2o::h2o.shutdown(prompt = FALSE)
-}
+# When done
+h2o::h2o.shutdown(prompt = FALSE)
 ```
+
+Before using the `'h2o'` engine, users need to run `agua::h2o_start()`
+or `h2o::h2o.init()` to start the h2o server, which will be storing
+data, models, and other values passed from the R session.
+
+There are several package vignettes including:
+
+-   [Introduction to
+    agua](https://agua.tidymodels.org/articles/agua.html)
+
+-   [Model tuning](https://agua.tidymodels.org/articles/tune.html)
+
+-   [Automatic machine
+    learning](https://agua.tidymodels.org/articles/auto_ml.html)
 
 ## Code of Conduct
 

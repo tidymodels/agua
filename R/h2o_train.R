@@ -5,20 +5,27 @@
 #'
 #' @inheritParams h2o::h2o.randomForest
 #' @inheritParams h2o::h2o.xgboost
+#' @inheritParams h2o::h2o.gbm
 #' @inheritParams h2o::h2o.glm
 #' @inheritParams h2o::h2o.deeplearning
 #' @inheritParams h2o::h2o.rulefit
 #' @inheritParams h2o::h2o.naiveBayes
-#' @inheritParams h2o::h2o.gbm
 #' @param x A data frame of predictors.
 #' @param y A vector of outcomes.
 #' @param model A character string for the model. Current selections are
-#' `"randomForest"`, `"xgboost"`, "`gbm`", `"glm"`, `"deeplearning"`, `"rulefit"` and
-#' `"naiveBayes"`. Use [h2o::h2o.xgboost.available()] to see if xgboost
-#' can be used on your OS/h2o server.
+#' `"automl"`, `"randomForest"`, `"xgboost"`, `"gbm"`, `"glm"`, `"deeplearning"`,
+#' `"rulefit"` and `"naiveBayes"`. Use [agua::h2o_xgboost_available()] to see
+#' if xgboost can be used on your OS/h2o server.
 #' @param weights A numeric vector of case weights.
-#' @param validation The _proportion_ of the data that are used for performance
-#' assessment and potential early stopping.
+#' @param validation An integer between 0 and 1 specifying the _proportion_ of
+#' the data reserved as validation set. This is used by h2o for performance
+#' assessment and potential early stopping. Default to 0.
+#' @param verbosity Verbosity of the backend messages printed during training;
+#' Must be one of NULL (live log disabled), "debug", "info", "warn", "error".
+#' Defaults to NULL.
+#' @param save_data A logical for whether training data should be saved on
+#' the h2o server, set this to `TRUE` for AutoML models that needs to be
+#' re-fitted.
 #' @param ... Other options to pass to the h2o model functions (e.g.,
 #' [h2o::h2o.randomForest()]).
 #' @return An h2o model object.
@@ -45,7 +52,13 @@
 #'   predict(mod, head(mtcars))
 #' }
 #' @export
-h2o_train <- function(x, y, model, weights = NULL, validation = NULL, ...) {
+h2o_train <- function(x,
+                      y,
+                      model,
+                      weights = NULL,
+                      validation = NULL,
+                      save_data = FALSE,
+                      ...) {
   opts <- get_fit_opts(...)
   x <- as.data.frame(x)
   x_names <- names(x)
@@ -73,7 +86,9 @@ h2o_train <- function(x, y, model, weights = NULL, validation = NULL, ...) {
   }
 
   x <- as_h2o(x)
-  on.exit(h2o::h2o.rm(x$id))
+  if (!save_data) {
+    on.exit(h2o::h2o.rm(x$id))
+  }
 
   mod_fun <- paste0("h2o.", model)
   cl <-
@@ -99,6 +114,10 @@ get_fit_opts <- function(...) {
 #' @export
 #' @rdname h2o_train
 h2o_train_rf <- function(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...) {
+  if (mtries != -1 && mtries > ncol(x)) {
+    rlang::abort("`mtry` can't be greater than the number of predictors.")
+  }
+
   h2o_train(
     x,
     y,
@@ -127,10 +146,12 @@ h2o_train_xgboost <-
            stopping_rounds = 0,
            validation = NULL,
            ...) {
-    if (!xgboost_available()) {
-      msg <- paste0("H2o's xgboost algorithm isn't available on this machine",
-                    "try using the 'h2o_gbm' engine for `boost_tree()` instead",
-                    "for gradient boosted trees instead.")
+    if (!h2o_xgboost_available()) {
+      msg <- paste0(
+        "H2O's xgboost isn't available on this machine ",
+        "try using the 'h2o_gbm' engine for `boost_tree()` ",
+        "for gradient boosted trees instead."
+      )
       rlang::abort(msg)
     }
 
@@ -189,11 +210,29 @@ h2o_train_glm <-
            alpha = NULL,
            ...) {
     opts <- list(...)
-    if (length(opts) >= 1 && opts$family == "poisson") {
+    if (is.null(opts$family)) {
+      opts$family <- "AUTO"
+    }
+    # check for poisson reg
+    if (opts$family == "poisson") {
       all_positive <- all(sum(y > 0))
       all_ints <- rlang::is_integerish(y)
       if (!(all_positive && all_ints)) {
-        rlang::abort("Poisson regression expects non-negative integer response.")
+        msg <- paste0(
+          "Poisson regression expects the outcome ",
+          "to be non-negative integers."
+        )
+        rlang::abort()
+      }
+    }
+    # check for multinom reg
+    if (opts$family == "multinomial") {
+      if (nlevels(y) < 3) {
+        msg <- paste0(
+          "Multinomial regression expects the outcome ",
+          "to be a factor with at least 3 levels."
+        )
+        rlang::abort(msg)
       }
     }
 
@@ -230,9 +269,9 @@ h2o_train_mlp <- function(x, y,
                           validation = NULL,
                           ...) {
   activation <- switch(activation,
-                       relu = "Rectifier",
-                       tanh = "Tanh",
-                       activation
+    relu = "Rectifier",
+    tanh = "Tanh",
+    activation
   )
 
   all_activations <- c(
@@ -240,11 +279,11 @@ h2o_train_mlp <- function(x, y,
     "RectifierWithDropout", "Maxout", "MaxoutWithDropout"
   )
   if (!(activation %in% all_activations)) {
-    rlang::abort(
-      glue::glue(
-        "Activation function `{activation}` is not supported by the h2o engine. Possible values are {toString(all_activations)}."
-      )
-    )
+    msg <- glue::glue(paste0(
+      "Activation function `{activation}` is not supported by the h2o engine. ",
+      "Possible values are {toString(all_activations)}."
+    ))
+    rlang::abort(msg)
   }
 
 
@@ -283,15 +322,19 @@ h2o_train_rule <- function(x, y,
                            ...) {
   opts <- list(...)
   if (!is.null(opts$min_rule_length) && max_rule_length < opts$min_rule_length) {
-    rlang::abort(
-      glue::glue("`tree_depth` ({max_rule_length}) must be greater than the engine argument `min_rule_length` ({opts$min_rule_length}).")
-    )
+    msg <- glue::glue(paste0(
+      "`tree_depth` ({max_rule_length}) must be greater than the ",
+      "engine argument `min_rule_length` ({opts$min_rule_length})."
+    ))
+    rlang::abort(msg)
   }
 
   if (is.null(opts$min_rule_length) && max_rule_length < 3) {
-    rlang::abort(
-      glue::glue("`tree_depth` ({max_rule_length}) must be greater than the engine argument `min_rule_length`'s default value of 3.")
-    )
+    msg <- glue::glue(paste0(
+      "`tree_depth` ({max_rule_length}) must be greater than the ",
+      "engine argument `min_rule_length`'s default value of 3."
+    ))
+    rlang::abort(msg)
   }
 
 
@@ -304,4 +347,41 @@ h2o_train_rule <- function(x, y,
     lambda = lambda,
     ...
   )
+}
+
+#' @export
+#' @rdname h2o_train
+h2o_train_auto <- function(x, y, verbosity = NULL, save_data = FALSE, ...) {
+  opts <- list(...)
+
+  if (!is.null(opts$leaderboard_frame)) {
+    opts$leaderboard_frame <- convert_frame(opts$leaderboard_frame, names(x))
+  }
+  if (!is.null(opts$blending_frame)) {
+    opts$blending_frame <- convert_frame(opts$blending_frame, names(x))
+  }
+
+  cl <- rlang::call2(
+    "h2o_train",
+    .ns = "agua",
+    x = quote(x),
+    y = quote(y),
+    model = "automl",
+    verbosity = verbosity,
+    save_data = save_data,
+    !!!opts,
+  )
+
+  rlang::eval_tidy(cl)
+}
+
+convert_frame <- function(frame, x_names) {
+  frame_x <- frame[x_names]
+  y_name <- setdiff(names(frame), x_names)
+  y <- frame[[y_name]]
+  frame_x$.outcome <- y
+  frame <- as_h2o(frame_x)
+  on.exit(h2o::h2o.rm(frame$id))
+
+  frame$data
 }

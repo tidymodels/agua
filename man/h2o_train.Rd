@@ -9,9 +9,18 @@
 \alias{h2o_train_nb}
 \alias{h2o_train_mlp}
 \alias{h2o_train_rule}
+\alias{h2o_train_auto}
 \title{Model wrappers for h2o}
 \usage{
-h2o_train(x, y, model, weights = NULL, validation = NULL, ...)
+h2o_train(
+  x,
+  y,
+  model,
+  weights = NULL,
+  validation = NULL,
+  save_data = FALSE,
+  ...
+)
 
 h2o_train_rf(x, y, ntrees = 50, mtries = -1, min_rows = 1, ...)
 
@@ -68,6 +77,8 @@ h2o_train_rule(
   lambda = NULL,
   ...
 )
+
+h2o_train_auto(x, y, verbosity = NULL, save_data = FALSE, ...)
 }
 \arguments{
 \item{x}{A data frame of predictors.}
@@ -75,14 +86,19 @@ h2o_train_rule(
 \item{y}{A vector of outcomes.}
 
 \item{model}{A character string for the model. Current selections are
-\code{"randomForest"}, \code{"xgboost"}, "\code{gbm}", \code{"glm"}, \code{"deeplearning"}, \code{"rulefit"} and
-\code{"naiveBayes"}. Use \code{\link[h2o:h2o.xgboost.available]{h2o::h2o.xgboost.available()}} to see if xgboost
-can be used on your OS/h2o server.}
+\code{"automl"}, \code{"randomForest"}, \code{"xgboost"}, \code{"gbm"}, \code{"glm"}, \code{"deeplearning"},
+\code{"rulefit"} and \code{"naiveBayes"}. Use \code{\link[=h2o_xgboost_available]{h2o_xgboost_available()}} to see
+if xgboost can be used on your OS/h2o server.}
 
 \item{weights}{A numeric vector of case weights.}
 
-\item{validation}{The \emph{proportion} of the data that are used for performance
-assessment and potential early stopping.}
+\item{validation}{An integer between 0 and 1 specifying the \emph{proportion} of
+the data reserved as validation set. This is used by h2o for performance
+assessment and potential early stopping. Default to 0.}
+
+\item{save_data}{A logical for whether training data should be saved on
+the h2o server, set this to \code{TRUE} for AutoML models that needs to be
+re-fitted.}
 
 \item{...}{Other options to pass to the h2o model functions (e.g.,
 \code{\link[h2o:h2o.randomForest]{h2o::h2o.randomForest()}}).}
@@ -130,6 +146,10 @@ amount of mixing between the two. Default value of alpha is 0 when SOLVER = 'L-B
 \item{rule_generation_ntrees}{Specifies the number of trees to build in the tree model. Defaults to 50. Defaults to 50.}
 
 \item{max_rule_length}{Maximum length of rules. Defaults to 3.}
+
+\item{verbosity}{Verbosity of the backend messages printed during training;
+Must be one of NULL (live log disabled), "debug", "info", "warn", "error".
+Defaults to NULL.}
 }
 \value{
 An h2o model object.

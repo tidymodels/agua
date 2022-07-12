@@ -1,30 +1,6 @@
----
-output: github_document
----
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
-
-# agua
-
-<!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/tidymodels/agua/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/agua?branch=main)
-[![R-CMD-check](https://github.com/tidymodels/agua/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/tidymodels/agua/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
-
-agua enables users to fit, optimize, and evaluate models via [H2O](https://h2o.ai/) using tidymodels syntax. Most users will not have to use aqua directly; the features can be accessed via the new parsnip computational engine `'h2o'`. 
-
 There are two main components in agua: 
 
-* New parsnip engine `'h2o'` for many models, see [Get started](https:://agua.tidymodels.org/articles/agua.html) for a complete list. 
+* New parsnip engine `'h2o'` for many models, see the [vignette](https:://agua.tidymodels.org/articles/agua.html) for a complete list. 
 
 * Infrastructure for the tune package. 
 
@@ -52,14 +28,21 @@ pak::pak("tidymodels/agua")
 
 The following code demonstrates how to create a single model on the h2o server and how to make predictions. 
 
+
+```r
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE
+)
+```
+
+
+
 ```r
 library(tidymodels)
 library(agua)
-library(h2o)
-tidymodels_prefer()
-```
 
-```r
 # Start the h2o server before running models
 h2o_start()
 
@@ -80,10 +63,10 @@ mod
 #> ==============
 #> 
 #> H2ORegressionModel: drf
-#> Model ID:  DRF_model_R_1656520956148_1 
+#> Model ID:  DRF_model_R_1657141210850_1 
 #> Model Summary: 
 #>   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-#> 1            1000                     1000              285914         4
+#> 1            1000                     1000              285916         4
 #>   max_depth mean_depth min_leaves max_leaves mean_leaves
 #> 1        10    6.70600         10         27    18.04100
 #> 
@@ -92,11 +75,11 @@ mod
 #> ** Reported on training data. **
 #> ** Metrics reported on Out-Of-Bag training samples **
 #> 
-#> MSE:  4.354249
-#> RMSE:  2.086684
-#> MAE:  1.657823
-#> RMSLE:  0.09848976
-#> Mean Residual Deviance :  4.354249
+#> MSE:  4.354
+#> RMSE:  2.087
+#> MAE:  1.658
+#> RMSLE:  0.09849
+#> Mean Residual Deviance :  4.354
 
 # Predictions
 predict(mod, head(mtcars))
@@ -123,8 +106,3 @@ There are several package vignettes including:
 - [Model tuning](https://agua.tidymodels.org/articles/tune.html)
 
 - [Automatic machine learning](https://agua.tidymodels.org/articles/auto_ml.html)
-
-
-## Code of Conduct
-  
-Please note that the agua project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

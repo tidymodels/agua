@@ -18,4 +18,3 @@ test_that("server functions", {
   h2o::h2o.shutdown(prompt = FALSE)
   expect_false(h2o_running())
 })
-

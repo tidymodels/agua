@@ -2,12 +2,12 @@
 % Please edit documentation in R/params.R
 \name{h2o_activation}
 \alias{h2o_activation}
+\alias{h2o_split}
 \title{Tuning parameters in h2o}
 \usage{
-h2o_activation(
-  values = c("Rectifier", "RectifierWithDropout", "Tanh", "TanhWithDropout", "Maxout",
-    "MaxoutWithDropout")
-)
+h2o_activation(values = values_h2o_activation)
+
+h2o_split(values = values_h2o_split)
 }
 \description{
 Tuning parameters in h2o

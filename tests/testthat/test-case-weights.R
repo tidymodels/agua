@@ -6,7 +6,7 @@ test_that("case weights works", {
   data("two_class_dat", package = "modeldata")
 
   wts <- runif(nrow(two_class_dat))
-  wts <- ifelse(wts < 1/5, 0, 1)
+  wts <- ifelse(wts < 1 / 5, 0, 1)
   two_class_subset <- two_class_dat[wts != 0, ]
   wts <- importance_weights(wts)
 
@@ -25,9 +25,12 @@ test_that("case weights works", {
     fit(data = two_class_dat %>% dplyr::mutate(wts = wts))
 
 
-  expect_equal(fit_res$fit@parameters$weights_column$column_name,
-               ".weights")
-  expect_equal(wf_res$fit$fit$fit@parameters$weights_column$column_name,
-               ".weights")
-
+  expect_equal(
+    fit_res$fit@parameters$weights_column$column_name,
+    ".weights"
+  )
+  expect_equal(
+    wf_res$fit$fit$fit@parameters$weights_column$column_name,
+    ".weights"
+  )
 })

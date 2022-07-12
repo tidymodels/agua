@@ -1,0 +1,135 @@
+---
+title: "Introduction to agua"
+output: rmarkdown::html_vignette
+description:
+  Getting started with h2o and tidymodels 
+vignette: >
+  %\VignetteIndexEntry{Introduction to agua}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 5.75,
+  out.width = "95%"
+)
+options(digits = 3)
+```
+
+## Introduction 
+
+The `agua` package provides tidymodels interface to the [H2O](https://h2o.ai/) platform and the [h2o](https://docs.h2o.ai/h2o/latest-stable/h2o-r/docs/index.html) R package. It has two main components
+
+-   new parsnip engine `'h2o'` for the following models:
+
+    -   `linear_reg()`, `logistic_reg()`, `poisson_reg()`, `multinom_reg()`: All fit penalized generalized linear models. If the model parameters `penalty` and `mixture` are not specified, h2o will internally search for the optimal regularization settings. 
+    
+    -   `boost_tree()`: . Fits boosted trees via xgboost. Use `h2o::h2o.xgboost.available()` to see if h2o's xgboost is supported on your machine. For classical gradient boosting, use the `'h2o_gbm'` engine. 
+
+    -   `rand_forest()`: Random forest models. 
+    
+    -   `naive_Bayes()`: Naive Bayes models. 
+    
+    -   `rule_fit()`: RuleFit models. 
+    
+    -   `mlp()`: Multi-layer feedforward neural networks. 
+    
+    -   `auto_ml()`: Automatic machine learning. 
+
+-   Infrastructure for the tune package, see [Tuning with agua](https:://agua.tidymodels.org/articles/tune.html) for more details. 
+
+ All supported models can accept an additional engine argument `validation`, which is a number between 0 and 1 specifying the _proportion_ of data reserved as validation set. This can used by h2o for performance assessment and potential early stopping.
+
+## Fitting models with the `'h2o'` engine 
+
+As an example, we will fit a random forest model to the `concrete` data. This will be a regression model with the outcome being the compressive strength of concrete mixtures.
+
+```{r startup, message = FALSE}
+library(tidymodels)
+library(agua)
+library(ggplot2)
+tidymodels_prefer()
+theme_set(theme_bw())
+
+# start h2o server
+h2o_start()
+
+data(concrete, package = "modeldata")
+concrete <-
+  concrete %>%
+  group_by(across(-compressive_strength)) %>%
+  summarize(compressive_strength = mean(compressive_strength),
+            .groups = "drop")
+
+concrete
+```
+
+Note that we need to call `h2o_start()` or `h2o::h2o.init()` to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects on the server as possible. The h2o server will automatically terminate once R session is closed. You can use `h2o::h2o.removeAll()` to remove all server-side objects and `h2o::h2o.shutdown()` to manually stop the server. 
+
+The rest of the syntax of model fitting and prediction are identical to the usage of any other engine in tidymodels. 
+
+```{r rf-fit}
+set.seed(1501)
+concrete_split <- initial_split(concrete, strata = compressive_strength)
+concrete_train <- training(concrete_split)
+concrete_test  <- testing(concrete_split)
+
+rf_spec <- rand_forest(mtry = 3, trees = 500) %>%
+  set_engine("h2o", histogram_type = "Random") %>% 
+  set_mode("regression")
+
+normalized_rec <-
+  recipe(compressive_strength ~ ., data = concrete_train) %>%
+  step_normalize(all_predictors())
+
+rf_wflow <- workflow() %>% 
+  add_model(rf_spec) %>%
+  add_recipe(normalized_rec)
+  
+rf_fit <- fit(rf_wflow, data = concrete_train)
+rf_fit
+
+predict(rf_fit, new_data = concrete_test)
+```
+
+Here, we specify the engine argument `histogram_type = "Random"` to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for "h2o" of that model. For instance, the h2o link in the help page of `rand_forest()` shows that it uses `h2o::h2o.randomForest()`, whose arguments can be passed in as engine arguments in `set_engine()`. 
+
+You can also use `fit_resamples()` with h2o models. 
+
+```{r rf-fitresample, eval = FALSE}
+concrete_folds <-
+  vfold_cv(concrete_train, strata = compressive_strength)
+
+fit_resamples(rf_wflow, resamples = concrete_folds)
+#> # Resampling results
+#> # 10-fold cross-validation using stratification 
+#> # A tibble: 10 × 4
+#>    splits           id     .metrics         .notes          
+#>    <list>           <chr>  <list>           <list>          
+#>  1 <split [667/76]> Fold01 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  2 <split [667/76]> Fold02 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  3 <split [667/76]> Fold03 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  4 <split [667/76]> Fold04 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  5 <split [667/76]> Fold05 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  6 <split [668/75]> Fold06 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  7 <split [671/72]> Fold07 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  8 <split [671/72]> Fold08 <tibble [2 × 4]> <tibble [0 × 3]>
+#>  9 <split [671/72]> Fold09 <tibble [2 × 4]> <tibble [0 × 3]>
+#> 10 <split [671/72]> Fold10 <tibble [2 × 4]> <tibble [0 × 3]>
+```
+
+Variable importance scores can be visualized by the vip package. 
+
+```{r}
+library(vip)
+
+rf_fit %>% 
+  extract_fit_parsnip() %>% 
+  vip()
+```
+

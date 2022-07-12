@@ -1,26 +1,24 @@
-# ------------------------------------------------------------------------------
-# Tools for using the h2o model functions
-
+# tools for tuning
 all_algos <- c(
   "boost_tree", "rand_forest", "linear_reg", "logistic_reg",
-  "multinom_reg", "mlp", "naive_Bayes"
+  "multinom_reg", "mlp", "naive_Bayes", "auto_ml"
 )
-
 
 extract_h2o_algorithm <- function(workflow, ...) {
   model_spec <- hardhat::extract_spec_parsnip(workflow)
   model_class <- class(model_spec)[1]
   algo <- switch(model_class,
-                 boost_tree = "gbm",
-                 rand_forest = "randomForest",
-                 linear_reg = "glm",
-                 logistic_reg = "glm",
-                 multinom_reg = "glm",
-                 mlp = "deeplearning",
-                 naive_Bayes = "naive_bayes",
-                 rlang::abort(
-                   glue::glue("Model `{model_class}` is not supported by the h2o engine, use one of { toString(all_algos) }")
-                 )
+    boost_tree = "gbm",
+    rand_forest = "randomForest",
+    linear_reg = "glm",
+    logistic_reg = "glm",
+    multinom_reg = "glm",
+    mlp = "deeplearning",
+    naive_Bayes = "naive_bayes",
+    auto_ml = "automl",
+    rlang::abort(
+      glue::glue("Model `{model_class}` is not supported by the h2o engine, use one of { toString(all_algos) }")
+    )
   )
   algo
 }
@@ -68,10 +66,10 @@ as_tibble.H2OFrame <-
            rownames = pkgconfig::get_config("tibble::rownames", NULL)) {
     x <- as.data.frame(x)
     tibble::as_tibble(x,
-                      ...,
-                      .rows = .rows,
-                      .name_repair = .name_repair,
-                      rownames = rownames
+      ...,
+      .rows = .rows,
+      .name_repair = .name_repair,
+      rownames = rownames
     )
   }
 
@@ -100,39 +98,45 @@ rename_grid_h2o <- function(grid, workflow) {
     dplyr::rename(!!!rn$parsnip_to_engine)
 }
 
-
-#' Silently start h2o server
-#' @return The output from [h2o::h2o.init()]
-#' @export
-#' @examples
-#' h2o_start()
-h2o_start <- function() {
-  res <- utils::capture.output(h2o:::with_no_h2o_progress(
-    h2o::h2o.init()
-  ), "output")
-  invisible(res)
+workflow_uses_automl <- function(x) {
+  model_spec <- hardhat::extract_spec_parsnip(x)
+  identical(class(model_spec)[1], "auto_ml")
 }
 
-xgboost_available <- function() {
-  "XGBoost" %in% h2o::h2o.list_core_extensions()
-}
-
-#' Check if h2o cluster is initialized
-#'
-#' @param verbose Print out the message if no cluster is available.
-#' @return A logical.
-#' @examples
-#' h2o_running()
-#' h2o_running(verbose = TRUE)
-#' @export
-h2o_running <- function(verbose = FALSE) {
-  res <- try(h2o::h2o.clusterIsUp(), silent = TRUE)
-  if (inherits(res, "try-error")) {
-    if (verbose) {
-      msg <- as.character(res)
-      rlang::inform(msg)
-    }
-    res <- FALSE
+eval_silently <- function(expr) {
+  junk <- capture.output(res <- try(rlang::eval_tidy(expr), silent = TRUE))
+  if (inherits(res, "try-error") && startsWith(res[1], "Error in h2o.getConnection()")) {
+    rlang::abort(as.character(res))
   }
+  if (length(junk) == 0) {
+    return(res)
+  }
+}
+
+# extract algorithm from model id
+id_to_algorithm <- function(id, recode = TRUE) {
+  algo <- tolower(sub("_.+", "", id))
+  if (recode) {
+    algo[algo == "xrt" | algo == "drf"] <- "random forests"
+    algo[algo == "deeplearning"] <- "neural nets"
+    algo[algo == "gbm"] <- "gradient boosting"
+    algo[algo == "stackedensemble"] <- "stacking"
+  }
+  algo
+}
+
+# convert a h2o model to parsnip `model_fit` object
+convert_h2o_parsnip <- function(x, spec, lvl = NULL, extra_class = "h2o_fit", ...) {
+  res <- list(
+    fit = x,
+    spec = spec,
+    elapsed = list(elapsed = NA_real_),
+    lvl = lvl
+  )
+  class(res) <- c(
+    extra_class,
+    paste0("_", class(x)[1]),
+    "model_fit"
+  )
   res
 }

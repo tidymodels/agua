@@ -1,6 +1,6 @@
 data(two_class_dat, package = "modeldata")
 
-helper_objects_agua <- function() {
+helper_objects_tune <- function() {
   set.seed(1)
   folds <- rsample::vfold_cv(two_class_dat, v = 5)
 

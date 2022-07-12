@@ -1,4 +1,4 @@
-# TODO: model types: automl, h2o.gam, h2o.coxph
+# TODO: model types: h2o.gam, h2o.coxph
 # raw prediction type for predict
 class_info <- list(
   pre = NULL,
@@ -64,9 +64,9 @@ add_linear_reg_h2o <- function() {
     eng = "h2o",
     mode = "regression",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )
@@ -125,9 +125,9 @@ add_logistic_reg_h2o <- function() {
     eng = "h2o",
     mode = "classification",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )
@@ -186,9 +186,9 @@ add_poisson_reg_h2o <- function() {
     eng = "h2o",
     mode = "regression",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )
@@ -247,9 +247,9 @@ add_multinom_reg_h2o <- function() {
     eng = "h2o",
     mode = "classification",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )
@@ -803,9 +803,9 @@ add_mlp_h2o <- function() {
     eng = "h2o",
     mode = "classification",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )
@@ -814,9 +814,9 @@ add_mlp_h2o <- function() {
     eng = "h2o",
     mode = "regression",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )
@@ -1006,9 +1006,9 @@ add_auto_ml_h2o <- function() {
     eng = "h2o",
     mode = "regression",
     options = list(
-      predictor_indicators = "none",
+      predictor_indicators = "traditional",
       compute_intercept = FALSE,
-      remove_intercept = FALSE,
+      remove_intercept = TRUE,
       allow_sparse_x = FALSE
     )
   )
