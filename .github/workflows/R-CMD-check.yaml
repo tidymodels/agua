@@ -48,7 +48,9 @@ jobs:
           needs: check
 
       - name: Install tidymodels
-        run: install.packages("tidymodels")
+        run: |
+          install.packages("tidymodels")
+          install.packages("vip")
         shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
