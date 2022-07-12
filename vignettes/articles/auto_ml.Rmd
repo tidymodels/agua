@@ -116,7 +116,7 @@ autoplot(auto_fit, type = "rank", metric = c("mae", "rmse")) +
 
 After initial assessment, we might be interested to allow more time for AutoML to search for more candidates. Recall that we have set engine argument `max_runtime_secs` to 120s before, we can increase it or adjust `max_models` to control the total runtime. H2O also provides an option to build upon an existing AutoML leaderboard and add more candidates, this can be done via `refit()`. The model to be re-fitted needs to have engine argument `save_data = TRUE`. If you also want to add stacked ensembles set `keep_cross_validation_predictions = TRUE` as well. 
 
-```{r, eval = FALSE}
+```{r auto-refit, eval = FALSE}
 # not run 
 auto_spec_refit <-
   auto_ml() %>%

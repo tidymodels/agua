@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# agua
+# agua <a href="https://agua.tidymodels.org/"><img src="man/figures/logo.svg" align="right" height="139" /></a>
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/tidymodels/agua/branch/main/graph/badge.svg)](https://app.codecov.io/gh/tidymodels/agua?branch=main)

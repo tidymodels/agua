@@ -19,3 +19,4 @@ bin-release/
 .Rproj.user
 docs
 inst/doc
+pkgdown
