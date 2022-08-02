@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="../deps/_Source%20Sans%20Pro-0.4.1/font.css" rel="stylesheet">
-<link href="../deps/_Source%20Code%20Pro-0.4.1/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to agua">
@@ -134,20 +134,22 @@
 <span></span>
 <span><span class="va">concrete</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 992 × 9</span></span></span>
-<span><span class="co">#&gt;    cement blast_furnace_s… fly_ash water superplasticizer coarse_aggregate</span></span>
-<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>   102              153        0  192                 0             887 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>   102              153        0  192                 0             887 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>   102              153        0  192                 0             887 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>   102              153        0  192                 0             887 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>   108.             162.       0  204.                0             938.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>   108.             162.       0  204.                0             938.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>   108.             162.       0  204.                0             938.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>   108.             162.       0  204.                0             938.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>   116              173        0  192                 0             910.</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>   116              173        0  192                 0             910.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 982 more rows, and 3 more variables: fine_aggregate &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   age &lt;int&gt;, compressive_strength &lt;dbl&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt;    cement blast_furn…¹ fly_ash water super…² coars…³ fine_…⁴   age compr…⁵</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>   102          153        0  192        0    887     942      3    4.57</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>   102          153        0  192        0    887     942      7    7.68</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>   102          153        0  192        0    887     942     28   17.3 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>   102          153        0  192        0    887     942     90   25.5 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>   108.         162.       0  204.       0    938.    849      3    2.33</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>   108.         162.       0  204.       0    938.    849      7    7.72</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>   108.         162.       0  204.       0    938.    849     28   20.6 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>   108.         162.       0  204.       0    938.    849     90   29.2 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>   116          173        0  192        0    910.    892.     3    6.28</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>   116          173        0  192        0    910.    892.     7   10.1 </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 982 more rows, and abbreviated variable names</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​blast_furnace_slag, ²​superplasticizer, ³​coarse_aggregate,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ⁴​fine_aggregate, ⁵​compressive_strength</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span></span></code></pre></div>
 <p>Note that we need to call <code><a href="../reference/h2o-server.html">h2o_start()</a></code> or <code><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o::h2o.init()</a></code> to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects on the server as possible. The h2o server will automatically terminate once R session is closed. You can use <code><a href="https://rdrr.io/pkg/h2o/man/h2o.removeAll.html" class="external-link">h2o::h2o.removeAll()</a></code> to remove all server-side objects and <code><a href="https://rdrr.io/pkg/h2o/man/h2o.shutdown.html" class="external-link">h2o::h2o.shutdown()</a></code> to manually stop the server.</p>
 <p>The rest of the syntax of model fitting and prediction are identical to the usage of any other engine in tidymodels.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -184,10 +186,10 @@
 <span><span class="co">#&gt; ==============</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; H2ORegressionModel: drf</span></span>
-<span><span class="co">#&gt; Model ID:  DRF_model_R_1657658696501_4 </span></span>
+<span><span class="co">#&gt; Model ID:  DRF_model_R_1659457017847_4 </span></span>
 <span><span class="co">#&gt; Model Summary: </span></span>
 <span><span class="co">#&gt;   number_of_trees number_of_internal_trees model_size_in_bytes min_depth</span></span>
-<span><span class="co">#&gt; 1             500                      500             2648799        15</span></span>
+<span><span class="co">#&gt; 1             500                      500             2648788        15</span></span>
 <span><span class="co">#&gt;   max_depth mean_depth min_leaves max_leaves mean_leaves</span></span>
 <span><span class="co">#&gt; 1        20   17.96800        377        456   416.83400</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -216,7 +218,8 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 32.0 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 12.0 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 11.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 239 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 239 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ Use `print(n = ...)` to see more rows</span></span></span></code></pre></div>
 <p>Here, we specify the engine argument <code>histogram_type = "Random"</code> to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for “h2o” of that model. For instance, the h2o link in the help page of <code><a href="https://parsnip.tidymodels.org/reference/rand_forest.html" class="external-link">rand_forest()</a></code> shows that it uses <code><a href="https://rdrr.io/pkg/h2o/man/h2o.randomForest.html" class="external-link">h2o::h2o.randomForest()</a></code>, whose arguments can be passed in as engine arguments in <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine()</a></code>.</p>
 <p>You can also use <code>fit_resamples()</code> with h2o models.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -263,7 +266,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
   </div></footer>
