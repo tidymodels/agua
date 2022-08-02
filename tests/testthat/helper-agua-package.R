@@ -1,7 +1,7 @@
-data(two_class_dat, package = "modeldata")
 
 helper_objects_tune <- function() {
   set.seed(1)
+  data(two_class_dat, package = "modeldata")
   folds <- rsample::vfold_cv(two_class_dat, v = 5)
 
   rec_no_tune <-
