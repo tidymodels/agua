@@ -287,11 +287,11 @@ h2o_train_mlp <- function(x, y,
   }
 
 
-  if (activation == "Rectifier" & hidden_dropout_ratios > 0) {
+  if (activation == "Rectifier" && hidden_dropout_ratios > 0) {
     activation <- "RectifierWithDropout"
-  } else if (activation == "Tanh" & hidden_dropout_ratios > 0) {
+  } else if (activation == "Tanh" && hidden_dropout_ratios > 0) {
     activation <- "TanhWithDropout"
-  } else if (activation == "Maxout" & hidden_dropout_ratios > 0) {
+  } else if (activation == "Maxout" && hidden_dropout_ratios > 0) {
     activation <- "MaxoutWithDropout"
   }
 
