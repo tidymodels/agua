@@ -5,7 +5,7 @@ articles:
   agua: agua.html
   auto_ml: auto_ml.html
   tune: tune.html
-last_built: 2022-08-02T16:16Z
+last_built: 2022-09-01T01:41Z
 urls:
   reference: https://agua.tidymodels.org/reference
   article: https://agua.tidymodels.org/articles
