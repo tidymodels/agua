@@ -21,7 +21,7 @@ test_that("case weights works", {
   wf_res <- workflow() %>%
     add_model(spec) %>%
     add_formula(Class ~ .) %>%
-    add_case_weights(wts) %>%
+    workflows::add_case_weights(wts) %>%
     fit(data = two_class_dat %>% dplyr::mutate(wts = wts))
 
 
