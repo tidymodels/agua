@@ -1,7 +1,8 @@
+options("prefer_RCurl" = FALSE)
+h2o_start()
+
 test_that("case weights works", {
   skip_if_not_installed("modeldata")
-
-  h2o_start()
   data("two_class_dat", package = "modeldata")
 
   wts <- runif(nrow(two_class_dat))

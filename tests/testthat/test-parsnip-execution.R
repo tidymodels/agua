@@ -1,3 +1,6 @@
+options("prefer_RCurl" = FALSE)
+h2o_start()
+
 test_that("random forest execution", {
   expect_h2o_fit(rand_forest(mtry = 2, trees = 5) %>%
     set_mode("regression"))
