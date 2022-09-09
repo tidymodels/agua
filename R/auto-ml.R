@@ -1,15 +1,17 @@
 #' Tools for working with H2O AutoML results
 #'
 #' @description
-#' `rank_results()` ranks average cross validation performances of
-#' candidate models on each metric.
+#' Functions that returns a tibble describing model performances.
 #'
-#' `collect_metrics()` returns average statistics of performance metrics
-#'  (summarized) per model, or raw value in each resample (unsummarized).
+#' * `rank_results()` ranks average cross validation performances
+#' of candidate models on each metric.
 #'
-#' `tidy()` returns a tibble with average performance for each model.
+#' * `collect_metrics()` computes average statistics of performance metrics
+#' (summarized) for each model, or raw value in each resample (unsummarized).
 #'
-#' `member_weights()` computes member importance for stacked ensemble
+#' * `tidy()` computes average performance for each model.
+#'
+#' * `member_weights()` computes member importance for stacked ensemble
 #' models, i.e., the relative importance of base models in the meta-learner.
 #' This is typically the coefficient magnitude in the second-level GLM model.
 #'
@@ -301,7 +303,7 @@ check_leaderboard_n <- function(leaderboard, n) {
 #' @rdname automl-tools
 extract_fit_parsnip._H2OAutoML <- function(x, id = NULL, ...) {
   # for bundled objects, leaders are already extracted
-  if (!"leader" %in% slotNames(x$fit)) {
+  if (!"leader" %in% methods::slotNames(x$fit)) {
     mod <- x$fit
   } else {
     if (is.null(id)) {
@@ -321,7 +323,7 @@ extract_fit_parsnip._H2OAutoML <- function(x, id = NULL, ...) {
 #' @rdname automl-tools
 extract_fit_engine._H2OAutoML <- function(x, id = NULL, ...) {
   # for bundled objects, leaders are already extracted
-  if (!"leader" %in% slotNames(x$fit)) {
+  if (!"leader" %in% methods::slotNames(x$fit)) {
     return(x$fit)
   }
 
@@ -351,8 +353,8 @@ refit._H2OAutoML <- function(object, verbosity = NULL, ...) {
   if (is.null(training_frame)) {
     msg <- paste0(
       "The model needs to be trained with `save_data = TRUE` to ",
-      "enable re-fitting, also set `keep_cross_validation_predictions = TRUE` ",
-      "if you need stacked ensembles in later models."
+      "enable re-fitting. If you want to train stacked ensembles in re-fitting, ",
+      "set `keep_cross_validation_predictions = TRUE` as well."
     )
     rlang::abort(msg)
   }

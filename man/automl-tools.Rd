@@ -69,17 +69,17 @@ Defaults to NULL.}
 A \code{\link[tibble:tibble]{tibble::tibble()}}.
 }
 \description{
-\code{rank_results()} ranks average cross validation performances of
-candidate models on each metric.
-
-\code{collect_metrics()} returns average statistics of performance metrics
-(summarized) per model, or raw value in each resample (unsummarized).
-
-\code{tidy()} returns a tibble with average performance for each model.
-
-\code{member_weights()} computes member importance for stacked ensemble
+Functions that returns a tibble describing model performances.
+\itemize{
+\item \code{rank_results()} ranks average cross validation performances
+of candidate models on each metric.
+\item \code{collect_metrics()} computes average statistics of performance metrics
+(summarized) for each model, or raw value in each resample (unsummarized).
+\item \code{tidy()} computes average performance for each model.
+\item \code{member_weights()} computes member importance for stacked ensemble
 models, i.e., the relative importance of base models in the meta-learner.
 This is typically the coefficient magnitude in the second-level GLM model.
+}
 
 \code{extract_fit_engine()} extracts single candidate model from \code{auto_ml()}
 results. When \code{id} is null, it returns the leader model.
