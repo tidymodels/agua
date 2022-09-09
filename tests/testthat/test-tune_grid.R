@@ -1,9 +1,6 @@
 data(two_class_dat, package = "modeldata")
 
 test_that("tune model only (with id)", {
-  skip_if(!interactive())
-  h2o_start()
-
   helper_objects <- helper_objects_tune()
   wflow <- workflows::workflow() %>%
     workflows::add_model(helper_objects$glm_spec_tune_label) %>%
@@ -19,9 +16,6 @@ test_that("tune model only (with id)", {
 })
 
 test_that("tune model only (without id)", {
-  skip_if(!interactive())
-  h2o_start()
-
   helper_objects <- helper_objects_tune()
   wflow <- workflows::workflow() %>%
     workflows::add_model(helper_objects$glm_spec_tune_no_label) %>%
@@ -37,9 +31,6 @@ test_that("tune model only (without id)", {
 })
 
 test_that("tune model only (with id and recipe)", {
-  skip_if(!interactive())
-  h2o_start()
-
   helper_objects <- helper_objects_tune()
   wflow <- workflows::workflow() %>%
     workflows::add_model(helper_objects$glm_spec_tune_no_label) %>%
@@ -57,9 +48,6 @@ test_that("tune model only (with id and recipe)", {
 
 
 test_that("tune model and recipe", {
-  skip_if(!interactive())
-  h2o_start()
-
   helper_objects <- helper_objects_tune()
   wflow <- workflows::workflow() %>%
     workflows::add_model(helper_objects$glm_spec_tune_no_label) %>%
@@ -78,9 +66,6 @@ test_that("tune model and recipe", {
 })
 
 test_that("tune with backend options parallelism", {
-  skip_if(!interactive())
-  h2o_start()
-
   helper_objects <- helper_objects_tune()
   wflow <- workflows::workflow() %>%
     workflows::add_model(helper_objects$glm_spec_tune_no_label) %>%
