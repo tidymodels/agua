@@ -1,15 +1,24 @@
+#' Control model tuning via [h2o::h2o.grid()]
+#' @inheritParams h2o::h2o.grid
+#' @rdname h2o_tune
+#' @export
+agua_backend_options <- function(parallelism = 1) {
+  tune::new_backend_options(parallelism = parallelism, class = "agua_backend_options")
+}
+
 tune_grid_loop_iter_agua <- function(split,
                                     grid_info,
                                     workflow,
                                     metrics,
                                     control,
-                                    parallelism,
                                     seed) {
   h2o::h2o.no_progress()
   on.exit(h2o::h2o.show_progress())
 
   tune::load_pkgs(workflow)
   tune::.load_namespace(control$pkgs)
+
+  parallelism <- check_parallelism(control)
 
   training_frame <- rsample::analysis(split)
   val_frame <- rsample::assessment(split)
@@ -288,4 +297,26 @@ pull_h2o_metrics <- function(predictions,
     event_level
   )
   metrics %>% dplyr::bind_cols(fold_id)
+}
+
+check_parallelism <- function(control) {
+  backend_options <- control$backend_options
+  if (is.null(backend_options)) {
+    return(1L)
+  }
+
+  if (!inherits(backend_options, "agua_backend_options")) {
+    msg <- paste0(
+      "`backend_options` should be created by `agua_backend_options()` ",
+      "e.g., `control_grid(backend_options = agua_backend_options(parallelism = 5))`"
+    )
+    rlang::abort(msg)
+  }
+
+  parallelism <- as.integer(backend_options$parallelism)
+  if (is.na(parallelism)) {
+    rlang::abort("`parallelism` should be an integer for the number of threads.")
+  }
+
+  parallelism
 }
