@@ -3,7 +3,6 @@ tune_grid_loop_iter_agua <- function(split,
                                      workflow,
                                      metrics,
                                      control,
-                                     parallelism,
                                      seed) {
   h2o::h2o.no_progress()
   on.exit(h2o::h2o.show_progress())
@@ -137,8 +136,7 @@ tune_grid_loop_iter_agua <- function(split,
       x = predictors,
       y = outcome,
       training_frame = h2o_training_frame$data,
-      hyper_params = h2o_hyper_params,
-      parallelism = parallelism
+      hyper_params = h2o_hyper_params
     )
 
     h2o_model_ids <- as.character(h2o_res@model_ids)
