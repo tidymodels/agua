@@ -49,7 +49,7 @@ as_h2o <- function(df, destination_frame_prefix = "object") {
   suffix <- paste0(sample(letters, size = 10, replace = TRUE), collapse = "")
   id <- paste(destination_frame_prefix, suffix, sep = "_")
   # fix when h2o exports
-  data <- h2o:::with_no_h2o_progress(h2o::as.h2o(df, destination_frame = id))
+  data <- h2o::h2o.no_progress(h2o::as.h2o(df, destination_frame = id))
   list(
     data = data,
     id = id

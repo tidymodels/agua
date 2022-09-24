@@ -371,7 +371,7 @@ refit._H2OAutoML <- function(object, verbosity = NULL, ...) {
     verbosity = verbosity,
     ...
   )
-  res <- h2o:::with_no_h2o_progress(rlang::eval_tidy(cl))
+  res <- h2o::h2o.no_progress(rlang::eval_tidy(cl))
   object$fit <- res
   object
 }

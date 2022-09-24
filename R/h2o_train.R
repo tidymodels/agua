@@ -100,7 +100,7 @@ h2o_train <- function(x,
       training_frame = quote(x$data),
       !!!opts
     )
-  h2o:::with_no_h2o_progress(rlang::eval_tidy(cl))
+  h2o::h2o.no_progress(rlang::eval_tidy(cl))
 }
 
 get_fit_opts <- function(...) {
