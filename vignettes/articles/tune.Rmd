@@ -9,7 +9,13 @@ vignette: >
 
 ## Hyper-parameter tuning with agua 
 
-agua sets up the infrastructure for the tune package to enable optimization of h2o models. Similar to other models, we label the hyperparameter with the `tune()` placeholder and feed them into `tune_*()` functions such as `tune_grid()` and `tune_bayes()`. We will use the tuning example from [Introduction to tune](https://tune.tidymodels.org/articles/tune.html) with the Ames housing data. 
+agua sets up the infrastructure for the tune package to enable optimization of h2o models. Similar to other models, we label the hyperparameter with the `tune()` placeholder and feed them into `tune_*()` functions such as `tune_grid()` and `tune_bayes()`. With some API changes before agua's next CRAN release, for now we will need a specific pull request in the tune package to run the following examples  
+
+```r
+devtools::install_github('tidymodels/tune#531')
+```
+
+Next, we will go through the tuning example from [Introduction to tune](https://tune.tidymodels.org/articles/tune.html) with the Ames housing data. 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
