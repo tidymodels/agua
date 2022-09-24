@@ -1,10 +1,10 @@
 tune_grid_loop_iter_agua <- function(split,
-                                    grid_info,
-                                    workflow,
-                                    metrics,
-                                    control,
-                                    parallelism,
-                                    seed) {
+                                     grid_info,
+                                     workflow,
+                                     metrics,
+                                     control,
+                                     parallelism,
+                                     seed) {
   h2o::h2o.no_progress()
   on.exit(h2o::h2o.show_progress())
 

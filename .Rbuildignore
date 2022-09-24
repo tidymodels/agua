@@ -10,3 +10,5 @@
 ^\.github$
 ^CNAME$
 ^cran-comments\.md$
+^doc$
+^Meta$
