@@ -7,14 +7,29 @@ agua_backend_options <- function(parallelism = 1) {
 }
 
 tune_grid_loop_iter_agua <- function(split,
-                                    grid_info,
-                                    workflow,
-                                    metrics,
-                                    control,
-                                    seed) {
-  h2o::h2o.no_progress()
-  on.exit(h2o::h2o.show_progress())
+                                     grid_info,
+                                     workflow,
+                                     metrics,
+                                     control,
+                                     seed) {
+  h2o::h2o.no_progress(
+    tune_grid_loop_iter_agua_impl(
+      split,
+      grid_info,
+      workflow,
+      metrics,
+      control,
+      seed
+    )
+  )
+}
 
+tune_grid_loop_iter_agua_impl <- function(split,
+                                          grid_info,
+                                          workflow,
+                                          metrics,
+                                          control,
+                                          seed) {
   tune::load_pkgs(workflow)
   tune::.load_namespace(control$pkgs)
 
@@ -130,24 +145,24 @@ tune_grid_loop_iter_agua <- function(split,
     )
 
     # extract hyper params into list
-    h2o_hyper_params <- purrr::map(
-      model_param_names,
-      ~ dplyr::pull(iter_grid_info_models, .)
-      %>% unique()
-    ) %>%
-      purrr::set_names(model_param_names_h2o)
+    h2o_hyper_params <- iter_grid_info_models %>%
+      dplyr::select(dplyr::all_of(model_param_names)) %>%
+      purrr::set_names(model_param_names_h2o) %>%
+      as.list()
 
     h2o_training_frame <- as_h2o(training_frame_processed, "training_frame")
     h2o_val_frame <- as_h2o(val_frame_processed, "val_frame")
 
     h2o_algo <- extract_h2o_algorithm(workflow)
+    h2o_search_criteria <- if (length(h2o_hyper_params) > 1) list(strategy = "Sequential")  else NULL
     h2o_res <- h2o::h2o.grid(
       h2o_algo,
       x = predictors,
       y = outcome,
       training_frame = h2o_training_frame$data,
       hyper_params = h2o_hyper_params,
-      parallelism = parallelism
+      parallelism = parallelism,
+      search_criteria = h2o_search_criteria
     )
 
     h2o_model_ids <- as.character(h2o_res@model_ids)
