@@ -73,7 +73,7 @@ The syntax is the same, we provide a workflow and the grid of hyperparameters, t
 
 - We have to call `h2o_start()` beforehand to enable all the h2o side of computations. 
 
-- We can further configure tuning on the h2o server by supplying the `backend_options` argument in `control_grid()` with an `agua_backend_options()` object. Currently there is only one supported argument, `parallelism`, which specifies the number of models built in parallel. In the example above, we tell the h2o server to build 5 models in parallel. Note the parallelism on the h2o server is different than a parallel backend in R such as doParallel. The former parallelizes over model parameters while the latter over parameters in the preprocessor. See the next section for more details. 
+- We can further configure tuning on the h2o server by supplying the `backend_options` argument in `control_grid()` with an `agua_backend_options()` object. Currently there is only one supported argument, `parallelism`, which specifies the number of models built in parallel. In the example above, we tell the h2o server to build 5 models in parallel. Note the parallelism on the h2o server is different than a parallel backend in R such as `doParallel`. The former parallelizes over model parameters while the latter over parameters in the preprocessor. See the next section for more details. 
 
 Other functions in tune for working with tuning results such as `collect_metrics()`, `collect_predictions()` and `autoplot()` will also recognize `ames_res` and work as expected. 
 
@@ -87,8 +87,7 @@ autoplot(ames_res, metric = "rmse")
 
 ## Tuning internals 
 
-For users interested in the performance characteristics of tuning h2o models with agua, it is helpful to know some inner workings of h2o. agua uses 
-the `h2o::h2o.grid()` function for tuning model parameters, which accepts a list of possible combinations and search for the optimal one for a given dataset.
+For users interested in the performance characteristics of tuning h2o models with agua, it is helpful to know some inner workings of h2o. agua uses the `h2o::h2o.grid()` function for tuning model parameters, which accepts a list of possible combinations and search for the optimal one for a given dataset.
 
 In the example above, we have three tuning parameters of two types: 
 
@@ -121,9 +120,8 @@ grid %>%
   pull(penalty)
 ```
 
-Then option `control_grid(backend_options = agua_backend_options(parallelism = 5))` tells the h2o server to build 5 models with these choices in parallel. In this case, it's also the number of possible combinations of model parameters. 
+Then the option `control_grid(backend_options = agua_backend_options(parallelism = 5))` tells the h2o server to build 5 models with these choices in parallel. 
 
 If you have a parallel backend in R like `doParallel` registered, combinations of `long df` and `lat df` will be selected in parallel, as is the prepared analysis set. This is independent of how `parallelism` is configured on the h2o server. 
 
-Regarding the performance of model evaluation, `h2o.grid()` supports passing in a validation frame but does not return predictions on that data. In order to compute metrics on the holdout sample, we have to retrieve the model,
-convert validation data into the desired format, predict on it, and convert the results back to data frames. In the future we hope to get validation predictions directly thus eliminating excessive data conversions. 
+Regarding the performance of model evaluation, `h2o::h2o.grid()` supports passing in a validation frame but does not return predictions on that data. In order to compute metrics on the holdout sample, we have to retrieve the model, convert validation data into the desired format, predict on it, and convert the results back to data frames. In the future we hope to get validation predictions directly thus eliminating excessive data conversions. 

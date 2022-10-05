@@ -2,6 +2,7 @@
 % Please edit documentation in R/server.R
 \name{h2o_start}
 \alias{h2o_start}
+\alias{h2o_end}
 \alias{h2o_running}
 \alias{h2o_remove}
 \alias{h2o_remove_all}
@@ -11,6 +12,8 @@
 \title{Utility functions for interacting with the h2o server}
 \usage{
 h2o_start()
+
+h2o_end()
 
 h2o_running(verbose = FALSE)
 
