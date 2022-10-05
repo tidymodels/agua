@@ -1,4 +1,4 @@
-# agua 0.1.0 
+# agua 0.1.0
 
 * First full-featured release
 
