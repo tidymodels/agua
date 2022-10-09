@@ -10,3 +10,4 @@
 ^\.github$
 ^CNAME$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
