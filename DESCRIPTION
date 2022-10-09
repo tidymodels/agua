@@ -34,7 +34,7 @@ Imports:
     stats,
     tibble,
     tidyr,
-    tune (>= 1.0.0.9000),
+    tune (>= 1.0.1),
     vctrs,
     workflows
 Suggests: 
@@ -44,8 +44,6 @@ Suggests:
     recipes,
     rmarkdown,
     testthat (>= 3.0.0)
-Remotes:
-    tidymodels/tune#531
 Config/Needs/website:
   tidyverse/tidytemplate,
   doParallel,
