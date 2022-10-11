@@ -18,8 +18,8 @@ computational engine `'h2o'`.
 There are two main components in agua:
 
 - New parsnip engine `'h2o'` for many models, see [Get
-  started](https:://agua.tidymodels.org/articles/agua) for a complete
-  list.
+  started](https://agua.tidymodels.org/articles/agua.html) for a
+  complete list.
 
 - Infrastructure for the tune package.
 

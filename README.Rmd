@@ -24,7 +24,7 @@ agua enables users to fit, optimize, and evaluate models via [H2O](https://h2o.a
 
 There are two main components in agua: 
 
-* New parsnip engine `'h2o'` for many models, see [Get started](https:://agua.tidymodels.org/articles/agua) for a complete list. 
+* New parsnip engine `'h2o'` for many models, see [Get started](https://agua.tidymodels.org/articles/agua.html) for a complete list. 
 
 * Infrastructure for the tune package. 
 
