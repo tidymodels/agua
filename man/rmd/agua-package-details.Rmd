@@ -4,7 +4,7 @@ output: github_document
 
 There are two main components in agua: 
 
-* New parsnip engine `'h2o'` for many models, see the [vignette](https:://agua.tidymodels.org/articles/agua.html) for a complete list. 
+* New parsnip engine `'h2o'` for many models, see the [vignette](https:://agua.tidymodels.org/articles/agua) for a complete list. 
 
 * Infrastructure for the tune package. 
 

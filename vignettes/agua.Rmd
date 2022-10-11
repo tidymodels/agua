@@ -41,7 +41,7 @@ The `agua` package provides tidymodels interface to the [H2O](https://h2o.ai/) p
     
     -   `auto_ml()`: Automatic machine learning. 
 
--   Infrastructure for the tune package, see [Tuning with agua](https:://agua.tidymodels.org/articles/tune.html) for more details. 
+-   Infrastructure for the tune package, see [Tuning with agua](https:://agua.tidymodels.org/articles/tune) for more details. 
 
  All supported models can accept an additional engine argument `validation`, which is a number between 0 and 1 specifying the _proportion_ of data reserved as validation set. This can used by h2o for performance assessment and potential early stopping.
 
@@ -125,11 +125,15 @@ fit_resamples(rf_wflow, resamples = concrete_folds)
 
 Variable importance scores can be visualized by the vip package. 
 
-```{r}
+```{r, eval = FALSE}
 library(vip)
 
 rf_fit %>% 
   extract_fit_parsnip() %>% 
   vip()
+```
+
+```{r, echo = FALSE}
+knitr::include_graphics("../man/figures/vip.png")
 ```
 

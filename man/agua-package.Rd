@@ -19,8 +19,8 @@ package. Addition work was done by Qiushi Yan as an RStudio summer intern.
 There are two main components in agua:
 \itemize{
 \item New parsnip engine \code{'h2o'} for many models, see the
-\href{https:://agua.tidymodels.org/articles/agua.html}{vignette} for a
-complete list.
+\href{https:://agua.tidymodels.org/articles/agua}{vignette} for a complete
+list.
 \item Infrastructure for the tune package.
 }
 
@@ -74,10 +74,10 @@ mod
 #> ==============
 #> 
 #> H2ORegressionModel: drf
-#> Model ID:  DRF_model_R_1664991442414_1 
+#> Model ID:  DRF_model_R_1665349177449_1537 
 #> Model Summary: 
 #>   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-#> 1            1000                     1000              285901         4
+#> 1            1000                     1000              285908         4
 #>   max_depth mean_depth min_leaves max_leaves mean_leaves
 #> 1        10    6.70600         10         27    18.04100
 #> 
