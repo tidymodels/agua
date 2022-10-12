@@ -16,7 +16,7 @@ infrastructure for tune."><meta property="og:image" content="https://agua.tidymo
     
     <a class="navbar-brand me-2" href="../index.html">agua</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,9 @@ infrastructure for tune."><meta property="og:image" content="https://agua.tidymo
     <a class="dropdown-item" href="../articles/auto_ml.html">Automatic machine learning</a>
     <a class="dropdown-item" href="../articles/tune.html">Model tuning</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -71,7 +74,7 @@ infrastructure for tune.</p>
     <p>The package uses code initially written by Steven Pawley in his h2oparsnip
 package. Addition work was done by Qiushi Yan as an RStudio summer intern.</p>
 <p>There are two main components in agua:</p><ul><li><p>New parsnip engine <code>'h2o'</code> for many models, see the
-<a href="https:://agua.tidymodels.org/articles/agua.html">vignette</a> for a
+<a href="https://agua.tidymodels.org/articles/agua.html">vignette</a> for a
 complete list.</p></li>
 <li><p>Infrastructure for the tune package.</p></li>
 </ul><p>When fitting a parsnip model, the data are passed to the h2o server
@@ -85,8 +88,7 @@ RStudio.</p><div class="section">
 
 
 <p>The CRAN version of the package can be installed via</p>
-<p></p><div class="sourceCode r"><pre><code><span><span class="co"># Not yet!</span></span>
-<span><span class="co"># install.packages("agua")</span></span></code></pre><p></p></div>
+<p></p><div class="sourceCode r"><pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"agua"</span><span class="op">)</span></span></code></pre><p></p></div>
 <p>You can also install the development version of agua using:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://pak.r-lib.org/" class="external-link">pak</a></span><span class="op">)</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"tidymodels/agua"</span><span class="op">)</span></span></code></pre><p></p></div>
@@ -98,11 +100,6 @@ RStudio.</p><div class="section">
 
 <p>The following code demonstrates how to create a single model on the h2o
 server and how to make predictions.</p>
-<p></p><div class="sourceCode r"><pre><code><span><span class="fu">knitr</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/knitr/man/opts_chunk.html" class="external-link">opts_chunk</a></span><span class="op">$</span><span class="fu">set</span><span class="op">(</span></span>
-<span>  collapse <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  comment <span class="op">=</span> <span class="st">"#&gt;"</span>,</span>
-<span>  message <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span></code></pre><p></p></div>
 <p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://agua.tidymodels.org/">agua</a></span><span class="op">)</span></span>
 <span></span>
@@ -126,7 +123,7 @@ server and how to make predictions.</p>
 <span><span class="co">#&gt; ==============</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; H2ORegressionModel: drf</span></span>
-<span><span class="co">#&gt; Model ID:  DRF_model_R_1657141210850_1 </span></span>
+<span><span class="co">#&gt; Model ID:  DRF_model_R_1665517828283_1 </span></span>
 <span><span class="co">#&gt; Model Summary: </span></span>
 <span><span class="co">#&gt;   number_of_trees number_of_internal_trees model_size_in_bytes min_depth</span></span>
 <span><span class="co">#&gt; 1            1000                     1000              285916         4</span></span>
@@ -157,7 +154,7 @@ server and how to make predictions.</p>
 <span><span class="co">#&gt; 6  18.7</span></span>
 <span></span>
 <span><span class="co"># When done</span></span>
-<span><span class="fu">h2o</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.shutdown.html" class="external-link">h2o.shutdown</a></span><span class="op">(</span>prompt <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre><p></p></div>
+<span><span class="fu"><a href="../reference/h2o-server.html">h2o_end</a></span><span class="op">(</span><span class="op">)</span></span></code></pre><p></p></div>
 <p>Before using the <code>'h2o'</code> engine, users need to run <code><a href="h2o-server.html">agua::h2o_start()</a></code>
 or <code><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o::h2o.init()</a></code> to start the h2o server, which will be storing
 data, models, and other values passed from the R session.</p>

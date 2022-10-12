@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">agua</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,9 @@
     <a class="dropdown-item" href="../articles/auto_ml.html">Automatic machine learning</a>
     <a class="dropdown-item" href="../articles/tune.html">Model tuning</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
@@ -78,7 +81,7 @@
         <dd>Tools for working with H2O AutoML results</dd>
       </dl><dl><dt>
           
-          <code><a href="h2o-server.html">h2o_start()</a></code> <code><a href="h2o-server.html">h2o_running()</a></code> <code><a href="h2o-server.html">h2o_remove()</a></code> <code><a href="h2o-server.html">h2o_remove_all()</a></code> <code><a href="h2o-server.html">h2o_get_model()</a></code> <code><a href="h2o-server.html">h2o_get_frame()</a></code> <code><a href="h2o-server.html">h2o_xgboost_available()</a></code> 
+          <code><a href="h2o-server.html">h2o_start()</a></code> <code><a href="h2o-server.html">h2o_end()</a></code> <code><a href="h2o-server.html">h2o_running()</a></code> <code><a href="h2o-server.html">h2o_remove()</a></code> <code><a href="h2o-server.html">h2o_remove_all()</a></code> <code><a href="h2o-server.html">h2o_get_model()</a></code> <code><a href="h2o-server.html">h2o_get_frame()</a></code> <code><a href="h2o-server.html">h2o_xgboost_available()</a></code> 
         </dt>
         <dd>Utility functions for interacting with the h2o server</dd>
       </dl><dl><dt>
@@ -91,6 +94,11 @@
           <code><a href="h2o_train.html">h2o_train()</a></code> <code><a href="h2o_train.html">h2o_train_rf()</a></code> <code><a href="h2o_train.html">h2o_train_xgboost()</a></code> <code><a href="h2o_train.html">h2o_train_gbm()</a></code> <code><a href="h2o_train.html">h2o_train_glm()</a></code> <code><a href="h2o_train.html">h2o_train_nb()</a></code> <code><a href="h2o_train.html">h2o_train_mlp()</a></code> <code><a href="h2o_train.html">h2o_train_rule()</a></code> <code><a href="h2o_train.html">h2o_train_auto()</a></code> 
         </dt>
         <dd>Model wrappers for h2o</dd>
+      </dl><dl><dt>
+          
+          <code><a href="h2o_tune.html">agua_backend_options()</a></code> 
+        </dt>
+        <dd>Control model tuning via <code><a href="https://rdrr.io/pkg/h2o/man/h2o.grid.html" class="external-link">h2o::h2o.grid()</a></code></dd>
       </dl></div>
   </main></div>
 

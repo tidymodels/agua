@@ -39,7 +39,7 @@
     
     <a class="navbar-brand me-2" href="index.html">agua</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,9 @@
     <a class="dropdown-item" href="articles/auto_ml.html">Automatic machine learning</a>
     <a class="dropdown-item" href="articles/tune.html">Model tuning</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -90,7 +93,7 @@
 <p>agua enables users to fit, optimize, and evaluate models via <a href="https://h2o.ai/" class="external-link">H2O</a> using tidymodels syntax. Most users will not have to use aqua directly; the features can be accessed via the new parsnip computational engine <code>'h2o'</code>.</p>
 <p>There are two main components in agua:</p>
 <ul>
-<li><p>New parsnip engine <code>'h2o'</code> for many models, see <a href="https:://agua.tidymodels.org/articles/agua.html">Get started</a> for a complete list.</p></li>
+<li><p>New parsnip engine <code>'h2o'</code> for many models, see <a href="https://agua.tidymodels.org/articles/agua.html">Get started</a> for a complete list.</p></li>
 <li><p>Infrastructure for the tune package.</p></li>
 </ul>
 <p>When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to <code><a href="https://rdrr.io/pkg/h2o/man/h2o.grid.html" class="external-link">h2o.grid()</a></code> to process them.</p>
@@ -100,8 +103,7 @@
 </h2>
 <p>The CRAN version of the package can be installed via</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Not yet!</span></span>
-<span><span class="co"># install.packages("agua")</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"agua"</span><span class="op">)</span></span></code></pre></div>
 <p>You can also install the development version of agua using:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://pak.r-lib.org/" class="external-link">pak</a></span><span class="op">)</span></span>
@@ -168,7 +170,7 @@
 <span><span class="co">#&gt; 6  18.7</span></span>
 <span></span>
 <span><span class="co"># When done</span></span>
-<span><span class="fu">h2o</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/h2o/man/h2o.shutdown.html" class="external-link">h2o.shutdown</a></span><span class="op">(</span>prompt <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/h2o-server.html">h2o_end</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Before using the <code>'h2o'</code> engine, users need to run <code><a href="reference/h2o-server.html">agua::h2o_start()</a></code> or <code><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o::h2o.init()</a></code> to start the h2o server, which will be storing data, models, and other values passed from the R session.</p>
 <p>There are several package vignettes including:</p>
 <ul>

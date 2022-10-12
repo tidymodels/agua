@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">agua</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,9 @@
     <a class="dropdown-item" href="../articles/auto_ml.html">Automatic machine learning</a>
     <a class="dropdown-item" href="../articles/tune.html">Model tuning</a>
   </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -107,7 +110,7 @@
 <li><p><code><a href="https://parsnip.tidymodels.org/reference/auto_ml.html" class="external-link">auto_ml()</a></code>: Automatic machine learning.</p></li>
 </ul>
 </li>
-<li><p>Infrastructure for the tune package, see <a href="https:://agua.tidymodels.org/articles/tune.html">Tuning with agua</a> for more details.</p></li>
+<li><p>Infrastructure for the tune package, see <a href="https://agua.tidymodels.org/articles/tune.html">Tuning with agua</a> for more details.</p></li>
 </ul>
 <p>All supported models can accept an additional engine argument <code>validation</code>, which is a number between 0 and 1 specifying the <em>proportion</em> of data reserved as validation set. This can used by h2o for performance assessment and potential early stopping.</p>
 </div>
@@ -133,22 +136,22 @@
 <span>            .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">concrete</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 992 × 9</span></span></span>
+<span><span class="co">#&gt; # A tibble: 992 × 9</span></span>
 <span><span class="co">#&gt;    cement blast_furn…¹ fly_ash water super…² coars…³ fine_…⁴   age compr…⁵</span></span>
-<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>   102          153        0  192        0    887     942      3    4.57</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>   102          153        0  192        0    887     942      7    7.68</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>   102          153        0  192        0    887     942     28   17.3 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>   102          153        0  192        0    887     942     90   25.5 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>   108.         162.       0  204.       0    938.    849      3    2.33</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>   108.         162.       0  204.       0    938.    849      7    7.72</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>   108.         162.       0  204.       0    938.    849     28   20.6 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>   108.         162.       0  204.       0    938.    849     90   29.2 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>   116          173        0  192        0    910.    892.     3    6.28</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>   116          173        0  192        0    910.    892.     7   10.1 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 982 more rows, and abbreviated variable names</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ¹​blast_furnace_slag, ²​superplasticizer, ³​coarse_aggregate,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   ⁴​fine_aggregate, ⁵​compressive_strength</span></span></span></code></pre></div>
+<span><span class="co">#&gt;     &lt;dbl&gt;        &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1   102          153        0  192        0    887     942      3    4.57</span></span>
+<span><span class="co">#&gt;  2   102          153        0  192        0    887     942      7    7.68</span></span>
+<span><span class="co">#&gt;  3   102          153        0  192        0    887     942     28   17.3 </span></span>
+<span><span class="co">#&gt;  4   102          153        0  192        0    887     942     90   25.5 </span></span>
+<span><span class="co">#&gt;  5   108.         162.       0  204.       0    938.    849      3    2.33</span></span>
+<span><span class="co">#&gt;  6   108.         162.       0  204.       0    938.    849      7    7.72</span></span>
+<span><span class="co">#&gt;  7   108.         162.       0  204.       0    938.    849     28   20.6 </span></span>
+<span><span class="co">#&gt;  8   108.         162.       0  204.       0    938.    849     90   29.2 </span></span>
+<span><span class="co">#&gt;  9   116          173        0  192        0    910.    892.     3    6.28</span></span>
+<span><span class="co">#&gt; 10   116          173        0  192        0    910.    892.     7   10.1 </span></span>
+<span><span class="co">#&gt; # … with 982 more rows, and abbreviated variable names</span></span>
+<span><span class="co">#&gt; #   ¹​blast_furnace_slag, ²​superplasticizer, ³​coarse_aggregate,</span></span>
+<span><span class="co">#&gt; #   ⁴​fine_aggregate, ⁵​compressive_strength</span></span></code></pre></div>
 <p>Note that we need to call <code><a href="../reference/h2o-server.html">h2o_start()</a></code> or <code><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o::h2o.init()</a></code> to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects on the server as possible. The h2o server will automatically terminate once R session is closed. You can use <code><a href="https://rdrr.io/pkg/h2o/man/h2o.removeAll.html" class="external-link">h2o::h2o.removeAll()</a></code> to remove all server-side objects and <code><a href="https://rdrr.io/pkg/h2o/man/h2o.shutdown.html" class="external-link">h2o::h2o.shutdown()</a></code> to manually stop the server.</p>
 <p>The rest of the syntax of model fitting and prediction are identical to the usage of any other engine in tidymodels.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -172,8 +175,8 @@
 <span><span class="va">rf_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">rf_wflow</span>, data <span class="op">=</span> <span class="va">concrete_train</span><span class="op">)</span></span>
 <span><span class="va">rf_fit</span></span>
 <span><span class="co">#&gt; ══ Workflow [trained] ════════════════════════════════════════════════════</span></span>
-<span><span class="co">#&gt; <span style="font-style: italic;">Preprocessor:</span> Recipe</span></span>
-<span><span class="co">#&gt; <span style="font-style: italic;">Model:</span> rand_forest()</span></span>
+<span><span class="co">#&gt; Preprocessor: Recipe</span></span>
+<span><span class="co">#&gt; Model: rand_forest()</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Preprocessor ──────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt; 1 Recipe Step</span></span>
@@ -185,42 +188,42 @@
 <span><span class="co">#&gt; ==============</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; H2ORegressionModel: drf</span></span>
-<span><span class="co">#&gt; Model ID:  DRF_model_R_1664050746621_4 </span></span>
+<span><span class="co">#&gt; Model ID:  DRF_model_R_1665503649643_6 </span></span>
 <span><span class="co">#&gt; Model Summary: </span></span>
 <span><span class="co">#&gt;   number_of_trees number_of_internal_trees model_size_in_bytes min_depth</span></span>
-<span><span class="co">#&gt; 1             500                      500             2648787        15</span></span>
+<span><span class="co">#&gt; 1             500                      500             2652880        15</span></span>
 <span><span class="co">#&gt;   max_depth mean_depth min_leaves max_leaves mean_leaves</span></span>
-<span><span class="co">#&gt; 1        20   17.96800        377        456   416.83400</span></span>
+<span><span class="co">#&gt; 1        20   17.97600        375        450   417.48000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; H2ORegressionMetrics: drf</span></span>
 <span><span class="co">#&gt; ** Reported on training data. **</span></span>
 <span><span class="co">#&gt; ** Metrics reported on Out-Of-Bag training samples **</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; MSE:  26.2</span></span>
-<span><span class="co">#&gt; RMSE:  5.12</span></span>
-<span><span class="co">#&gt; MAE:  3.68</span></span>
-<span><span class="co">#&gt; RMSLE:  0.168</span></span>
-<span><span class="co">#&gt; Mean Residual Deviance :  26.2</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf_fit</span>, new_data <span class="op">=</span> <span class="va">concrete_test</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 249 × 1</span></span></span>
+<span><span class="co">#&gt; MSE:  26.5</span></span>
+<span><span class="co">#&gt; RMSE:  5.15</span></span>
+<span><span class="co">#&gt; MAE:  3.7</span></span>
+<span><span class="co">#&gt; RMSLE:  0.169</span></span>
+<span><span class="co">#&gt; Mean Residual Deviance :  26.5</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">rf_fit</span>, new_data <span class="op">=</span> <span class="va">concrete_test</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 249 × 1</span></span>
 <span><span class="co">#&gt;    .pred</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  6.50</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  9.74</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  9.26</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 25.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  6.57</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 28.2 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 10.1 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 32.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 12.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 11.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 239 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1  6.42</span></span>
+<span><span class="co">#&gt;  2  9.54</span></span>
+<span><span class="co">#&gt;  3  9.20</span></span>
+<span><span class="co">#&gt;  4 25.5 </span></span>
+<span><span class="co">#&gt;  5  6.60</span></span>
+<span><span class="co">#&gt;  6 28.6 </span></span>
+<span><span class="co">#&gt;  7 10.0 </span></span>
+<span><span class="co">#&gt;  8 31.9 </span></span>
+<span><span class="co">#&gt;  9 12.1 </span></span>
+<span><span class="co">#&gt; 10 11.4 </span></span>
+<span><span class="co">#&gt; # … with 239 more rows</span></span></code></pre></div>
 <p>Here, we specify the engine argument <code>histogram_type = "Random"</code> to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for “h2o” of that model. For instance, the h2o link in the help page of <code><a href="https://parsnip.tidymodels.org/reference/rand_forest.html" class="external-link">rand_forest()</a></code> shows that it uses <code><a href="https://rdrr.io/pkg/h2o/man/h2o.randomForest.html" class="external-link">h2o::h2o.randomForest()</a></code>, whose arguments can be passed in as engine arguments in <code><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine()</a></code>.</p>
 <p>You can also use <code>fit_resamples()</code> with h2o models.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">concrete_folds</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">vfold_cv</span><span class="op">(</span><span class="va">concrete_train</span>, strata <span class="op">=</span> <span class="va">compressive_strength</span><span class="op">)</span></span>
 <span></span>
@@ -241,13 +244,13 @@
 <span><span class="co">#&gt;  9 &lt;split [671/72]&gt; Fold09 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 3]&gt;</span></span>
 <span><span class="co">#&gt; 10 &lt;split [671/72]&gt; Fold10 &lt;tibble [2 × 4]&gt; &lt;tibble [0 × 3]&gt;</span></span></code></pre></div>
 <p>Variable importance scores can be visualized by the vip package.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/koalaverse/vip/" class="external-link">vip</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rf_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://hardhat.tidymodels.org/reference/hardhat-extract.html" class="external-link">extract_fit_parsnip</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/vip/man/vip.html" class="external-link">vip</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="agua_files/figure-html/unnamed-chunk-1-1.png" width="95%"></p>
+<p><img src="../reference/figures/vip.png" width="95%"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
