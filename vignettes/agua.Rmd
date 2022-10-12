@@ -41,15 +41,16 @@ The `agua` package provides tidymodels interface to the [H2O](https://h2o.ai/) p
     
     -   `auto_ml()`: Automatic machine learning. 
 
--   Infrastructure for the tune package, see [Tuning with agua](https:://agua.tidymodels.org/articles/tune.html) for more details. 
+-   Infrastructure for the tune package, see [Tuning with agua](https://agua.tidymodels.org/articles/tune.html) for more details. 
 
- All supported models can accept an additional engine argument `validation`, which is a number between 0 and 1 specifying the _proportion_ of data reserved as validation set. This can used by h2o for performance assessment and potential early stopping.
+
+All supported models can accept an additional engine argument `validation`, which is a number between 0 and 1 specifying the _proportion_ of data reserved as validation set. This can used by h2o for performance assessment and potential early stopping.
 
 ## Fitting models with the `'h2o'` engine 
 
 As an example, we will fit a random forest model to the `concrete` data. This will be a regression model with the outcome being the compressive strength of concrete mixtures.
 
-```{r startup, message = FALSE}
+```{r startup, eval = FALSE}
 library(tidymodels)
 library(agua)
 library(ggplot2)
@@ -67,13 +68,29 @@ concrete <-
             .groups = "drop")
 
 concrete
+#> # A tibble: 992 × 9
+#>    cement blast_furn…¹ fly_ash water super…² coars…³ fine_…⁴   age compr…⁵
+#>     <dbl>        <dbl>   <dbl> <dbl>   <dbl>   <dbl>   <dbl> <int>   <dbl>
+#>  1   102          153        0  192        0    887     942      3    4.57
+#>  2   102          153        0  192        0    887     942      7    7.68
+#>  3   102          153        0  192        0    887     942     28   17.3 
+#>  4   102          153        0  192        0    887     942     90   25.5 
+#>  5   108.         162.       0  204.       0    938.    849      3    2.33
+#>  6   108.         162.       0  204.       0    938.    849      7    7.72
+#>  7   108.         162.       0  204.       0    938.    849     28   20.6 
+#>  8   108.         162.       0  204.       0    938.    849     90   29.2 
+#>  9   116          173        0  192        0    910.    892.     3    6.28
+#> 10   116          173        0  192        0    910.    892.     7   10.1 
+#> # … with 982 more rows, and abbreviated variable names
+#> #   ¹​blast_furnace_slag, ²​superplasticizer, ³​coarse_aggregate,
+#> #   ⁴​fine_aggregate, ⁵​compressive_strength
 ```
 
 Note that we need to call `h2o_start()` or `h2o::h2o.init()` to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects on the server as possible. The h2o server will automatically terminate once R session is closed. You can use `h2o::h2o.removeAll()` to remove all server-side objects and `h2o::h2o.shutdown()` to manually stop the server. 
 
 The rest of the syntax of model fitting and prediction are identical to the usage of any other engine in tidymodels. 
 
-```{r rf-fit}
+```{r rf-fit, eval = FALSE}
 set.seed(1501)
 concrete_split <- initial_split(concrete, strata = compressive_strength)
 concrete_train <- training(concrete_split)
@@ -93,9 +110,57 @@ rf_wflow <- workflow() %>%
   
 rf_fit <- fit(rf_wflow, data = concrete_train)
 rf_fit
-
-predict(rf_fit, new_data = concrete_test)
+#> ══ Workflow [trained] ════════════════════════════════════════════════════
+#> Preprocessor: Recipe
+#> Model: rand_forest()
+#> 
+#> ── Preprocessor ──────────────────────────────────────────────────────────
+#> 1 Recipe Step
+#> 
+#> • step_normalize()
+#> 
+#> ── Model ─────────────────────────────────────────────────────────────────
+#> Model Details:
+#> ==============
+#> 
+#> H2ORegressionModel: drf
+#> Model ID:  DRF_model_R_1665503649643_6 
+#> Model Summary: 
+#>   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
+#> 1             500                      500             2652880        15
+#>   max_depth mean_depth min_leaves max_leaves mean_leaves
+#> 1        20   17.97600        375        450   417.48000
+#> 
+#> 
+#> H2ORegressionMetrics: drf
+#> ** Reported on training data. **
+#> ** Metrics reported on Out-Of-Bag training samples **
+#> 
+#> MSE:  26.5
+#> RMSE:  5.15
+#> MAE:  3.7
+#> RMSLE:  0.169
+#> Mean Residual Deviance :  26.5
 ```
+
+```{r rf-predict, eval = FALSE}
+predict(rf_fit, new_data = concrete_test)
+#> # A tibble: 249 × 1
+#>    .pred
+#>    <dbl>
+#>  1  6.42
+#>  2  9.54
+#>  3  9.20
+#>  4 25.5 
+#>  5  6.60
+#>  6 28.6 
+#>  7 10.0 
+#>  8 31.9 
+#>  9 12.1 
+#> 10 11.4 
+#> # … with 239 more rows
+```
+
 
 Here, we specify the engine argument `histogram_type = "Random"` to use the extremely randomized trees (XRT) algorithm. For all available engine arguments, consult the engine specific help page for "h2o" of that model. For instance, the h2o link in the help page of `rand_forest()` shows that it uses `h2o::h2o.randomForest()`, whose arguments can be passed in as engine arguments in `set_engine()`. 
 
@@ -125,11 +190,15 @@ fit_resamples(rf_wflow, resamples = concrete_folds)
 
 Variable importance scores can be visualized by the vip package. 
 
-```{r}
+```{r, eval = FALSE}
 library(vip)
 
 rf_fit %>% 
   extract_fit_parsnip() %>% 
   vip()
+```
+
+```{r, echo = FALSE}
+knitr::include_graphics("../man/figures/vip.png")
 ```
 

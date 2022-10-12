@@ -38,7 +38,7 @@ h2o_predict <- function(object, new_data, ...) {
     newdata = new_data$data,
     !!!opts
   )
-  res <- h2o:::h2o.no_progress(rlang::eval_tidy(cl))
+  res <- h2o::h2o.no_progress(rlang::eval_tidy(cl))
   tibble::as_tibble(res)
 }
 

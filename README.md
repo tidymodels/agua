@@ -18,7 +18,7 @@ computational engine `'h2o'`.
 There are two main components in agua:
 
 - New parsnip engine `'h2o'` for many models, see [Get
-  started](https:://agua.tidymodels.org/articles/agua.html) for a
+  started](https://agua.tidymodels.org/articles/agua.html) for a
   complete list.
 
 - Infrastructure for the tune package.
@@ -37,8 +37,7 @@ RStudio.
 The CRAN version of the package can be installed via
 
 ``` r
-# Not yet!
-# install.packages("agua")
+install.packages("agua")
 ```
 
 You can also install the development version of agua using:
@@ -112,7 +111,7 @@ predict(mod, head(mtcars))
 #> 6  18.7
 
 # When done
-h2o::h2o.shutdown(prompt = FALSE)
+h2o_end()
 ```
 
 Before using the `'h2o'` engine, users need to run `agua::h2o_start()`

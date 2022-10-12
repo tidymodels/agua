@@ -89,12 +89,15 @@ test_that("tune with backend options parallelism", {
     penalty = 10^seq(-10, 1, length = 5),
     deg_free = c(3, 4, 5)
   )
-  control <- tune::control_grid(save_pred = TRUE)
-  res <- tune::tune_grid(wflow,
-                         resamples = helper_objects$folds,
-                         control = control,
-                         grid = param_grid,
-                         backend_options = list(parallelism = 20)
+  control <- tune::control_grid(
+    save_pred = TRUE,
+    backend_options = agua_backend_options(parallelism = 20)
+  )
+  res <- tune::tune_grid(
+    wflow,
+    resamples = helper_objects$folds,
+    control = control,
+    grid = param_grid
   )
   expect_snapshot(res)
 })

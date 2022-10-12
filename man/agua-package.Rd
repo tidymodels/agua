@@ -19,7 +19,7 @@ package. Addition work was done by Qiushi Yan as an RStudio summer intern.
 There are two main components in agua:
 \itemize{
 \item New parsnip engine \code{'h2o'} for many models, see the
-\href{https:://agua.tidymodels.org/articles/agua.html}{vignette} for a
+\href{https://agua.tidymodels.org/articles/agua.html}{vignette} for a
 complete list.
 \item Infrastructure for the tune package.
 }
@@ -36,8 +36,7 @@ RStudio.
 
 The CRAN version of the package can be installed via
 
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{# Not yet!
-# install.packages("agua")
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{install.packages("agua")
 }\if{html}{\out{</div>}}
 
 You can also install the development version of agua using:
@@ -51,13 +50,6 @@ pak::pak("tidymodels/agua")
 
 The following code demonstrates how to create a single model on the h2o
 server and how to make predictions.
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE
-)
-}\if{html}{\out{</div>}}
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(tidymodels)
 library(agua)
@@ -82,7 +74,7 @@ mod
 #> ==============
 #> 
 #> H2ORegressionModel: drf
-#> Model ID:  DRF_model_R_1657141210850_1 
+#> Model ID:  DRF_model_R_1665517828283_1 
 #> Model Summary: 
 #>   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
 #> 1            1000                     1000              285916         4
@@ -113,7 +105,7 @@ predict(mod, head(mtcars))
 #> 6  18.7
 
 # When done
-h2o::h2o.shutdown(prompt = FALSE)
+h2o_end()
 }\if{html}{\out{</div>}}
 
 Before using the \code{'h2o'} engine, users need to run \code{agua::h2o_start()}

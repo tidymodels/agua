@@ -17,6 +17,12 @@ h2o_start <- function() {
 
 #' @rdname h2o-server
 #' @export
+h2o_end <- function() {
+  h2o::h2o.shutdown(prompt = FALSE)
+}
+
+#' @rdname h2o-server
+#' @export
 h2o_running <- function(verbose = FALSE) {
   res <- try(h2o::h2o.clusterIsUp(), silent = TRUE)
   if (inherits(res, "try-error")) {

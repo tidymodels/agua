@@ -1,14 +1,39 @@
+#' Control model tuning via [h2o::h2o.grid()]
+#' @inheritParams h2o::h2o.grid
+#' @rdname h2o_tune
+#' @export
+agua_backend_options <- function(parallelism = 1) {
+  tune::new_backend_options(parallelism = parallelism, class = "agua_backend_options")
+}
+
 tune_grid_loop_iter_agua <- function(split,
                                      grid_info,
                                      workflow,
                                      metrics,
                                      control,
                                      seed) {
-  h2o::h2o.no_progress()
-  on.exit(h2o::h2o.show_progress())
+  h2o::h2o.no_progress(
+    tune_grid_loop_iter_agua_impl(
+      split,
+      grid_info,
+      workflow,
+      metrics,
+      control,
+      seed
+    )
+  )
+}
 
+tune_grid_loop_iter_agua_impl <- function(split,
+                                          grid_info,
+                                          workflow,
+                                          metrics,
+                                          control,
+                                          seed) {
   tune::load_pkgs(workflow)
   tune::.load_namespace(control$pkgs)
+
+  parallelism <- check_parallelism(control)
 
   training_frame <- rsample::analysis(split)
   val_frame <- rsample::assessment(split)
@@ -120,23 +145,24 @@ tune_grid_loop_iter_agua <- function(split,
     )
 
     # extract hyper params into list
-    h2o_hyper_params <- purrr::map(
-      model_param_names,
-      ~ dplyr::pull(iter_grid_info_models, .)
-      %>% unique()
-    ) %>%
-      purrr::set_names(model_param_names_h2o)
+    h2o_hyper_params <- iter_grid_info_models %>%
+      dplyr::select(dplyr::all_of(model_param_names)) %>%
+      purrr::set_names(model_param_names_h2o) %>%
+      as.list()
 
     h2o_training_frame <- as_h2o(training_frame_processed, "training_frame")
     h2o_val_frame <- as_h2o(val_frame_processed, "val_frame")
 
     h2o_algo <- extract_h2o_algorithm(workflow)
+    h2o_search_criteria <- if (length(h2o_hyper_params) > 1) list(strategy = "Sequential")  else NULL
     h2o_res <- h2o::h2o.grid(
       h2o_algo,
       x = predictors,
       y = outcome,
       training_frame = h2o_training_frame$data,
-      hyper_params = h2o_hyper_params
+      hyper_params = h2o_hyper_params,
+      parallelism = parallelism,
+      search_criteria = h2o_search_criteria
     )
 
     h2o_model_ids <- as.character(h2o_res@model_ids)
@@ -286,4 +312,26 @@ pull_h2o_metrics <- function(predictions,
     event_level
   )
   metrics %>% dplyr::bind_cols(fold_id)
+}
+
+check_parallelism <- function(control) {
+  backend_options <- control$backend_options
+  if (is.null(backend_options)) {
+    return(1L)
+  }
+
+  if (!inherits(backend_options, "agua_backend_options")) {
+    msg <- paste0(
+      "`backend_options` should be created by `agua_backend_options()` ",
+      "e.g., `control_grid(backend_options = agua_backend_options(parallelism = 5))`"
+    )
+    rlang::abort(msg)
+  }
+
+  parallelism <- as.integer(backend_options$parallelism)
+  if (is.na(parallelism)) {
+    rlang::abort("`parallelism` should be an integer for the number of threads.")
+  }
+
+  parallelism
 }

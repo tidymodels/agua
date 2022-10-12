@@ -1,20 +1,27 @@
-There are two main components in agua: 
 
-* New parsnip engine `'h2o'` for many models, see the [vignette](https:://agua.tidymodels.org/articles/agua.html) for a complete list. 
+There are two main components in agua:
 
-* Infrastructure for the tune package. 
+- New parsnip engine `'h2o'` for many models, see the
+  [vignette](https://agua.tidymodels.org/articles/agua.html) for a
+  complete list.
 
-When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to `h2o.grid()` to process them. 
+- Infrastructure for the tune package.
 
-This work is based on @stevenpawley's [h2oparsnip](https://github.com/stevenpawley/h2oparsnip) package. Additional work was done by Qiushi Yan for his 2022 summer internship at RStudio. 
+When fitting a parsnip model, the data are passed to the h2o server
+directly. For tuning, the data are passed once and instructions are
+given to `h2o.grid()` to process them.
+
+This work is based on @stevenpawley’s
+[h2oparsnip](https://github.com/stevenpawley/h2oparsnip) package.
+Additional work was done by Qiushi Yan for his 2022 summer internship at
+RStudio.
 
 ## Installation
 
 The CRAN version of the package can be installed via
 
-```r
-# Not yet!
-# install.packages("agua")
+``` r
+install.packages("agua")
 ```
 
 You can also install the development version of agua using:
@@ -26,20 +33,10 @@ pak::pak("tidymodels/agua")
 
 ## Examples
 
-The following code demonstrates how to create a single model on the h2o server and how to make predictions. 
+The following code demonstrates how to create a single model on the h2o
+server and how to make predictions.
 
-
-```r
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE
-)
-```
-
-
-
-```r
+``` r
 library(tidymodels)
 library(agua)
 
@@ -63,7 +60,7 @@ mod
 #> ==============
 #> 
 #> H2ORegressionModel: drf
-#> Model ID:  DRF_model_R_1657141210850_1 
+#> Model ID:  DRF_model_R_1665517828283_1 
 #> Model Summary: 
 #>   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
 #> 1            1000                     1000              285916         4
@@ -94,15 +91,18 @@ predict(mod, head(mtcars))
 #> 6  18.7
 
 # When done
-h2o::h2o.shutdown(prompt = FALSE)
+h2o_end()
 ```
 
-Before using the `'h2o'` engine, users need to run `agua::h2o_start()` or `h2o::h2o.init()` to start the h2o server, which will be storing data, models, and other values passed from the R session. 
+Before using the `'h2o'` engine, users need to run `agua::h2o_start()`
+or `h2o::h2o.init()` to start the h2o server, which will be storing
+data, models, and other values passed from the R session.
 
-There are several package vignettes including: 
+There are several package vignettes including:
 
 - [Introduction to agua](https://agua.tidymodels.org/articles/agua.html)
 
 - [Model tuning](https://agua.tidymodels.org/articles/tune.html)
 
-- [Automatic machine learning](https://agua.tidymodels.org/articles/auto_ml.html)
+- [Automatic machine
+  learning](https://agua.tidymodels.org/articles/auto_ml.html)

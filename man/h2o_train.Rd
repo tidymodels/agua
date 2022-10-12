@@ -170,7 +170,7 @@ if (h2o_running()) {
   # using parsnip:
 
   spec <-
-    rand_forest(mtry = 3, trees = 1000) \%>\%
+    rand_forest(mtry = 3, trees = 500) \%>\%
     set_engine("h2o") \%>\%
     set_mode("regression")
 

@@ -7,15 +7,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Hyper-parameter tuning with agua 
+## Hyper-parameter tuning with agua
 
-agua sets up the infrastructure for the tune package to enable optimization of h2o models. Similar to other models, we label the hyperparameter with the `tune()` placeholder and feed them into `tune_*()` functions such as `tune_grid()` and `tune_bayes()`. With some API changes before agua's next CRAN release, for now we will need a specific pull request in the tune package to run the following examples  
+agua sets up the infrastructure for the tune package to enable optimization of h2o models. Similar to other models, we label the hyperparameter with the `tune()` placeholder and feed them into `tune_*()` functions such as `tune_grid()` and `tune_bayes()`.
 
-```r
-devtools::install_github('tidymodels/tune#531')
-```
-
-Next, we will go through the tuning example from [Introduction to tune](https://tune.tidymodels.org/articles/tune.html) with the Ames housing data. 
+Let's go through the example from [Introduction to tune](https://tune.tidymodels.org/articles/tune.html) with the Ames housing data.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -42,44 +38,44 @@ data_split <- ames %>%
   mutate(Sale_Price = log10(Sale_Price)) %>%
   initial_split(strata = Sale_Price)
 ames_train <- training(data_split)
-ames_test  <- testing(data_split)
+ames_test <- testing(data_split)
 cv_splits <- vfold_cv(ames_train, v = 10, strata = Sale_Price)
 
-ames_rec <- 
-  recipe(Sale_Price ~ Gr_Liv_Area + Longitude + Latitude, data = ames_train) %>% 
-  step_log(Gr_Liv_Area, base = 10) %>% 
-  step_ns(Longitude, deg_free = tune("long df")) %>% 
-  step_ns(Latitude,  deg_free = tune("lat df"))
+ames_rec <-
+  recipe(Sale_Price ~ Gr_Liv_Area + Longitude + Latitude, data = ames_train) %>%
+  step_log(Gr_Liv_Area, base = 10) %>%
+  step_ns(Longitude, deg_free = tune("long df")) %>%
+  step_ns(Latitude, deg_free = tune("lat df"))
 
-lm_mod <- linear_reg(penalty = tune()) %>% 
+lm_mod <- linear_reg(penalty = tune()) %>%
   set_engine("h2o")
 
-lm_wflow <- workflow() %>% 
+lm_wflow <- workflow() %>%
   add_model(lm_mod) %>%
   add_recipe(ames_rec)
 
 grid <- lm_wflow %>%
-  extract_parameter_set_dials() %>% 
+  extract_parameter_set_dials() %>%
   grid_regular(levels = 5)
 
 ames_res <- tune_grid(
-  lm_wflow, 
-  resamples = cv_splits, 
-  grid = grid, 
-  control = control_grid(save_pred = TRUE)
+  lm_wflow,
+  resamples = cv_splits,
+  grid = grid,
+  control = control_grid(save_pred = TRUE,
+    backend_options = agua_backend_options(parallelism = 5))
 )
 
-ames_res 
+ames_res
 ```
 
-The syntax is the same, we provide a workflow and the grid of hyper-parameters, then `tune_grid()` returns cross validation 
-performances for every parameterization per resample. There are two small differences to note when tuning h2o models: 
+The syntax is the same, we provide a workflow and the grid of hyperparameters, then `tune_grid()` returns cross validation performances for every parameterization per resample. There are 2 differences to note when tuning h2o models:
 
-- Remember to call `h2o_start()` beforehand to enable all the h2o side of computations. 
+- We have to call `h2o_start()` beforehand to enable all the h2o side of computations.
 
-- h2o supports only a regular grid of hyper-parameters, as created by `expand.grid()`, see `?dials::grid_regular` for more details. As such we need to set `grid` in `tune_*()` functions explicitly to be a data frame of regular grid and prevent the default grid generation.  
+- We can further configure tuning on the h2o server by supplying the `backend_options` argument in `control_grid()` with an `agua_backend_options()` object. Currently there is only one supported argument, `parallelism`, which specifies the number of models built in parallel. In the example above, we tell the h2o server to build 5 models in parallel. Note the parallelism on the h2o server is different than a parallel backend in R such as `doParallel`. The former parallelizes over model parameters while the latter over parameters in the preprocessor. See the next section for more details.
 
-Other functions in tune for working with tuning results such as `collect_metrics()`, `collect_predictions()` and `autoplot()` will also recognize `ames_res` and work as expected. 
+Other functions in tune for working with tuning results such as `collect_metrics()`, `collect_predictions()` and `autoplot()` will also recognize `ames_res` and work as expected.
 
 ```{r tune-metrics}
 collect_metrics(ames_res, summarize = FALSE)
@@ -89,34 +85,43 @@ collect_metrics(ames_res, summarize = FALSE)
 autoplot(ames_res, metric = "rmse")
 ```
 
+## Tuning internals
 
-One current limitation with parallel processing is that parallelization on the R side is done over resamples, i.e., `control = control_grid(parallel_over = 'resamples')`. We can't set `parallel_over = 'everything'`
-for an inner parallel loop of tuning parameters. Yet the h2o server by can build models 
-in parallel with adaptive parallelism. 
+For users interested in the performance characteristics of tuning h2o models with agua, it is helpful to know some inner workings of h2o. agua uses the `h2o::h2o.grid()` function for tuning model parameters, which accepts a list of possible combinations and search for the optimal one for a given dataset.
 
-**TODO**: how to use `parallelism` in `h2o::h2o.grid`
+In the example above, we have three tuning parameters of two types:
 
-## Tuning internals 
+* tuning parameters in the model: `penalty`.
 
-For users interested to understand the limitations and performance characteristics of tuning h2o models with agua, it is helpful to know some inner workings of h2o. agua uses 
-the `h2o::h2o.grid()` function for tuning model parameters, which accepts a list of hyper-parameters, construct a regular grid, and search for the optimal 
-combination for a given dataset.
+* tuning parameters in the preprocessor: `long df` and `lat df`.
 
-In the above example, we have three tuning parameters of two types: 
+This can be extracted by `extract_parameter_set_dials()`
 
 ```{r tune-params}
 extract_parameter_set_dials(lm_wflow)
 ```
 
-* tuning parameters in the model: `penalty`.
+Since `h2o.grid` is only responsible for optimizing model parameters, the preprocessor parameters `long df` and `lat df` will be iterated as usual on the R side (also for this reason you can't use agua with `control_grid(parallel_over = 'everything')`). Once a certain combination of them is chosen, agua will engineer all the relevant features and pass the data and model definitions to `h2o_grid()`. For example, say we choose the preprocess parameters to be `long df = 4` and `lat df = 1`, the analysis set in one particular fold becomes
 
-* tuning parameters in the preprocessor: `long df` and `lat df`. 
+```{r, echo = FALSE}
+one_analysis <- analysis(cv_splits[["splits"]][[1]])
 
-Since `h2o.grid` does not optimize parameters in the preprocessor, possible values of `long df` and `lat df` in `grid` will be iterated as usual on the R side. Once a certain combination of them is chosen, agua will engineer all the relevant features, convert `grid` to a list of hyper-parameters, then passes the data and model definitions to `h2o_grid()`. Next, `h2o.grid()` conducts a series of validations to prepare data for the server, one of which is an `expand.grid()` on the list of hyper-parameters to generate a regular grid. After this, we have completed computations on the R side and the rest of model tuning is now delegated to the h2o server. 
+ames_rec %>%
+  finalize_recipe(tibble(`long df` = 4, `lat df` = 1)) %>%
+  prep() %>%
+  bake(one_analysis)
+```
 
-If you have a parallel backend registered, models will be optimized and evaluated 
-in parallel per resample. The h2o server would still require the complete set of parameters for one resample. For this reason, agua does not support `parallel_over = 'everything'` on the R side. 
+This is the data frame we will be passing to the h2o server for one iteration of training. We have now completed computations on the R side with the rest delegated to the h2o server. For this preprocessor combination, we have 5 possible choices of the model parameter `penalty`
 
-Regarding the performance of model evaluation, `h2o.grid()` supports passing in a validation
-frame but does not return predictions on that data. In order to compute metrics on the holdout sample, we have to retrieve the model,
-convert validation data into the desired format, predict on it, and convert the results back to data frames. In the future we hope to get validation predictions directly thus eliminating excessive data conversions. 
+```{r}
+grid %>%
+  filter(`long df` == 4, `lat df` == 1) %>%
+  pull(penalty)
+```
+
+Then the option `control_grid(backend_options = agua_backend_options(parallelism = 5))` tells the h2o server to build 5 models with these choices in parallel.
+
+If you have a parallel backend in R like `doParallel` registered, combinations of `long df` and `lat df` will be selected in parallel, as is the prepared analysis set. This is independent of how `parallelism` is configured on the h2o server.
+
+Regarding the performance of model evaluation, `h2o::h2o.grid()` supports passing in a validation frame but does not return predictions on that data. In order to compute metrics on the holdout sample, we have to retrieve the model, convert validation data into the desired format, predict on it, and convert the results back to data frames. In the future we hope to get validation predictions directly thus eliminating excessive data conversions.

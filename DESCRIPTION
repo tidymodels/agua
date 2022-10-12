@@ -1,6 +1,6 @@
 Package: agua
 Title: 'tidymodels' Integration with 'h2o'
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: c(
     person("Max", "Kuhn", , "max@rstudio.com", role = "aut",
            comment = c(ORCID = "0000-0003-2402-136X")),
@@ -27,13 +27,14 @@ Imports:
     glue,
     h2o (>= 3.38.0.1),
     hardhat (>= 1.1.0),
+    methods,
     purrr,
     rlang,
     rsample,
     stats,
     tibble,
     tidyr,
-    tune (>= 1.0.0.9000),
+    tune (>= 1.0.1),
     vctrs,
     workflows
 Suggests: 
@@ -43,9 +44,6 @@ Suggests:
     recipes,
     rmarkdown,
     testthat (>= 3.0.0)
-Remotes: 
-    tidymodels/tune#531,
-    tidymodels/parsnip
 Config/Needs/website:
   tidyverse/tidytemplate,
   doParallel,

@@ -41,7 +41,7 @@
 #'   # using parsnip:
 #'
 #'   spec <-
-#'     rand_forest(mtry = 3, trees = 1000) %>%
+#'     rand_forest(mtry = 3, trees = 500) %>%
 #'     set_engine("h2o") %>%
 #'     set_mode("regression")
 #'
@@ -100,7 +100,7 @@ h2o_train <- function(x,
       training_frame = quote(x$data),
       !!!opts
     )
-  h2o:::h2o.no_progress(rlang::eval_tidy(cl))
+  h2o::h2o.no_progress(rlang::eval_tidy(cl))
 }
 
 get_fit_opts <- function(...) {
