@@ -1,0 +1,12 @@
+pandoc: 2.14.2
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  agua: agua.html
+  auto_ml: auto_ml.html
+  tune: tune.html
+last_built: 2022-10-12T18:14Z
+urls:
+  reference: https://agua.tidymodels.org/reference
+  article: https://agua.tidymodels.org/articles
+
