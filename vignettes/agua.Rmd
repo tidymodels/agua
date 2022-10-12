@@ -50,7 +50,7 @@ All supported models can accept an additional engine argument `validation`, whic
 
 As an example, we will fit a random forest model to the `concrete` data. This will be a regression model with the outcome being the compressive strength of concrete mixtures.
 
-```{r startup, message = FALSE}
+```{r startup, eval = FALSE}
 library(tidymodels)
 library(agua)
 library(ggplot2)
@@ -68,6 +68,22 @@ concrete <-
             .groups = "drop")
 
 concrete
+#> # A tibble: 992 × 9
+#>    cement blast_furn…¹ fly_ash water super…² coars…³ fine_…⁴   age compr…⁵
+#>     <dbl>        <dbl>   <dbl> <dbl>   <dbl>   <dbl>   <dbl> <int>   <dbl>
+#>  1   102          153        0  192        0    887     942      3    4.57
+#>  2   102          153        0  192        0    887     942      7    7.68
+#>  3   102          153        0  192        0    887     942     28   17.3 
+#>  4   102          153        0  192        0    887     942     90   25.5 
+#>  5   108.         162.       0  204.       0    938.    849      3    2.33
+#>  6   108.         162.       0  204.       0    938.    849      7    7.72
+#>  7   108.         162.       0  204.       0    938.    849     28   20.6 
+#>  8   108.         162.       0  204.       0    938.    849     90   29.2 
+#>  9   116          173        0  192        0    910.    892.     3    6.28
+#> 10   116          173        0  192        0    910.    892.     7   10.1 
+#> # … with 982 more rows, and abbreviated variable names
+#> #   ¹​blast_furnace_slag, ²​superplasticizer, ³​coarse_aggregate,
+#> #   ⁴​fine_aggregate, ⁵​compressive_strength
 ```
 
 Note that we need to call `h2o_start()` or `h2o::h2o.init()` to start the h2o instance. The h2o server handles computations related to estimation and prediction, and passes the results back to R. agua takes care of data conversion and error handling, it also tries to store as least objects on the server as possible. The h2o server will automatically terminate once R session is closed. You can use `h2o::h2o.removeAll()` to remove all server-side objects and `h2o::h2o.shutdown()` to manually stop the server. 
