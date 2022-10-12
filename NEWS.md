@@ -6,4 +6,4 @@
 
 # agua 0.0.1
 
-* Test release with basic fitting functions 
+* Test release with basic fitting functions
