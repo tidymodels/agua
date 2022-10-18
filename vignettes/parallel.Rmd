@@ -1,0 +1,102 @@
+---
+title: "Parallel processing with agua and h2o"
+output: rmarkdown::html_vignette
+description: Parallel processing with agua and h2os 
+vignette: >
+  %\VignetteIndexEntry{Parallel processing with agua and h2o}
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteEncoding{UTF-8}
+---
+  
+When using h2o with R there are, generally speaking, different ways to parallelize the computations: 
+
+* The h2o server has the ability to internally parallelize individual model computations. For example, when fitting trees, the search for the best split can be done using multiple threads. 
+
+* R has external parallelization tools (such as the foreach and future packages) that can start new R processes to simultaneously do work. This would run many models in parallel. 
+
+With h2o and tidymodels, you can use either approach or both. We'll discuss the different options
+
+## Within-model parallelization with h2o
+
+If you are using h2o directly, `h2o.init()` has an option called `nthreads`: 
+
+> (Optional) Number of threads in the thread pool. This relates very closely to the number of CPUs used. -1 means use all CPUs on the host (Default). A positive integer specifies the number of CPUs directly. This value is only used when R starts H2O.
+
+You can use that to specify how many resources are used to train the model. 
+
+To control this on a model-by-model basis, there is a new tidymodels control argument called `backend_options`. If you were doing a grid search, you first define how many threads the h2o server should use:
+
+```r
+library(tidymodels)
+library(agua)
+library(finetune)
+
+h2o_thread_spec <- agua_backend_options(parallelism = 10) 
+```
+
+then pass this to any of the existing control functions: 
+
+```r
+grid_ctrl <- control_grid(backend_options = h2o_thread_spec)
+```
+
+This can be used when using grid search, racing, or any of the iterative search methods in tidymodels. 
+
+## Between-model parallelization
+
+If a model is being resampled or tuned, there is evidence at users should parallelize the longest running "loop" of the process. That is usually not the internal model operations (which are what the h2o parallelizes). See the blog post [_While you wait for that to finish, can I interest you in parallel processing?_](http://appliedpredictivemodeling.com/blog/2018/1/17/parallel-processing) for an example using xgboost. 
+
+To parallelize the model tuning or resampling operations, external tools like foreach will result in shorter computational times. We'll focus on foreach, since that is what tidymodels currently uses. For beginners, there is a section in [_Tidy Models with R_](https://www.tmwr.org/grid-search.html#parallel-processing) that describes how this works. 
+
+With foreach, users load an extension package such as doMC or doParallel. The former uses multicore technology and does not work on Windows. The latter uses PSOCK clusters and is available on all operating systems. Let's look at each. 
+
+### Multicore
+
+To get started, you would install the doMC package and register the parallel backend. 
+
+```r
+available_cores <- parallel::detectCores()
+
+library(doMC)
+registerDoMC(cores = available_cores)
+```
+
+Using this, agua will send multiple model fits to the "worker processes" at the same time and seamlessly bring the results back to your R session. 
+
+When the worker processes are created they inherit much of what was going on in your R process. This includes which packages are loaded as well as the information on the h2o server. Basically, it takes care of the background minutiae. 
+
+### doParallel 
+
+PSOCK clusters are usually higher maintenance for users and developers. To start, a cluster object is created and then registered as the parallel backend: 
+
+```r
+available_cores <- parallel::detectCores()
+
+library(doParallel)
+cl <- makePSOCKcluster(available_cores)
+registerDoParallel(cl)
+```
+
+However, due to how these clusters work, their R processes start with a clean slate and don't know anything about the h2o server or what packages should be loaded. 
+
+For this reason, we need to run some code on the worker processes to "prime the pump":
+
+```r
+check_workers_h2o <- function() {
+  library(h2o)
+  h2o.init()  #<- doesn't start a new server if you've already started one. 
+  h2o.clusterIsUp()
+}
+
+unlist(parallel::clusterCall(cl, check_workers_h2o))
+```
+
+This should return a vector of `TRUE` values if everything is appropriately setup. 
+
+From there, you can run your tidymodels code as usual. 
+
+## Using internal and external methods at once
+
+If you have the computing power, you can employ the within- and between-approaches. Just set the `nthreads` option (or the agua backend) then register your parallel backend tool (e.g. doMC or doParallel). 
+
+The worker processes will send multiple chunks of work to the h2o server at the same time and the h2o server will train the models in parallel too. 
