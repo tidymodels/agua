@@ -4,8 +4,8 @@ output: rmarkdown::html_vignette
 description: Parallel processing with agua and h2os 
 vignette: >
   %\VignetteIndexEntry{Parallel processing with agua and h2o}
-%\VignetteEngine{knitr::rmarkdown}
-%\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
   
 When using h2o with R there are, generally speaking, different ways to parallelize the computations: 
