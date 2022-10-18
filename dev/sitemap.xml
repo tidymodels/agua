@@ -19,6 +19,9 @@
     <loc>https://agua.tidymodels.org/dev/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://agua.tidymodels.org/dev/articles/parallel.html</loc>
+  </url>
+  <url>
     <loc>https://agua.tidymodels.org/dev/articles/tune.html</loc>
   </url>
   <url>
