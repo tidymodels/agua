@@ -18,7 +18,6 @@ h2o_activation <- function(values = values_h2o_activation) {
   dials::new_qual_param(
     type = "character",
     values = values,
-    default = "none",
     label = c(h2o_activation = "Activation function")
   )
 }
@@ -31,7 +30,6 @@ h2o_split <- function(values = values_h2o_split) {
   dials::new_qual_param(
     type = "character",
     values = values,
-    default = "none",
     label = c(h2o_split = "Type of histogram to find optimal splits")
   )
 }
