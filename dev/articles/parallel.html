@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.4/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.4/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Parallel processing with agua and h2o">
@@ -95,21 +95,35 @@
 
     
     
-<p>When using h2o with R there are, generally speaking, different ways to parallelize the computations:</p>
+<p>When using h2o with R there are, generally speaking, different ways
+to parallelize the computations:</p>
 <ul>
-<li><p>The h2o server has the ability to internally parallelize individual model computations. For example, when fitting trees, the search for the best split can be done using multiple threads.</p></li>
-<li><p>R has external parallelization tools (such as the foreach and future packages) that can start new R processes to simultaneously do work. This would run many models in parallel.</p></li>
+<li><p>The h2o server has the ability to internally parallelize
+individual model computations. For example, when fitting trees, the
+search for the best split can be done using multiple threads.</p></li>
+<li><p>R has external parallelization tools (such as the foreach and
+future packages) that can start new R processes to simultaneously do
+work. This would run many models in parallel.</p></li>
 </ul>
-<p>With h2o and tidymodels, you can use either approach or both. We’ll discuss the different options</p>
+<p>With h2o and tidymodels, you can use either approach or both. We’ll
+discuss the different options</p>
 <div class="section level2">
 <h2 id="within-model-parallelization-with-h2o">Within-model parallelization with h2o<a class="anchor" aria-label="anchor" href="#within-model-parallelization-with-h2o"></a>
 </h2>
-<p>If you are using h2o directly, <code><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o.init()</a></code> has an option called <code>nthreads</code>:</p>
+<p>If you are using h2o directly, <code><a href="https://rdrr.io/pkg/h2o/man/h2o.init.html" class="external-link">h2o.init()</a></code> has an option
+called <code>nthreads</code>:</p>
 <blockquote>
-<p>(Optional) Number of threads in the thread pool. This relates very closely to the number of CPUs used. -1 means use all CPUs on the host (Default). A positive integer specifies the number of CPUs directly. This value is only used when R starts H2O.</p>
+<p>(Optional) Number of threads in the thread pool. This relates very
+closely to the number of CPUs used. -1 means use all CPUs on the host
+(Default). A positive integer specifies the number of CPUs directly.
+This value is only used when R starts H2O.</p>
 </blockquote>
-<p>You can use that to specify how many resources are used to train the model.</p>
-<p>To control this on a model-by-model basis, there is a new tidymodels control argument called <code>backend_options</code>. If you were doing a grid search, you first define how many threads the h2o server should use:</p>
+<p>You can use that to specify how many resources are used to train the
+model.</p>
+<p>To control this on a model-by-model basis, there is a new tidymodels
+control argument called <code>backend_options</code>. If you were doing
+a grid search, you first define how many threads the h2o server should
+use:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://agua.tidymodels.org/">agua</a></span><span class="op">)</span></span>
@@ -119,38 +133,62 @@
 <p>then pass this to any of the existing control functions:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grid_ctrl</span> <span class="op">&lt;-</span> <span class="fu">control_grid</span><span class="op">(</span>backend_options <span class="op">=</span> <span class="va">h2o_thread_spec</span><span class="op">)</span></span></code></pre></div>
-<p>This can be used when using grid search, racing, or any of the iterative search methods in tidymodels.</p>
+<p>This can be used when using grid search, racing, or any of the
+iterative search methods in tidymodels.</p>
 </div>
 <div class="section level2">
 <h2 id="between-model-parallelization">Between-model parallelization<a class="anchor" aria-label="anchor" href="#between-model-parallelization"></a>
 </h2>
-<p>If a model is being resampled or tuned, there is evidence at users should parallelize the longest running “loop” of the process. That is usually not the internal model operations (which are what the h2o parallelizes). See the blog post <a href="http://appliedpredictivemodeling.com/blog/2018/1/17/parallel-processing" class="external-link"><em>While you wait for that to finish, can I interest you in parallel processing?</em></a> for an example using xgboost.</p>
-<p>To parallelize the model tuning or resampling operations, external tools like foreach will result in shorter computational times. We’ll focus on foreach, since that is what tidymodels currently uses. For beginners, there is a section in <a href="https://www.tmwr.org/grid-search.html#parallel-processing" class="external-link"><em>Tidy Models with R</em></a> that describes how this works.</p>
-<p>With foreach, users load an extension package such as doMC or doParallel. The former uses multicore technology and does not work on Windows. The latter uses PSOCK clusters and is available on all operating systems. Let’s look at each.</p>
+<p>If a model is being resampled or tuned, there is evidence at users
+should parallelize the longest running “loop” of the process. That is
+usually not the internal model operations (which are what the h2o
+parallelizes). See the blog post <a href="http://appliedpredictivemodeling.com/blog/2018/1/17/parallel-processing" class="external-link"><em>While
+you wait for that to finish, can I interest you in parallel
+processing?</em></a> for an example using xgboost.</p>
+<p>To parallelize the model tuning or resampling operations, external
+tools like foreach will result in shorter computational times. We’ll
+focus on foreach, since that is what tidymodels currently uses. For
+beginners, there is a section in <a href="https://www.tmwr.org/grid-search.html#parallel-processing" class="external-link"><em>Tidy
+Models with R</em></a> that describes how this works.</p>
+<p>With foreach, users load an extension package such as doMC or
+doParallel. The former uses multicore technology and does not work on
+Windows. The latter uses PSOCK clusters and is available on all
+operating systems. Let’s look at each.</p>
 <div class="section level3">
 <h3 id="multicore">Multicore<a class="anchor" aria-label="anchor" href="#multicore"></a>
 </h3>
-<p>To get started, you would install the doMC package and register the parallel backend.</p>
+<p>To get started, you would install the doMC package and register the
+parallel backend.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">available_cores</span> <span class="op">&lt;-</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">doMC</span><span class="op">)</span></span>
 <span><span class="fu">registerDoMC</span><span class="op">(</span>cores <span class="op">=</span> <span class="va">available_cores</span><span class="op">)</span></span></code></pre></div>
-<p>Using this, agua will send multiple model fits to the “worker processes” at the same time and seamlessly bring the results back to your R session.</p>
-<p>When the worker processes are created they inherit much of what was going on in your R process. This includes which packages are loaded as well as the information on the h2o server. Basically, it takes care of the background minutiae.</p>
+<p>Using this, agua will send multiple model fits to the “worker
+processes” at the same time and seamlessly bring the results back to
+your R session.</p>
+<p>When the worker processes are created they inherit much of what was
+going on in your R process. This includes which packages are loaded as
+well as the information on the h2o server. Basically, it takes care of
+the background minutiae.</p>
 </div>
 <div class="section level3">
 <h3 id="doparallel">doParallel<a class="anchor" aria-label="anchor" href="#doparallel"></a>
 </h3>
-<p>PSOCK clusters are usually higher maintenance for users and developers. To start, a cluster object is created and then registered as the parallel backend:</p>
+<p>PSOCK clusters are usually higher maintenance for users and
+developers. To start, a cluster object is created and then registered as
+the parallel backend:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">available_cores</span> <span class="op">&lt;-</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">doParallel</a></span><span class="op">)</span></span>
 <span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makePSOCKcluster</a></span><span class="op">(</span><span class="va">available_cores</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre></div>
-<p>However, due to how these clusters work, their R processes start with a clean slate and don’t know anything about the h2o server or what packages should be loaded.</p>
-<p>For this reason, we need to run some code on the worker processes to “prime the pump”:</p>
+<p>However, due to how these clusters work, their R processes start with
+a clean slate and don’t know anything about the h2o server or what
+packages should be loaded.</p>
+<p>For this reason, we need to run some code on the worker processes to
+“prime the pump”:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">check_workers_h2o</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/h2oai/h2o-3" class="external-link">h2o</a></span><span class="op">)</span></span>
@@ -159,15 +197,21 @@
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterCall</a></span><span class="op">(</span><span class="va">cl</span>, <span class="va">check_workers_h2o</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>This should return a vector of <code>TRUE</code> values if everything is appropriately setup.</p>
+<p>This should return a vector of <code>TRUE</code> values if everything
+is appropriately setup.</p>
 <p>From there, you can run your tidymodels code as usual.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="using-internal-and-external-methods-at-once">Using internal and external methods at once<a class="anchor" aria-label="anchor" href="#using-internal-and-external-methods-at-once"></a>
 </h2>
-<p>If you have the computing power, you can employ the within- and between-approaches. Just set the <code>nthreads</code> option (or the agua backend) then register your parallel backend tool (e.g. doMC or doParallel).</p>
-<p>The worker processes will send multiple chunks of work to the h2o server at the same time and the h2o server will train the models in parallel too.</p>
+<p>If you have the computing power, you can employ the within- and
+between-approaches. Just set the <code>nthreads</code> option (or the
+agua backend) then register your parallel backend tool (e.g. doMC or
+doParallel).</p>
+<p>The worker processes will send multiple chunks of work to the h2o
+server at the same time and the h2o server will train the models in
+parallel too.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

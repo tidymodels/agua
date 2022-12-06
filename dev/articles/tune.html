@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.4/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.4/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Model tuning">
@@ -98,8 +98,13 @@
 <div class="section level2">
 <h2 id="hyper-parameter-tuning-with-agua">Hyper-parameter tuning with agua<a class="anchor" aria-label="anchor" href="#hyper-parameter-tuning-with-agua"></a>
 </h2>
-<p>agua sets up the infrastructure for the tune package to enable optimization of h2o models. Similar to other models, we label the hyperparameter with the <code><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">tune()</a></code> placeholder and feed them into <code>tune_*()</code> functions such as <code>tune_grid()</code> and <code>tune_bayes()</code>.</p>
-<p>Let’s go through the example from <a href="https://tune.tidymodels.org/articles/tune.html" class="external-link">Introduction to tune</a> with the Ames housing data.</p>
+<p>agua sets up the infrastructure for the tune package to enable
+optimization of h2o models. Similar to other models, we label the
+hyperparameter with the <code><a href="https://hardhat.tidymodels.org/reference/tune.html" class="external-link">tune()</a></code> placeholder and feed them
+into <code>tune_*()</code> functions such as <code>tune_grid()</code>
+and <code>tune_bayes()</code>.</p>
+<p>Let’s go through the example from <a href="https://tune.tidymodels.org/articles/tune.html" class="external-link">Introduction to
+tune</a> with the Ames housing data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://agua.tidymodels.org/">agua</a></span><span class="op">)</span></span>
@@ -165,12 +170,28 @@
 <span><span class="co">#&gt;   - Warning(s) x10: A correlation computation is required, but `estimate` is co...</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Run `show_notes(.Last.tune.result)` for more information.</span></span></code></pre></div>
-<p>The syntax is the same, we provide a workflow and the grid of hyperparameters, then <code>tune_grid()</code> returns cross validation performances for every parameterization per resample. There are 2 differences to note when tuning h2o models:</p>
+<p>The syntax is the same, we provide a workflow and the grid of
+hyperparameters, then <code>tune_grid()</code> returns cross validation
+performances for every parameterization per resample. There are 2
+differences to note when tuning h2o models:</p>
 <ul>
-<li><p>We have to call <code><a href="../reference/h2o-server.html">h2o_start()</a></code> beforehand to enable all the h2o side of computations.</p></li>
-<li><p>We can further configure tuning on the h2o server by supplying the <code>backend_options</code> argument in <code>control_grid()</code> with an <code><a href="../reference/h2o_tune.html">agua_backend_options()</a></code> object. Currently there is only one supported argument, <code>parallelism</code>, which specifies the number of models built in parallel. In the example above, we tell the h2o server to build 5 models in parallel. Note the parallelism on the h2o server is different than a parallel backend in R such as <code>doParallel</code>. The former parallelizes over model parameters while the latter over parameters in the preprocessor. See the next section for more details.</p></li>
+<li><p>We have to call <code><a href="../reference/h2o-server.html">h2o_start()</a></code> beforehand to enable all
+the h2o side of computations.</p></li>
+<li><p>We can further configure tuning on the h2o server by supplying
+the <code>backend_options</code> argument in <code>control_grid()</code>
+with an <code><a href="../reference/h2o_tune.html">agua_backend_options()</a></code> object. Currently there is
+only one supported argument, <code>parallelism</code>, which specifies
+the number of models built in parallel. In the example above, we tell
+the h2o server to build 5 models in parallel. Note the parallelism on
+the h2o server is different than a parallel backend in R such as
+<code>doParallel</code>. The former parallelizes over model parameters
+while the latter over parameters in the preprocessor. See the next
+section for more details.</p></li>
 </ul>
-<p>Other functions in tune for working with tuning results such as <code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code>, <code>collect_predictions()</code> and <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> will also recognize <code>ames_res</code> and work as expected.</p>
+<p>Other functions in tune for working with tuning results such as
+<code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code>, <code>collect_predictions()</code> and
+<code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> will also recognize <code>ames_res</code> and
+work as expected.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics</a></span><span class="op">(</span><span class="va">ames_res</span>, summarize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2,500 × 8</span></span></span>
@@ -195,13 +216,20 @@
 <div class="section level2">
 <h2 id="tuning-internals">Tuning internals<a class="anchor" aria-label="anchor" href="#tuning-internals"></a>
 </h2>
-<p>For users interested in the performance characteristics of tuning h2o models with agua, it is helpful to know some inner workings of h2o. agua uses the <code><a href="https://rdrr.io/pkg/h2o/man/h2o.grid.html" class="external-link">h2o::h2o.grid()</a></code> function for tuning model parameters, which accepts a list of possible combinations and search for the optimal one for a given dataset.</p>
-<p>In the example above, we have three tuning parameters of two types:</p>
+<p>For users interested in the performance characteristics of tuning h2o
+models with agua, it is helpful to know some inner workings of h2o. agua
+uses the <code><a href="https://rdrr.io/pkg/h2o/man/h2o.grid.html" class="external-link">h2o::h2o.grid()</a></code> function for tuning model
+parameters, which accepts a list of possible combinations and search for
+the optimal one for a given dataset.</p>
+<p>In the example above, we have three tuning parameters of two
+types:</p>
 <ul>
 <li><p>tuning parameters in the model: <code>penalty</code>.</p></li>
-<li><p>tuning parameters in the preprocessor: <code>long df</code> and <code>lat df</code>.</p></li>
+<li><p>tuning parameters in the preprocessor: <code>long df</code> and
+<code>lat df</code>.</p></li>
 </ul>
-<p>This can be extracted by <code><a href="https://hardhat.tidymodels.org/reference/hardhat-extract.html" class="external-link">extract_parameter_set_dials()</a></code></p>
+<p>This can be extracted by
+<code><a href="https://hardhat.tidymodels.org/reference/hardhat-extract.html" class="external-link">extract_parameter_set_dials()</a></code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://hardhat.tidymodels.org/reference/hardhat-extract.html" class="external-link">extract_parameter_set_dials</a></span><span class="op">(</span><span class="va">lm_wflow</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Collection of 3 parameters for tuning</span></span>
@@ -210,7 +238,16 @@
 <span><span class="co">#&gt;     penalty  penalty nparam[+]</span></span>
 <span><span class="co">#&gt;     long df deg_free nparam[+]</span></span>
 <span><span class="co">#&gt;      lat df deg_free nparam[+]</span></span></code></pre></div>
-<p>Since <code>h2o.grid</code> is only responsible for optimizing model parameters, the preprocessor parameters <code>long df</code> and <code>lat df</code> will be iterated as usual on the R side (also for this reason you can’t use agua with <code>control_grid(parallel_over = 'everything')</code>). Once a certain combination of them is chosen, agua will engineer all the relevant features and pass the data and model definitions to <code>h2o_grid()</code>. For example, say we choose the preprocess parameters to be <code>long df = 4</code> and <code>lat df = 1</code>, the analysis set in one particular fold becomes</p>
+<p>Since <code>h2o.grid</code> is only responsible for optimizing model
+parameters, the preprocessor parameters <code>long df</code> and
+<code>lat df</code> will be iterated as usual on the R side (also for
+this reason you can’t use agua with
+<code>control_grid(parallel_over = 'everything')</code>). Once a certain
+combination of them is chosen, agua will engineer all the relevant
+features and pass the data and model definitions to
+<code>h2o_grid()</code>. For example, say we choose the preprocess
+parameters to be <code>long df = 4</code> and <code>lat df = 1</code>,
+the analysis set in one particular fold becomes</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,976 × 7</span></span></span>
 <span><span class="co">#&gt;    Gr_Liv_Area Sale_Price Longitude_ns_1 Longitu…¹ Longi…² Longi…³ Latit…⁴</span></span>
 <span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -226,15 +263,32 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>        3.24       4.93        0.317      0.538    0.184 -<span style="color: #BB0000;">0.039</span><span style="color: #BB0000; text-decoration: underline;">1</span>   0.577</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 1,966 more rows, and abbreviated variable names ¹​Longitude_ns_2,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​Longitude_ns_3, ³​Longitude_ns_4, ⁴​Latitude_ns_1</span></span></span></code></pre>
-<p>This is the data frame we will be passing to the h2o server for one iteration of training. We have now completed computations on the R side with the rest delegated to the h2o server. For this preprocessor combination, we have 5 possible choices of the model parameter <code>penalty</code></p>
+<p>This is the data frame we will be passing to the h2o server for one
+iteration of training. We have now completed computations on the R side
+with the rest delegated to the h2o server. For this preprocessor
+combination, we have 5 possible choices of the model parameter
+<code>penalty</code></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grid</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">`long df`</span> <span class="op">==</span> <span class="fl">4</span>, <span class="va">`lat df`</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">pull</span><span class="op">(</span><span class="va">penalty</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.00e-10 3.16e-08 1.00e-05 3.16e-03 1.00e+00</span></span></code></pre></div>
-<p>Then the option <code>control_grid(backend_options = agua_backend_options(parallelism = 5))</code> tells the h2o server to build 5 models with these choices in parallel.</p>
-<p>If you have a parallel backend in R like <code>doParallel</code> registered, combinations of <code>long df</code> and <code>lat df</code> will be selected in parallel, as is the prepared analysis set. This is independent of how <code>parallelism</code> is configured on the h2o server.</p>
-<p>Regarding the performance of model evaluation, <code><a href="https://rdrr.io/pkg/h2o/man/h2o.grid.html" class="external-link">h2o::h2o.grid()</a></code> supports passing in a validation frame but does not return predictions on that data. In order to compute metrics on the holdout sample, we have to retrieve the model, convert validation data into the desired format, predict on it, and convert the results back to data frames. In the future we hope to get validation predictions directly thus eliminating excessive data conversions.</p>
+<p>Then the option
+<code>control_grid(backend_options = agua_backend_options(parallelism = 5))</code>
+tells the h2o server to build 5 models with these choices in
+parallel.</p>
+<p>If you have a parallel backend in R like <code>doParallel</code>
+registered, combinations of <code>long df</code> and <code>lat df</code>
+will be selected in parallel, as is the prepared analysis set. This is
+independent of how <code>parallelism</code> is configured on the h2o
+server.</p>
+<p>Regarding the performance of model evaluation,
+<code><a href="https://rdrr.io/pkg/h2o/man/h2o.grid.html" class="external-link">h2o::h2o.grid()</a></code> supports passing in a validation frame but
+does not return predictions on that data. In order to compute metrics on
+the holdout sample, we have to retrieve the model, convert validation
+data into the desired format, predict on it, and convert the results
+back to data frames. In the future we hope to get validation predictions
+directly thus eliminating excessive data conversions.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

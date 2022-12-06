@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.2/font.css" rel="stylesheet">
-<link href="../deps/Source_Code_Pro-0.4.2/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_Pro-0.4.4/font.css" rel="stylesheet">
+<link href="../deps/Source_Code_Pro-0.4.4/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Automatic machine learning">
@@ -98,7 +98,14 @@
 <div class="section level2">
 <h2 id="using-h2o-automl">Using H2O AutoML<a class="anchor" aria-label="anchor" href="#using-h2o-automl"></a>
 </h2>
-<p>Automatic machine learning (AutoML) is the process of automatically searching, screening and evaluating many models for a specific dataset. AutoML could be particularly insightful as an exploratory approach to identify model families and parameterization that is most likely to succeed. You can use H2O’s <a href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html" class="external-link">AutoML</a> algorithm via the <code>'h2o'</code> engine in <code><a href="https://parsnip.tidymodels.org/reference/auto_ml.html" class="external-link">auto_ml()</a></code>. agua provides several helper functions to quickly wrangle and visualize AutoML’s results.</p>
+<p>Automatic machine learning (AutoML) is the process of automatically
+searching, screening and evaluating many models for a specific dataset.
+AutoML could be particularly insightful as an exploratory approach to
+identify model families and parameterization that is most likely to
+succeed. You can use H2O’s <a href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html" class="external-link">AutoML</a>
+algorithm via the <code>'h2o'</code> engine in <code><a href="https://parsnip.tidymodels.org/reference/auto_ml.html" class="external-link">auto_ml()</a></code>.
+agua provides several helper functions to quickly wrangle and visualize
+AutoML’s results.</p>
 <p>Let’s run an AutoML search on the concrete data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org" class="external-link">tidymodels</a></span><span class="op">)</span></span>
@@ -133,17 +140,17 @@
 <span><span class="fu"><a href="https://hardhat.tidymodels.org/reference/hardhat-extract.html" class="external-link">extract_fit_parsnip</a></span><span class="op">(</span><span class="va">auto_fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt; parsnip model object</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ═════════════════════ H2O AutoML Summary: 103 models ═════════════════════ </span></span>
+<span><span class="co">#&gt; ══════════════════════ H2O AutoML Summary: 97 models ═════════════════════ </span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ═══════════════════════════════ Leaderboard ══════════════════════════════ </span></span>
 <span><span class="co">#&gt;                                                  model_id rmse  mse  mae</span></span>
-<span><span class="co">#&gt; 1 StackedEnsemble_BestOfFamily_4_AutoML_1_20221018_144713 4.49 20.1 2.90</span></span>
-<span><span class="co">#&gt; 2        XGBoost_grid_1_AutoML_1_20221018_144713_model_38 4.61 21.3 3.03</span></span>
-<span><span class="co">#&gt; 3    StackedEnsemble_AllModels_2_AutoML_1_20221018_144713 4.62 21.4 3.04</span></span>
-<span><span class="co">#&gt; 4    StackedEnsemble_AllModels_1_AutoML_1_20221018_144713 4.67 21.8 3.08</span></span>
-<span><span class="co">#&gt; 5        XGBoost_grid_1_AutoML_1_20221018_144713_model_39 4.68 21.9 3.14</span></span>
-<span><span class="co">#&gt; 6 StackedEnsemble_BestOfFamily_3_AutoML_1_20221018_144713 4.68 21.9 3.08</span></span>
+<span><span class="co">#&gt; 1 StackedEnsemble_BestOfFamily_4_AutoML_1_20221206_193214 4.49 20.1 2.90</span></span>
+<span><span class="co">#&gt; 2        XGBoost_grid_1_AutoML_1_20221206_193214_model_38 4.61 21.3 3.03</span></span>
+<span><span class="co">#&gt; 3    StackedEnsemble_AllModels_2_AutoML_1_20221206_193214 4.62 21.4 3.04</span></span>
+<span><span class="co">#&gt; 4    StackedEnsemble_AllModels_1_AutoML_1_20221206_193214 4.67 21.8 3.08</span></span>
+<span><span class="co">#&gt; 5        XGBoost_grid_1_AutoML_1_20221206_193214_model_39 4.68 21.9 3.14</span></span>
+<span><span class="co">#&gt; 6 StackedEnsemble_BestOfFamily_3_AutoML_1_20221206_193214 4.68 21.9 3.08</span></span>
 <span><span class="co">#&gt;   rmsle mean_residual_deviance</span></span>
 <span><span class="co">#&gt; 1 0.136                   20.1</span></span>
 <span><span class="co">#&gt; 2 0.143                   21.3</span></span>
@@ -151,7 +158,16 @@
 <span><span class="co">#&gt; 4 0.142                   21.8</span></span>
 <span><span class="co">#&gt; 5 0.146                   21.9</span></span>
 <span><span class="co">#&gt; 6 0.142                   21.9</span></span></code></pre></div>
-<p>In 120 seconds, AutoML fitted 103 models. The parsnip fit object <code>extract_fit_parsnip(auto_fit)</code> shows the number of candidate models, the best performing algorithm and its corresponding model id, and a preview of the leaderboard with cross validation performances. The <code>model_id</code> column in the leaderboard is a unique model identifier for the h2o server. This can be useful when you need to predict on or extract a specific model, e.g. with <code>predict(auto_fit, id = id)</code> and <code>extract_fit_engine(auto_fit, id = id)</code>. By default, they will operate on the best performing leader model.</p>
+<p>In 120 seconds, AutoML fitted 97 models. The parsnip fit object
+<code>extract_fit_parsnip(auto_fit)</code> shows the number of candidate
+models, the best performing algorithm and its corresponding model id,
+and a preview of the leaderboard with cross validation performances. The
+<code>model_id</code> column in the leaderboard is a unique model
+identifier for the h2o server. This can be useful when you need to
+predict on or extract a specific model, e.g. with
+<code>predict(auto_fit, id = id)</code> and
+<code>extract_fit_engine(auto_fit, id = id)</code>. By default, they
+will operate on the best performing leader model.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># predict with the best model</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">auto_fit</span>, new_data <span class="op">=</span> <span class="va">concrete_test</span><span class="op">)</span></span>
@@ -169,41 +185,49 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  52.5</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  39.4</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 250 more rows</span></span></span></code></pre></div>
-<p>Typically, we use AutoML to get a quick sense of the range of our success metric, and algorithms that are likely to succeed. agua provides tools to summarize these results.</p>
+<p>Typically, we use AutoML to get a quick sense of the range of our
+success metric, and algorithms that are likely to succeed. agua provides
+tools to summarize these results.</p>
 <ul>
 <li>
-<code><a href="https://generics.r-lib.org/reference/rank_results.html" class="external-link">rank_results()</a></code> returns the leaderboard in a tidy format with rankings within each metric. A low rank means good performance in a metric. Here, the top 5 models with the smallest MAE includes are four stacked ensembles and one GBM model.</li>
+<code><a href="https://generics.r-lib.org/reference/rank_results.html" class="external-link">rank_results()</a></code> returns the leaderboard in a tidy format
+with rankings within each metric. A low rank means good performance in a
+metric. Here, the top 5 models with the smallest MAE includes are four
+stacked ensembles and one GBM model.</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://generics.r-lib.org/reference/rank_results.html" class="external-link">rank_results</a></span><span class="op">(</span><span class="va">auto_fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">.metric</span> <span class="op">==</span> <span class="st">"mae"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">rank</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 103 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 97 × 5</span></span></span>
 <span><span class="co">#&gt;    id                                          algor…¹ .metric  mean  rank</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> StackedEnsemble_BestOfFamily_4_AutoML_1_20… stacki… mae      2.91     1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> XGBoost_grid_1_AutoML_1_20221018_144713_mo… xgboost mae      3.03     2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> XGBoost_grid_1_AutoML_1_20221206_193214_mo… xgboost mae      3.03     2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> StackedEnsemble_AllModels_2_AutoML_1_20221… stacki… mae      3.04     3</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> StackedEnsemble_BestOfFamily_3_AutoML_1_20… stacki… mae      3.08     4</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> StackedEnsemble_AllModels_1_AutoML_1_20221… stacki… mae      3.09     5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> XGBoost_grid_1_AutoML_1_20221018_144713_mo… xgboost mae      3.13     6</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> XGBoost_grid_1_AutoML_1_20221018_144713_mo… xgboost mae      3.13     7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> XGBoost_grid_1_AutoML_1_20221018_144713_mo… xgboost mae      3.14     8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GBM_5_AutoML_1_20221018_144713              gradie… mae      3.15     9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> XGBoost_grid_1_AutoML_1_20221206_193214_mo… xgboost mae      3.13     6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> XGBoost_grid_1_AutoML_1_20221206_193214_mo… xgboost mae      3.13     7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> XGBoost_grid_1_AutoML_1_20221206_193214_mo… xgboost mae      3.14     8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GBM_5_AutoML_1_20221206_193214              gradie… mae      3.15     9</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> StackedEnsemble_BestOfFamily_2_AutoML_1_20… stacki… mae      3.17    10</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 93 more rows, and abbreviated variable name ¹​algorithm</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 87 more rows, and abbreviated variable name ¹​algorithm</span></span></span></code></pre></div>
 <ul>
 <li>
-<code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code> returns average statistics of performance metrics (summarized) per model, or raw value for each resample (unsummarized). <code>cv_id</code> identifies the resample h2o internally used for optimization.</li>
+<code><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics()</a></code> returns average statistics of
+performance metrics (summarized) per model, or raw value for each
+resample (unsummarized). <code>cv_id</code> identifies the resample h2o
+internally used for optimization.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://tune.tidymodels.org/reference/collect_predictions.html" class="external-link">collect_metrics</a></span><span class="op">(</span><span class="va">auto_fit</span>, summarize <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,645 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3,435 × 5</span></span></span>
 <span><span class="co">#&gt;    id                                        algor…¹ .metric cv_id .esti…²</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mae     cv_1…    2.68</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mae     cv_2…    2.51</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mae     cv_3…    3.10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mae     cv_3…    3.09</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mae     cv_4…    3.24</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mae     cv_5…    3.02</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mean_r… cv_1…   16.2 </span></span>
@@ -211,35 +235,49 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mean_r… cv_3…   20.0 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mean_r… cv_4…   26.5 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> StackedEnsemble_BestOfFamily_4_AutoML_1_… stacki… mean_r… cv_5…   20.8 </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 3,635 more rows, and abbreviated variable names ¹​algorithm,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 3,425 more rows, and abbreviated variable names ¹​algorithm,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​.estimate</span></span></span></code></pre></div>
 <ul>
 <li>
-<code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code> returns a tibble with performance and individual model objects. This is helpful if you want to perform operations (e.g., predict) across all candidates.</li>
+<code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code> returns a tibble with performance and individual
+model objects. This is helpful if you want to perform operations (e.g.,
+predict) across all candidates.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">auto_fit</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">mutate</span><span class="op">(</span></span>
 <span>    .predictions <span class="op">=</span> <span class="fu">map</span><span class="op">(</span><span class="va">.model</span>, <span class="va">predict</span>, new_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">concrete_test</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 103 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 97 × 5</span></span></span>
 <span><span class="co">#&gt;    id                                   algor…¹ .metric  .model   .predi…²</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> StackedEnsemble_BestOfFamily_4_Auto… stacki… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> XGBoost_grid_1_AutoML_1_20221018_14… xgboost &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> XGBoost_grid_1_AutoML_1_20221206_19… xgboost &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> StackedEnsemble_AllModels_2_AutoML_… stacki… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> StackedEnsemble_AllModels_1_AutoML_… stacki… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> XGBoost_grid_1_AutoML_1_20221018_14… xgboost &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> XGBoost_grid_1_AutoML_1_20221206_19… xgboost &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> StackedEnsemble_BestOfFamily_3_Auto… stacki… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> StackedEnsemble_BestOfFamily_2_Auto… stacki… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> GBM_5_AutoML_1_20221018_144713       gradie… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GBM_grid_1_AutoML_1_20221018_144713… gradie… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> XGBoost_grid_1_AutoML_1_20221018_14… xgboost &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 93 more rows, and abbreviated variable names ¹​algorithm,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> GBM_5_AutoML_1_20221206_193214       gradie… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> GBM_grid_1_AutoML_1_20221206_193214… gradie… &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> XGBoost_grid_1_AutoML_1_20221206_19… xgboost &lt;tibble&gt; <span style="color: #949494;">&lt;fit[+]&gt;</span> &lt;tibble&gt;</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 87 more rows, and abbreviated variable names ¹​algorithm,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   ²​.predictions</span></span></span></code></pre></div>
 <ul>
 <li>
-<code><a href="../reference/automl-tools.html">member_weights()</a></code> computes member importance for all stacked ensemble models. Aside from base models such as GLM, GBM and neural networks, h2o tries to fit two kinds of stacked ensembles: one combines the all base models (<code>"all"</code>) and the other includes only the best model of each kind (<code>"bestofFamily"</code>), specific to a time point. Regardless of how ensembles are formed, we can calculate the variable importance in the ensemble as the importance score of every member model, i.e., the relative contribution of base models in the meta-learner. This is typically the coefficient magnitude in a second-level GLM. This way, in addition to inspecting model performances by themselves, we can find promising candidates if stacking is needed. Here, we show the scaled contribution of different algorithms in stacked ensembles.</li>
+<code><a href="../reference/automl-tools.html">member_weights()</a></code> computes member importance for all
+stacked ensemble models. Aside from base models such as GLM, GBM and
+neural networks, h2o tries to fit two kinds of stacked ensembles: one
+combines the all base models (<code>"all"</code>) and the other includes
+only the best model of each kind (<code>"bestofFamily"</code>), specific
+to a time point. Regardless of how ensembles are formed, we can
+calculate the variable importance in the ensemble as the importance
+score of every member model, i.e., the relative contribution of base
+models in the meta-learner. This is typically the coefficient magnitude
+in a second-level GLM. This way, in addition to inspecting model
+performances by themselves, we can find promising candidates if stacking
+is needed. Here, we show the scaled contribution of different algorithms
+in stacked ensembles.</li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">auto_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -252,12 +290,23 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_sqrt</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="cn">NULL</span>, x <span class="op">=</span> <span class="st">"scaled importance"</span>, title <span class="op">=</span> <span class="st">"Member importance in stacked ensembles"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="auto_ml_files/figure-html/auto-stacked-1.png" width="95%"></p>
-<p>You can also <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> an AutoML object, which essentially wraps functions above to plot performance assessment and ranking. The lower the average ranking, the more likely the model type suits the data.</p>
+<p>You can also <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> an AutoML object, which
+essentially wraps functions above to plot performance assessment and
+ranking. The lower the average ranking, the more likely the model type
+suits the data.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">auto_fit</span>, type <span class="op">=</span> <span class="st">"rank"</span>, metric <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mae"</span>, <span class="st">"rmse"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="auto_ml_files/figure-html/autoplot-1.png" width="95%"></p>
-<p>After initial assessment, we might be interested to allow more time for AutoML to search for more candidates. Recall that we have set engine argument <code>max_runtime_secs</code> to 120s before, we can increase it or adjust <code>max_models</code> to control the total runtime. H2O also provides an option to build upon an existing AutoML leaderboard and add more candidates, this can be done via <code><a href="https://generics.r-lib.org/reference/refit.html" class="external-link">refit()</a></code>. The model to be re-fitted needs to have engine argument <code>save_data = TRUE</code>. If you also want to add stacked ensembles set <code>keep_cross_validation_predictions = TRUE</code> as well.</p>
+<p>After initial assessment, we might be interested to allow more time
+for AutoML to search for more candidates. Recall that we have set engine
+argument <code>max_runtime_secs</code> to 120s before, we can increase
+it or adjust <code>max_models</code> to control the total runtime. H2O
+also provides an option to build upon an existing AutoML leaderboard and
+add more candidates, this can be done via <code><a href="https://generics.r-lib.org/reference/refit.html" class="external-link">refit()</a></code>. The
+model to be re-fitted needs to have engine argument
+<code>save_data = TRUE</code>. If you also want to add stacked ensembles
+set <code>keep_cross_validation_predictions = TRUE</code> as well.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># not run </span></span>
 <span><span class="va">auto_spec_refit</span> <span class="op">&lt;-</span></span>
@@ -280,18 +329,27 @@
 <div class="section level2">
 <h2 id="important-engine-arguments">Important engine arguments<a class="anchor" aria-label="anchor" href="#important-engine-arguments"></a>
 </h2>
-<p>There are several relevant engine arguments for H2O AutoML, some of the most commonly used are:</p>
+<p>There are several relevant engine arguments for H2O AutoML, some of
+the most commonly used are:</p>
 <ul>
-<li><p><code>max_runtime_secs</code> and <code>max_models</code>: Adjust runtime.</p></li>
-<li><p><code>include_algos</code> and <code>exclude_algos</code>: A character vector naming the algorithms to include or exclude.</p></li>
-<li><p><code>validation</code>: An integer between 0 and 1 specifying the proportion of training data reserved as validation set. This is used by h2o for performance assessment and potential early stopping.</p></li>
+<li><p><code>max_runtime_secs</code> and <code>max_models</code>: Adjust
+runtime.</p></li>
+<li><p><code>include_algos</code> and <code>exclude_algos</code>: A
+character vector naming the algorithms to include or exclude.</p></li>
+<li><p><code>validation</code>: An integer between 0 and 1 specifying
+the proportion of training data reserved as validation set. This is used
+by h2o for performance assessment and potential early stopping.</p></li>
 </ul>
-<p>See the details section in <code><a href="https://rdrr.io/pkg/h2o/man/h2o.automl.html" class="external-link">h2o::h2o.automl()</a></code> for more information.</p>
+<p>See the details section in <code><a href="https://rdrr.io/pkg/h2o/man/h2o.automl.html" class="external-link">h2o::h2o.automl()</a></code> for more
+information.</p>
 </div>
 <div class="section level2">
 <h2 id="limiations">Limiations<a class="anchor" aria-label="anchor" href="#limiations"></a>
 </h2>
-<p>One current limitation of H2O AutoML models is that they can’t be used in resampling. This means you can’t use them with <code>fit_resamples()</code>, <code>tune_grid()</code>, <code>tune_bayes()</code>, etc.</p>
+<p>One current limitation of H2O AutoML models is that they can’t be
+used in resampling. This means you can’t use them with
+<code>fit_resamples()</code>, <code>tune_grid()</code>,
+<code>tune_bayes()</code>, etc.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
