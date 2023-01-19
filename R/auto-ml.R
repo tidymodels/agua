@@ -203,12 +203,6 @@ collect_metrics.H2OAutoML <- function(x,
 }
 
 #' @rdname automl-tools
-#' @export
-tidy.workflow <- function(x, ...) {
-  tidy(extract_fit_parsnip(x), ...)
-}
-
-#' @rdname automl-tools
 #' @param keep_model A logical value for if the actual model object
 #'  should be retrieved from the server. Defaults to `TRUE`.
 #' @export

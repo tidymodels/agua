@@ -7,7 +7,6 @@
 \alias{collect_metrics.workflow}
 \alias{collect_metrics._H2OAutoML}
 \alias{collect_metrics.H2OAutoML}
-\alias{tidy.workflow}
 \alias{tidy._H2OAutoML}
 \alias{get_leaderboard}
 \alias{member_weights}
@@ -28,8 +27,6 @@
 \method{collect_metrics}{`_H2OAutoML`}(x, ...)
 
 \method{collect_metrics}{H2OAutoML}(x, summarize = TRUE, n = NULL, id = NULL, ...)
-
-\method{tidy}{workflow}(x, ...)
 
 \method{tidy}{`_H2OAutoML`}(x, n = NULL, id = NULL, keep_model = TRUE, ...)
 
