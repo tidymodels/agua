@@ -14,7 +14,7 @@
 #' @examples
 #' if (h2o_running()) {
 #'   auto_fit <- auto_ml() %>%
-#'     set_engine("h2o", max_runtime_secs = 10) %>%
+#'     set_engine("h2o", max_runtime_secs = 5) %>%
 #'     set_mode("regression") %>%
 #'     fit(mpg ~ ., data = mtcars)
 #'
