@@ -1,4 +1,4 @@
-# agua (development version)
+# agua 0.1.1
 
 # agua 0.1.0
 
