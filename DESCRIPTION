@@ -28,6 +28,7 @@ Imports:
     h2o (>= 3.38.0.1),
     hardhat (>= 1.1.0),
     methods,
+    pkgconfig,
     purrr,
     rlang,
     rsample,
