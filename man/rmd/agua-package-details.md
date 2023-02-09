@@ -104,5 +104,6 @@ There are several package vignettes including:
 
 - [Model tuning](https://agua.tidymodels.org/articles/tune.html)
 
-- [Automatic machine
-  learning](https://agua.tidymodels.org/articles/auto_ml.html)
+- [Automatic machine learning](https://agua.tidymodels.org/articles/auto_ml.html)
+
+- [Parallel processing with agua and h2o](https://agua.tidymodels.org/articles/parallel.html)

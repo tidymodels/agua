@@ -123,6 +123,8 @@ There are several package vignettes including:
 
 - [Automatic machine learning](https://agua.tidymodels.org/articles/auto_ml.html)
 
+- [Parallel processing with agua and h2o](https://agua.tidymodels.org/articles/parallel.html)
+
 
 ## Code of Conduct
   

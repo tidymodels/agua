@@ -117,6 +117,7 @@ There are several package vignettes including:
 \item \href{https://agua.tidymodels.org/articles/agua.html}{Introduction to agua}
 \item \href{https://agua.tidymodels.org/articles/tune.html}{Model tuning}
 \item \href{https://agua.tidymodels.org/articles/auto_ml.html}{Automatic machine learning}
+\item \href{https://agua.tidymodels.org/articles/parallel.html}{Parallel processing with agua and h2o}
 }
 }
 }
