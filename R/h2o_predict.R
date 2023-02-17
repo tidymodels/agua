@@ -13,6 +13,7 @@
 #' @details
 #' For AutoML, prediction is based on the best performing model.
 #' @examples
+#' \dontrun{
 #' if (h2o_running()) {
 #'   spec <-
 #'     rand_forest(mtry = 3, trees = 100) %>%
@@ -25,6 +26,7 @@
 #'
 #'   # using parsnip
 #'   predict(mod, new_data = head(mtcars))
+#' }
 #' }
 h2o_predict <- function(object, new_data, ...) {
   new_data <- as_h2o(new_data)

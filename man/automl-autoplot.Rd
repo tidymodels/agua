@@ -36,6 +36,7 @@ The \code{autoplot()} method plots cross validation performances of candidate
 models in H2O AutoML output via facets on each metric.
 }
 \examples{
+\dontrun{
 if (h2o_running()) {
   auto_fit <- auto_ml() \%>\%
     set_engine("h2o", max_runtime_secs = 5) \%>\%
@@ -43,5 +44,6 @@ if (h2o_running()) {
     fit(mpg ~ ., data = mtcars)
 
   autoplot(auto_fit)
+}
 }
 }

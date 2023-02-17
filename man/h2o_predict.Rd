@@ -42,6 +42,7 @@ h2o server cleanup, and so on.
 For AutoML, prediction is based on the best performing model.
 }
 \examples{
+\dontrun{
 if (h2o_running()) {
   spec <-
     rand_forest(mtry = 3, trees = 100) \%>\%
@@ -54,5 +55,6 @@ if (h2o_running()) {
 
   # using parsnip
   predict(mod, new_data = head(mtcars))
+}
 }
 }

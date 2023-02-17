@@ -36,7 +36,9 @@ h2o_xgboost_available()
 Utility functions for interacting with the h2o server
 }
 \examples{
+\dontrun{
 if (!h2o_running()) {
   h2o_start()
+}
 }
 }

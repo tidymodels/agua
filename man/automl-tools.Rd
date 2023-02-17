@@ -100,13 +100,15 @@ generalized linear model (\code{"GLM"}), and neural network (\code{"deeplearning
 See the details section in \code{\link[h2o:h2o.automl]{h2o::h2o.automl()}} for more information.
 }
 \examples{
+\dontrun{
 if (h2o_running()) {
-  auto_fit <- auto_ml() \%>\%
-    set_engine("h2o", max_runtime_secs = 5) \%>\%
-    set_mode("regression") \%>\%
-    fit(mpg ~ ., data = mtcars)
+    auto_fit <- auto_ml() \%>\%
+      set_engine("h2o", max_runtime_secs = 5) \%>\%
+      set_mode("regression") \%>\%
+      fit(mpg ~ ., data = mtcars)
 
-  rank_results(auto_fit, n = 5)
+    rank_results(auto_fit, n = 5)
+  }
 }
 
 }

@@ -3,8 +3,10 @@
 #' @param verbose Print out the message if no cluster is available.
 #' @param id Model or frame id.
 #' @examples
+#' \dontrun{
 #' if (!h2o_running()) {
 #'   h2o_start()
+#' }
 #' }
 #' @rdname h2o-server
 #' @export

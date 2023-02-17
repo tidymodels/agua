@@ -12,6 +12,7 @@
 #' @param ... Other options to pass to `autoplot()`.
 #' @return A ggplot object.
 #' @examples
+#' \dontrun{
 #' if (h2o_running()) {
 #'   auto_fit <- auto_ml() %>%
 #'     set_engine("h2o", max_runtime_secs = 5) %>%
@@ -19,6 +20,7 @@
 #'     fit(mpg ~ ., data = mtcars)
 #'
 #'   autoplot(auto_fit)
+#' }
 #' }
 #' @rdname automl-autoplot
 #' @export
