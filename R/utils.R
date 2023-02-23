@@ -140,3 +140,23 @@ convert_h2o_parsnip <- function(x, spec, lvl = NULL, extra_class = "h2o_fit", ..
   )
   res
 }
+
+# adapted from ps:::is_cran_check()
+is_cran_check <- function() {
+  if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+    FALSE
+  }
+  else {
+    Sys.getenv("_R_CHECK_PACKAGE_NAME_", "") != ""
+  }
+}
+
+should_run_examples <- function(suggests = NULL) {
+  has_needed_installs <- TRUE
+
+  if (!is.null(suggests)) {
+    has_needed_installs <- rlang::is_installed(suggests)
+  }
+
+  has_needed_installs && !is_cran_check()
+}

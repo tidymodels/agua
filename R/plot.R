@@ -11,8 +11,7 @@
 #' @param std_errs The number of standard errors to plot.
 #' @param ... Other options to pass to `autoplot()`.
 #' @return A ggplot object.
-#' @examples
-#' \dontrun{
+#' @examplesIf should_run_examples()
 #' if (h2o_running()) {
 #'   auto_fit <- auto_ml() %>%
 #'     set_engine("h2o", max_runtime_secs = 5) %>%
@@ -20,7 +19,6 @@
 #'     fit(mpg ~ ., data = mtcars)
 #'
 #'   autoplot(auto_fit)
-#' }
 #' }
 #' @rdname automl-autoplot
 #' @export

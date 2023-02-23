@@ -29,9 +29,8 @@
 #' @param ... Other options to pass to the h2o model functions (e.g.,
 #' [h2o::h2o.randomForest()]).
 #' @return An h2o model object.
-#' @examples
+#' @examplesIf should_run_examples()
 #' # start with h2o::h2o.init()
-#' \dontrun{
 #' if (h2o_running()) {
 #'  # -------------------------------------------------------------------------
 #'  # Using the model wrappers:
@@ -50,7 +49,6 @@
 #'  mod
 #'
 #'  predict(mod, head(mtcars))
-#' }
 #' }
 #' @export
 h2o_train <- function(x,

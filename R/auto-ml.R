@@ -43,16 +43,17 @@
 #' @param id A character vector of model ids to retrieve.
 #' @param ... Not used.
 #' @return A [tibble::tibble()].
-#' @examples
-#' \dontrun{
+#' @examplesIf should_run_examples()
 #' if (h2o_running()) {
-#'     auto_fit <- auto_ml() %>%
-#'       set_engine("h2o", max_runtime_secs = 5) %>%
-#'       set_mode("regression") %>%
-#'       fit(mpg ~ ., data = mtcars)
+#'  auto_fit <- auto_ml() %>%
+#'    set_engine("h2o", max_runtime_secs = 5) %>%
+#'    set_mode("regression") %>%
+#'    fit(mpg ~ ., data = mtcars)
 #'
-#'     rank_results(auto_fit, n = 5)
-#'   }
+#'    rank_results(auto_fit, n = 5)
+#'    collect_metrics(auto_fit, summarize = FALSE)
+#'    tidy(auto_fit)
+#'    member_weights(auto_fit)
 #' }
 #'
 #' @export
