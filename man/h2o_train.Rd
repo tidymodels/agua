@@ -159,8 +159,8 @@ Basic model wrappers for h2o model functions that include data conversion,
 seed configuration, and so on.
 }
 \examples{
+\dontshow{if (agua:::should_run_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # start with h2o::h2o.init()
-\dontrun{
 if (h2o_running()) {
  # -------------------------------------------------------------------------
  # Using the model wrappers:
@@ -180,5 +180,5 @@ if (h2o_running()) {
 
  predict(mod, head(mtcars))
 }
-}
+\dontshow{\}) # examplesIf}
 }

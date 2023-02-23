@@ -43,7 +43,7 @@
 #' @param id A character vector of model ids to retrieve.
 #' @param ... Not used.
 #' @return A [tibble::tibble()].
-#' @examplesIf should_run_examples()
+#' @examplesIf agua:::should_run_examples()
 #' if (h2o_running()) {
 #'  auto_fit <- auto_ml() %>%
 #'    set_engine("h2o", max_runtime_secs = 5) %>%

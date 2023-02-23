@@ -36,7 +36,7 @@ The \code{autoplot()} method plots cross validation performances of candidate
 models in H2O AutoML output via facets on each metric.
 }
 \examples{
-\dontrun{
+\dontshow{if (agua:::should_run_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 if (h2o_running()) {
   auto_fit <- auto_ml() \%>\%
     set_engine("h2o", max_runtime_secs = 5) \%>\%
@@ -45,5 +45,5 @@ if (h2o_running()) {
 
   autoplot(auto_fit)
 }
-}
+\dontshow{\}) # examplesIf}
 }

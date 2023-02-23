@@ -29,7 +29,7 @@
 #' @param ... Other options to pass to the h2o model functions (e.g.,
 #' [h2o::h2o.randomForest()]).
 #' @return An h2o model object.
-#' @examplesIf should_run_examples()
+#' @examplesIf agua:::should_run_examples()
 #' # start with h2o::h2o.init()
 #' if (h2o_running()) {
 #'  # -------------------------------------------------------------------------

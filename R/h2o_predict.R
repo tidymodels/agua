@@ -7,12 +7,12 @@
 #' @param id Model id in AutoML results.
 #' @param ... Other options passed to [h2o::h2o.predict()]
 #' @return For type != "raw", a prediction data frame with the same number of
-#'   rows as `new_data`. For type == "raw", return original [h2o::h2o.predict()]
-#'   output
+#'   rows as `new_data`. For type == "raw", return the result of
+#'   [h2o::h2o.predict()].
 #' @export
 #' @details
 #' For AutoML, prediction is based on the best performing model.
-#' @examplesIf should_run_examples()
+#' @examplesIf agua:::should_run_examples()
 #' if (h2o_running()) {
 #'   spec <-
 #'     rand_forest(mtry = 3, trees = 100) %>%

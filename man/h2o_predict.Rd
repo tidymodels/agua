@@ -31,8 +31,8 @@ appropriate value based on the model's mode.}
 }
 \value{
 For type != "raw", a prediction data frame with the same number of
-rows as \code{new_data}. For type == "raw", return original \code{\link[h2o:h2o.predict]{h2o::h2o.predict()}}
-output
+rows as \code{new_data}. For type == "raw", return the result of
+\code{\link[h2o:h2o.predict]{h2o::h2o.predict()}}.
 }
 \description{
 Prediction wrappers for fitted models with h2o engine that include data conversion,
@@ -42,7 +42,7 @@ h2o server cleanup, and so on.
 For AutoML, prediction is based on the best performing model.
 }
 \examples{
-\dontrun{
+\dontshow{if (agua:::should_run_examples()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 if (h2o_running()) {
   spec <-
     rand_forest(mtry = 3, trees = 100) \%>\%
@@ -56,5 +56,5 @@ if (h2o_running()) {
   # using parsnip
   predict(mod, new_data = head(mtcars))
 }
-}
+\dontshow{\}) # examplesIf}
 }
