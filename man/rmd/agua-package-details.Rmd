@@ -10,7 +10,7 @@ There are two main components in agua:
 
 When fitting a parsnip model, the data are passed to the h2o server directly. For tuning, the data are passed once and instructions are given to `h2o.grid()` to process them. 
 
-This work is based on @stevenpawley's [h2oparsnip](https://github.com/stevenpawley/h2oparsnip) package. Additional work was done by Qiushi Yan for his 2022 summer internship at RStudio. 
+This work is based on @stevenpawley's [h2oparsnip](https://github.com/stevenpawley/h2oparsnip) package. Additional work was done by Qiushi Yan for his 2022 summer internship at Posit. 
 
 ## Installation
 

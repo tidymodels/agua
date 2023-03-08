@@ -6,7 +6,7 @@
 #' infrastructure for tune.
 #'
 #' The package uses code initially written by Steven Pawley in his h2oparsnip
-#' package. Addition work was done by Qiushi Yan as an RStudio summer intern.
+#' package. Addition work was done by Qiushi Yan as a Posit summer intern.
 #'
 #' @includeRmd man/rmd/agua-package-details.md details
 #'
