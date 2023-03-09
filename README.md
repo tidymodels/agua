@@ -30,7 +30,7 @@ given to `h2o.grid()` to process them.
 This work is based on @stevenpawley’s
 [h2oparsnip](https://github.com/stevenpawley/h2oparsnip) package.
 Additional work was done by Qiushi Yan for his 2022 summer internship at
-RStudio.
+Posit.
 
 ## Installation
 

@@ -14,7 +14,7 @@ infrastructure for tune.
 }
 \details{
 The package uses code initially written by Steven Pawley in his h2oparsnip
-package. Addition work was done by Qiushi Yan as an RStudio summer intern.
+package. Addition work was done by Qiushi Yan as a Posit summer intern.
 
 There are two main components in agua:
 \itemize{
@@ -31,7 +31,7 @@ given to \code{h2o.grid()} to process them.
 This work is based on @stevenpawley’s
 \href{https://github.com/stevenpawley/h2oparsnip}{h2oparsnip} package.
 Additional work was done by Qiushi Yan for his 2022 summer internship at
-RStudio.
+Posit.
 \subsection{Installation}{
 
 The CRAN version of the package can be installed via
@@ -135,13 +135,13 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Max Kuhn \email{max@rstudio.com} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
+  \item Max Kuhn \email{max@posit.co} (\href{https://orcid.org/0000-0003-2402-136X}{ORCID})
   \item Steven Pawley \email{dr.stevenpawley@gmail.com}
 }
 
 Other contributors:
 \itemize{
-  \item RStudio [copyright holder]
+  \item Posit Software, PBC [copyright holder, funder]
 }
 
 }
