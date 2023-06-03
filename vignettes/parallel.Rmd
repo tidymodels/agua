@@ -30,7 +30,7 @@ You can use that to specify how many resources are used to train a model. This h
 
 When tuning or resampling, agua processes the data and sends computations to the h2o server in chunks based on the data set. In other words, if there are _B_ data sets created during resampling, agua sends all of the grid configurations for that data set to the h2o server at the same time. For example, if a grid of 7 tuning parameter combinations were resampled with _B_ 20 bootstraps, the 140 models are processed in chunks of 20.
 
-While the h2o server can process multiple models at once, it does not bey default. If you were using h2o directly, the [`h2o.grid()`](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/grid-search.html) function controls how many can be simultaneously fit via the `parallelism` argument (emphasis added): 
+While the h2o server can process multiple models at once, it does not by default. If you were using h2o directly, the [`h2o.grid()`](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/grid-search.html) function controls how many can be simultaneously fit via the `parallelism` argument (emphasis added): 
 
 > `parallelism`: Level of Parallelism during grid model building. 1 = __sequential building (default)__. Use the value of 0 for adaptive parallelism - decided by H2O. Any number > 1 sets the exact number of models built in parallel.
 
