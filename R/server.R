@@ -11,6 +11,9 @@
 #' @rdname h2o-server
 #' @export
 h2o_start <- function() {
+  if (has_java()) {
+    rlang::warn("JAVA not found, H2O may take minutes trying to connect.")
+  }
   res <- utils::capture.output(h2o::h2o.no_progress(
     h2o::h2o.init()
   ), "output")

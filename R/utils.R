@@ -160,3 +160,8 @@ should_run_examples <- function(suggests = NULL) {
 
   has_needed_installs && !is_cran_check()
 }
+
+# https://github.com/h2oai/h2o-3/blob/master/h2o-r/h2o-package/R/connection.R#L754-L775
+has_java <- function() {
+  nzchar(Sys.which("java"))
+}
