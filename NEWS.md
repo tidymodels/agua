@@ -1,3 +1,9 @@
+# agua 0.1.3
+
+* h2o_start warnings when java is not found
+
+* typos
+
 # agua 0.1.2
 
 # agua 0.1.1
