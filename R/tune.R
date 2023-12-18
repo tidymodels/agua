@@ -11,7 +11,10 @@ tune_grid_loop_iter_agua <- function(split,
                                      workflow,
                                      metrics,
                                      control,
-                                     seed) {
+                                     eval_time = NULL,
+                                     seed,
+                                     metrics_info = NULL,
+                                     params = NULL) {
   h2o::h2o.no_progress(
     tune_grid_loop_iter_agua_impl(
       split,
@@ -309,7 +312,8 @@ pull_h2o_metrics <- function(predictions,
     metrics,
     param_names,
     outcome_name,
-    event_level
+    event_level,
+    metrics_info = tune::metrics_info(metrics)
   )
   metrics %>% dplyr::bind_cols(fold_id)
 }
