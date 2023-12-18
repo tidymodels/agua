@@ -51,7 +51,7 @@ Config/Needs/website:
   tidymodels,
   vip
 Remotes:
-  tidymodels/tune
+  tidymodels/tune#793
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
