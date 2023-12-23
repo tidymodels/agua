@@ -4,9 +4,9 @@ pkgdown_sha: ~
 articles:
   agua: agua.html
   auto_ml: auto_ml.html
-  tune: tune.html
   parallel: parallel.html
-last_built: 2023-01-26T18:10Z
+  tune: tune.html
+last_built: 2023-12-23T17:31Z
 urls:
   reference: https://agua.tidymodels.org/reference
   article: https://agua.tidymodels.org/articles
