@@ -16,16 +16,16 @@ h2o_predict_regression(object, new_data, type = "numeric", ...)
 \method{predict}{`_H2OAutoML`}(object, new_data, id = NULL, ...)
 }
 \arguments{
-\item{object}{An object of class \code{model_fit}}
+\item{object}{An object of class \code{model_fit}.}
 
 \item{new_data}{A rectangular data object, such as a data frame.}
 
 \item{...}{Other options passed to \code{\link[h2o:h2o.predict]{h2o::h2o.predict()}}}
 
 \item{type}{A single character value or \code{NULL}. Possible values
-are "numeric", "class", "prob", "conf_int", "pred_int", "quantile", "time",
-"hazard", "survival", or "raw". When \code{NULL}, \code{predict()} will choose an
-appropriate value based on the model's mode.}
+are \code{"numeric"}, \code{"class"}, \code{"prob"}, \code{"conf_int"}, \code{"pred_int"},
+\code{"quantile"}, \code{"time"}, \code{"hazard"}, \code{"survival"}, or \code{"raw"}. When \code{NULL},
+\code{predict()} will choose an appropriate value based on the model's mode.}
 
 \item{id}{Model id in AutoML results.}
 }

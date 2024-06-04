@@ -105,7 +105,7 @@ re-fitted.}
 
 \item{ntrees}{Number of trees. Defaults to 50.}
 
-\item{mtries}{Number of variables randomly sampled as candidates at each split. If set to -1, defaults to sqrt{p} for
+\item{mtries}{Number of variables randomly sampled as candidates at each split. If set to -1, defaults to sqrt\{p\} for
 classification and p/3 for regression (where p is the # of predictors Defaults to -1.}
 
 \item{min_rows}{Fewest allowed (weighted) observations in a leaf. Defaults to 1.}

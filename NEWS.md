@@ -1,3 +1,7 @@
+# agua 0.1.4
+
+* bump tune version
+
 # agua 0.1.3
 
 * h2o_start warnings when java is not found
