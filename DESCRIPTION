@@ -35,7 +35,7 @@ Imports:
     stats,
     tibble,
     tidyr,
-    tune (>= 1.1.2.9007),
+    tune (>= 1.2.0),
     vctrs,
     workflows
 Suggests:
@@ -50,8 +50,6 @@ Config/Needs/website:
   doParallel,
   tidymodels,
   vip
-Remotes:
-  tidymodels/tune
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
