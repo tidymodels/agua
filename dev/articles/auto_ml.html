@@ -115,7 +115,7 @@ AutoML’s results.</p>
 <span><span class="fu"><a href="../reference/h2o-server.html">h2o_start</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: JAVA not found, H2O may take minutes trying to connect.</span></span>
 <span><span class="co">#&gt; Warning in h2o.clusterInfo(): </span></span>
-<span><span class="co">#&gt; Your H2O cluster version is (5 months and 14 days) old. There may be a newer version available.</span></span>
+<span><span class="co">#&gt; Your H2O cluster version is (5 months and 15 days) old. There may be a newer version available.</span></span>
 <span><span class="co">#&gt; Please download and install the latest version from: https://h2o-release.s3.amazonaws.com/h2o/latest_stable.html</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
@@ -154,12 +154,12 @@ AutoML’s results.</p>
 <span><span class="co">#&gt;  </span></span>
 <span><span class="co">#&gt; ═══════════════════════════════ Leaderboard ══════════════════════════════ </span></span>
 <span><span class="co">#&gt;                                                  model_id rmse  mse  mae</span></span>
-<span><span class="co">#&gt; 1 StackedEnsemble_BestOfFamily_4_AutoML_1_20240604_162346 4.51 20.4 3.00</span></span>
-<span><span class="co">#&gt; 2    StackedEnsemble_AllModels_2_AutoML_1_20240604_162346 4.62 21.4 3.04</span></span>
-<span><span class="co">#&gt; 3    StackedEnsemble_AllModels_1_AutoML_1_20240604_162346 4.67 21.8 3.08</span></span>
-<span><span class="co">#&gt; 4 StackedEnsemble_BestOfFamily_3_AutoML_1_20240604_162346 4.68 21.9 3.08</span></span>
-<span><span class="co">#&gt; 5 StackedEnsemble_BestOfFamily_2_AutoML_1_20240604_162346 4.71 22.2 3.16</span></span>
-<span><span class="co">#&gt; 6                          GBM_5_AutoML_1_20240604_162346 4.75 22.6 3.14</span></span>
+<span><span class="co">#&gt; 1 StackedEnsemble_BestOfFamily_4_AutoML_1_20240604_165818 4.51 20.4 3.00</span></span>
+<span><span class="co">#&gt; 2    StackedEnsemble_AllModels_2_AutoML_1_20240604_165818 4.62 21.4 3.04</span></span>
+<span><span class="co">#&gt; 3    StackedEnsemble_AllModels_1_AutoML_1_20240604_165818 4.67 21.8 3.08</span></span>
+<span><span class="co">#&gt; 4 StackedEnsemble_BestOfFamily_3_AutoML_1_20240604_165818 4.68 21.9 3.08</span></span>
+<span><span class="co">#&gt; 5 StackedEnsemble_BestOfFamily_2_AutoML_1_20240604_165818 4.71 22.2 3.16</span></span>
+<span><span class="co">#&gt; 6                          GBM_5_AutoML_1_20240604_165818 4.75 22.6 3.14</span></span>
 <span><span class="co">#&gt;   rmsle mean_residual_deviance</span></span>
 <span><span class="co">#&gt; 1 0.141                   20.4</span></span>
 <span><span class="co">#&gt; 2 0.140                   21.4</span></span>
@@ -218,12 +218,12 @@ stacked ensembles and one GBM model.</li>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> StackedEnsemble_AllModels_2_AutoML_1_202… stacking  mae      3.04     2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> StackedEnsemble_BestOfFamily_3_AutoML_1_… stacking  mae      3.08     3</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> StackedEnsemble_AllModels_1_AutoML_1_202… stacking  mae      3.09     4</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> XGBoost_grid_1_AutoML_1_20240604_162346_… xgboost   mae      3.13     5</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> XGBoost_grid_1_AutoML_1_20240604_162346_… xgboost   mae      3.14     6</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> GBM_5_AutoML_1_20240604_162346            gradient… mae      3.15     7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> XGBoost_grid_1_AutoML_1_20240604_165818_… xgboost   mae      3.13     5</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> XGBoost_grid_1_AutoML_1_20240604_165818_… xgboost   mae      3.14     6</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> GBM_5_AutoML_1_20240604_165818            gradient… mae      3.15     7</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> StackedEnsemble_BestOfFamily_2_AutoML_1_… stacking  mae      3.17     8</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> XGBoost_grid_1_AutoML_1_20240604_162346_… xgboost   mae      3.18     9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GBM_grid_1_AutoML_1_20240604_162346_mode… gradient… mae      3.18    10</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> XGBoost_grid_1_AutoML_1_20240604_165818_… xgboost   mae      3.18     9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GBM_grid_1_AutoML_1_20240604_165818_mode… gradient… mae      3.18    10</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 96 more rows</span></span></span></code></pre></div>
 <ul>
 <li>
@@ -274,11 +274,11 @@ predict) across all candidates.</li>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> StackedEnsemble_AllModels_1_A… stacking  <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> StackedEnsemble_BestOfFamily_… stacking  <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> StackedEnsemble_BestOfFamily_… stacking  <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> GBM_5_AutoML_1_20240604_162346 gradient… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> GBM_5_AutoML_1_20240604_165818 gradient… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> GBM_grid_1_AutoML_1_20240604_… gradient… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> XGBoost_grid_1_AutoML_1_20240… xgboost   <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> XGBoost_grid_1_AutoML_1_20240… xgboost   <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GBM_3_AutoML_1_20240604_162346 gradient… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> GBM_3_AutoML_1_20240604_165818 gradient… <span style="color: #949494;">&lt;tibble&gt;</span> <span style="color: #949494;">&lt;fit[+]&gt;</span> <span style="color: #949494;">&lt;tibble&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 96 more rows</span></span></span></code></pre></div>
 <ul>
 <li>
