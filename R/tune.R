@@ -102,6 +102,11 @@ tune_grid_loop_iter_agua_impl <- function(split,
       workflow = workflow,
       grid_preprocessor = iter_grid_preprocessor
     )
+
+    if (packageVersion("tune") > "1.2.1") {
+      split <- labels(split)
+    }
+
     workflow <- tune::.catch_and_log(
       .expr = workflows::.fit_pre(workflow, training_frame),
       control,
