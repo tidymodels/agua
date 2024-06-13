@@ -26,9 +26,25 @@ reg_info_raw$args$type <- "raw"
 
 
 add_linear_reg_h2o <- function() {
-  parsnip::set_model_engine("linear_reg", "regression", "h2o")
-  parsnip::set_dependency("linear_reg", "h2o", "h2o", "regression")
-  parsnip::set_dependency("linear_reg", "h2o", "agua", "regression")
+  parsnip::set_model_engine(
+    model = "linear_reg",
+    mode = "regression",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "linear_reg",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "linear_reg",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_model_arg(
     model = "linear_reg",
@@ -38,6 +54,7 @@ add_linear_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "mixture"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "linear_reg",
     eng = "h2o",
@@ -46,6 +63,7 @@ add_linear_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "penalty"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "linear_reg",
     eng = "h2o",
@@ -59,6 +77,7 @@ add_linear_reg_h2o <- function() {
       )
     )
   )
+
   parsnip::set_encoding(
     model = "linear_reg",
     eng = "h2o",
@@ -70,6 +89,7 @@ add_linear_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_pred(
     model = "linear_reg",
     eng = "h2o",
@@ -77,6 +97,7 @@ add_linear_reg_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "linear_reg",
     eng = "h2o",
@@ -87,9 +108,25 @@ add_linear_reg_h2o <- function() {
 }
 
 add_logistic_reg_h2o <- function() {
-  parsnip::set_model_engine("logistic_reg", "classification", "h2o")
-  parsnip::set_dependency("logistic_reg", "h2o", "h2o", "classification")
-  parsnip::set_dependency("logistic_reg", "h2o", "agua", "classification")
+  parsnip::set_model_engine(
+    model = "logistic_reg",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "logistic_reg",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "logistic_reg",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
 
   parsnip::set_model_arg(
     model = "logistic_reg",
@@ -99,6 +136,7 @@ add_logistic_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "mixture"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "logistic_reg",
     eng = "h2o",
@@ -107,6 +145,7 @@ add_logistic_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "penalty"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "logistic_reg",
     eng = "h2o",
@@ -120,6 +159,7 @@ add_logistic_reg_h2o <- function() {
       )
     )
   )
+
   parsnip::set_encoding(
     model = "logistic_reg",
     eng = "h2o",
@@ -131,6 +171,7 @@ add_logistic_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_pred(
     model = "logistic_reg",
     eng = "h2o",
@@ -138,6 +179,7 @@ add_logistic_reg_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "logistic_reg",
     eng = "h2o",
@@ -148,9 +190,25 @@ add_logistic_reg_h2o <- function() {
 }
 
 add_poisson_reg_h2o <- function() {
-  parsnip::set_model_engine("poisson_reg", "regression", "h2o")
-  parsnip::set_dependency("poisson_reg", "h2o", "h2o", "regression")
-  parsnip::set_dependency("poisson_reg", "h2o", "agua", "regression")
+  parsnip::set_model_engine(
+    model = "poisson_reg",
+    mode = "regression",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "poisson_reg",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "poisson_reg",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_model_arg(
     model = "poisson_reg",
@@ -160,6 +218,7 @@ add_poisson_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "mixture"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "poisson_reg",
     eng = "h2o",
@@ -168,6 +227,7 @@ add_poisson_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "penalty"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "poisson_reg",
     eng = "h2o",
@@ -181,6 +241,7 @@ add_poisson_reg_h2o <- function() {
       )
     )
   )
+
   parsnip::set_encoding(
     model = "poisson_reg",
     eng = "h2o",
@@ -192,6 +253,7 @@ add_poisson_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_pred(
     model = "poisson_reg",
     eng = "h2o",
@@ -199,6 +261,7 @@ add_poisson_reg_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "poisson_reg",
     eng = "h2o",
@@ -209,9 +272,25 @@ add_poisson_reg_h2o <- function() {
 }
 
 add_multinom_reg_h2o <- function() {
-  parsnip::set_model_engine("multinom_reg", "classification", "h2o")
-  parsnip::set_dependency("multinom_reg", "h2o", "h2o", "classification")
-  parsnip::set_dependency("multinom_reg", "h2o", "agua", "classification")
+  parsnip::set_model_engine(
+    model = "multinom_reg",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "multinom_reg",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "multinom_reg",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
 
   parsnip::set_model_arg(
     model = "multinom_reg",
@@ -221,6 +300,7 @@ add_multinom_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "mixture"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "multinom_reg",
     eng = "h2o",
@@ -229,6 +309,7 @@ add_multinom_reg_h2o <- function() {
     func = list(pkg = "dials", fun = "penalty"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "multinom_reg",
     eng = "h2o",
@@ -242,6 +323,7 @@ add_multinom_reg_h2o <- function() {
       )
     )
   )
+
   parsnip::set_encoding(
     model = "multinom_reg",
     eng = "h2o",
@@ -253,6 +335,7 @@ add_multinom_reg_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_pred(
     model = "multinom_reg",
     eng = "h2o",
@@ -260,6 +343,7 @@ add_multinom_reg_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "multinom_reg",
     eng = "h2o",
@@ -271,10 +355,45 @@ add_multinom_reg_h2o <- function() {
 
 
 add_rand_forest_h2o <- function() {
-  parsnip::set_model_engine("rand_forest", "classification", "h2o")
-  parsnip::set_model_engine("rand_forest", "regression", "h2o")
-  parsnip::set_dependency("rand_forest", "h2o", "h2o")
-  parsnip::set_dependency("rand_forest", "h2o", "agua")
+  parsnip::set_model_engine(
+    model = "rand_forest",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_model_engine(
+    model = "rand_forest",
+    mode = "regression",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "rand_forest",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "rand_forest",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "rand_forest",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "rand_forest",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_model_arg(
     model = "rand_forest",
@@ -284,6 +403,7 @@ add_rand_forest_h2o <- function() {
     func = list(pkg = "dials", fun = "trees"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "rand_forest",
     eng = "h2o",
@@ -292,6 +412,7 @@ add_rand_forest_h2o <- function() {
     func = list(pkg = "dials", fun = "min_n"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "rand_forest",
     eng = "h2o",
@@ -300,6 +421,7 @@ add_rand_forest_h2o <- function() {
     func = list(pkg = "dials", fun = "mtry"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "rand_forest",
     eng = "h2o",
@@ -311,6 +433,7 @@ add_rand_forest_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_fit(
     model = "rand_forest",
     eng = "h2o",
@@ -322,6 +445,7 @@ add_rand_forest_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_encoding(
     model = "rand_forest",
     eng = "h2o",
@@ -333,6 +457,7 @@ add_rand_forest_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_encoding(
     model = "rand_forest",
     eng = "h2o",
@@ -352,6 +477,7 @@ add_rand_forest_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "rand_forest",
     eng = "h2o",
@@ -359,6 +485,7 @@ add_rand_forest_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
+
   # classification predict
   parsnip::set_pred(
     model = "rand_forest",
@@ -367,6 +494,7 @@ add_rand_forest_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "rand_forest",
     eng = "h2o",
@@ -377,10 +505,45 @@ add_rand_forest_h2o <- function() {
 }
 
 add_xgboost_h2o <- function() {
-  parsnip::set_model_engine("boost_tree", "classification", "h2o")
-  parsnip::set_model_engine("boost_tree", "regression", "h2o")
-  parsnip::set_dependency("boost_tree", "h2o", "h2o")
-  parsnip::set_dependency("boost_tree", "h2o", "agua")
+  parsnip::set_model_engine(
+    model = "boost_tree",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_model_engine(
+    model = "boost_tree",
+    mode = "regression",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_model_arg(
     model = "boost_tree",
@@ -390,6 +553,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "trees"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o",
@@ -398,6 +562,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "tree_depth"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o",
@@ -406,6 +571,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "min_n"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o",
@@ -414,6 +580,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "learn_rate"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o",
@@ -422,6 +589,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "sample_size"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o",
@@ -430,6 +598,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "mtry"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o",
@@ -438,6 +607,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "loss_reduction"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o",
@@ -446,6 +616,7 @@ add_xgboost_h2o <- function() {
     func = list(pkg = "dials", fun = "stop_iter"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "boost_tree",
     eng = "h2o",
@@ -457,6 +628,7 @@ add_xgboost_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_fit(
     model = "boost_tree",
     eng = "h2o",
@@ -468,6 +640,7 @@ add_xgboost_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_encoding(
     model = "boost_tree",
     eng = "h2o",
@@ -479,6 +652,7 @@ add_xgboost_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_encoding(
     model = "boost_tree",
     eng = "h2o",
@@ -490,6 +664,7 @@ add_xgboost_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   # regression predict
   parsnip::set_pred(
     model = "boost_tree",
@@ -498,6 +673,7 @@ add_xgboost_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "boost_tree",
     eng = "h2o",
@@ -505,6 +681,7 @@ add_xgboost_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
+
   # classification predict
   parsnip::set_pred(
     model = "boost_tree",
@@ -513,6 +690,7 @@ add_xgboost_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "boost_tree",
     eng = "h2o",
@@ -523,10 +701,45 @@ add_xgboost_h2o <- function() {
 }
 
 add_gbm_h2o <- function() {
-  parsnip::set_model_engine("boost_tree", "classification", "h2o_gbm")
-  parsnip::set_model_engine("boost_tree", "regression", "h2o_gbm")
-  parsnip::set_dependency("boost_tree", "h2o_gbm", "h2o")
-  parsnip::set_dependency("boost_tree", "h2o_gbm", "agua")
+  parsnip::set_model_engine(
+    model = "boost_tree",
+    mode = "classification",
+    eng = "h2o_gbm"
+  )
+
+  parsnip::set_model_engine(
+    model = "boost_tree",
+    mode = "regression",
+    eng = "h2o_gbm"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    pkg = "agua",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "boost_tree",
+    eng = "h2o_gbm",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_model_arg(
     model = "boost_tree",
@@ -536,6 +749,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "trees"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -544,6 +758,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "tree_depth"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -552,6 +767,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "min_n"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -560,6 +776,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "learn_rate"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -568,6 +785,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "sample_size"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -576,6 +794,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "mtry"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -584,6 +803,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "loss_reduction"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -592,6 +812,7 @@ add_gbm_h2o <- function() {
     func = list(pkg = "dials", fun = "stop_iter"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -603,6 +824,7 @@ add_gbm_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_fit(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -614,6 +836,7 @@ add_gbm_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_encoding(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -625,6 +848,7 @@ add_gbm_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_encoding(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -636,6 +860,7 @@ add_gbm_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   # regression predict
   parsnip::set_pred(
     model = "boost_tree",
@@ -644,6 +869,7 @@ add_gbm_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -651,6 +877,7 @@ add_gbm_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
+
   # classification predict
   parsnip::set_pred(
     model = "boost_tree",
@@ -659,6 +886,7 @@ add_gbm_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "boost_tree",
     eng = "h2o_gbm",
@@ -671,9 +899,25 @@ add_gbm_h2o <- function() {
 
 
 add_naive_Bayes_h2o <- function() {
-  parsnip::set_model_engine("naive_Bayes", "classification", "h2o")
-  parsnip::set_dependency("naive_Bayes", "h2o", "h2o", "classification")
-  parsnip::set_dependency("naive_Bayes", "h2o", "agua", "classification")
+  parsnip::set_model_engine(
+    model = "naive_Bayes",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "naive_Bayes",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "naive_Bayes",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
 
   parsnip::set_model_arg(
     model = "naive_Bayes",
@@ -683,6 +927,7 @@ add_naive_Bayes_h2o <- function() {
     func = list(pkg = "dials", fun = "Laplace"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "naive_Bayes",
     eng = "h2o",
@@ -694,6 +939,7 @@ add_naive_Bayes_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_encoding(
     model = "naive_Bayes",
     eng = "h2o",
@@ -705,6 +951,7 @@ add_naive_Bayes_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_pred(
     model = "naive_Bayes",
     eng = "h2o",
@@ -712,6 +959,7 @@ add_naive_Bayes_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "naive_Bayes",
     eng = "h2o",
@@ -722,10 +970,45 @@ add_naive_Bayes_h2o <- function() {
 }
 
 add_mlp_h2o <- function() {
-  parsnip::set_model_engine("mlp", "classification", "h2o")
-  parsnip::set_model_engine("mlp", "regression", "h2o")
-  parsnip::set_dependency("mlp", "h2o", "h2o")
-  parsnip::set_dependency("mlp", "h2o", "agua")
+  parsnip::set_model_engine(
+    model = "mlp",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_model_engine(
+    model = "mlp",
+    mode = "regression",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "mlp",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "mlp",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "mlp",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "mlp",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_model_arg(
     model = "mlp",
@@ -735,6 +1018,7 @@ add_mlp_h2o <- function() {
     func = list(pkg = "dials", fun = "hidden_units"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "mlp",
     eng = "h2o",
@@ -743,6 +1027,7 @@ add_mlp_h2o <- function() {
     func = list(pkg = "dials", fun = "penalty"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "mlp",
     eng = "h2o",
@@ -751,6 +1036,7 @@ add_mlp_h2o <- function() {
     func = list(pkg = "dials", fun = "dropout"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "mlp",
     eng = "h2o",
@@ -759,6 +1045,7 @@ add_mlp_h2o <- function() {
     func = list(pkg = "dials", fun = "epochs"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "mlp",
     eng = "h2o",
@@ -767,6 +1054,7 @@ add_mlp_h2o <- function() {
     func = list(pkg = "agua", fun = "h2o_activation"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "mlp",
     eng = "h2o",
@@ -787,6 +1075,7 @@ add_mlp_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_fit(
     model = "mlp",
     eng = "h2o",
@@ -798,6 +1087,7 @@ add_mlp_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_encoding(
     model = "mlp",
     eng = "h2o",
@@ -809,6 +1099,7 @@ add_mlp_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_encoding(
     model = "mlp",
     eng = "h2o",
@@ -820,6 +1111,7 @@ add_mlp_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   # regression predict
   parsnip::set_pred(
     model = "mlp",
@@ -828,6 +1120,7 @@ add_mlp_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "mlp",
     eng = "h2o",
@@ -835,6 +1128,7 @@ add_mlp_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
+
   # classification predict
   parsnip::set_pred(
     model = "mlp",
@@ -843,6 +1137,7 @@ add_mlp_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "mlp",
     eng = "h2o",
@@ -853,10 +1148,45 @@ add_mlp_h2o <- function() {
 }
 
 add_rule_fit_h2o <- function() {
-  parsnip::set_model_engine("rule_fit", "classification", "h2o")
-  parsnip::set_model_engine("rule_fit", "regression", "h2o")
-  parsnip::set_dependency("rule_fit", "h2o", "h2o")
-  parsnip::set_dependency("rule_fit", "h2o", "agua")
+  parsnip::set_model_engine(
+    model = "rule_fit",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_model_engine(
+    model = "rule_fit",
+    mode = "regression",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "rule_fit",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "rule_fit",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "rule_fit",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "rule_fit",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_model_arg(
     model = "rule_fit",
@@ -866,6 +1196,7 @@ add_rule_fit_h2o <- function() {
     func = list(pkg = "dials", fun = "trees"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "rule_fit",
     eng = "h2o",
@@ -874,6 +1205,7 @@ add_rule_fit_h2o <- function() {
     func = list(pkg = "dials", fun = "tree_depth"),
     has_submodel = FALSE
   )
+
   parsnip::set_model_arg(
     model = "rule_fit",
     eng = "h2o",
@@ -882,6 +1214,7 @@ add_rule_fit_h2o <- function() {
     func = list(pkg = "dials", fun = "penalty"),
     has_submodel = FALSE
   )
+
   parsnip::set_fit(
     model = "rule_fit",
     eng = "h2o",
@@ -893,6 +1226,7 @@ add_rule_fit_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_fit(
     model = "rule_fit",
     eng = "h2o",
@@ -904,6 +1238,7 @@ add_rule_fit_h2o <- function() {
       defaults = list()
     )
   )
+
   parsnip::set_encoding(
     model = "rule_fit",
     eng = "h2o",
@@ -915,6 +1250,7 @@ add_rule_fit_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_encoding(
     model = "rule_fit",
     eng = "h2o",
@@ -926,6 +1262,7 @@ add_rule_fit_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   # regression predict
   parsnip::set_pred(
     model = "rule_fit",
@@ -934,6 +1271,7 @@ add_rule_fit_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "rule_fit",
     eng = "h2o",
@@ -941,6 +1279,7 @@ add_rule_fit_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
+
   # classification predict
   parsnip::set_pred(
     model = "rule_fit",
@@ -949,6 +1288,7 @@ add_rule_fit_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "rule_fit",
     eng = "h2o",
@@ -959,10 +1299,45 @@ add_rule_fit_h2o <- function() {
 }
 
 add_auto_ml_h2o <- function() {
-  parsnip::set_model_engine("auto_ml", "classification", "h2o")
-  parsnip::set_model_engine("auto_ml", "regression", "h2o")
-  parsnip::set_dependency("auto_ml", "h2o", "h2o")
-  parsnip::set_dependency("auto_ml", "h2o", "agua")
+  parsnip::set_model_engine(
+    model = "auto_ml",
+    mode = "classification",
+    eng = "h2o"
+  )
+
+  parsnip::set_model_engine(
+    model = "auto_ml",
+    mode = "regression",
+    eng = "h2o"
+  )
+
+  parsnip::set_dependency(
+    model = "auto_ml",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "auto_ml",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "classification"
+  )
+
+  parsnip::set_dependency(
+    model = "auto_ml",
+    eng = "h2o",
+    pkg = "h2o",
+    mode = "regression"
+  )
+
+  parsnip::set_dependency(
+    model = "auto_ml",
+    eng = "h2o",
+    pkg = "agua",
+    mode = "regression"
+  )
 
   parsnip::set_fit(
     model = "auto_ml",
@@ -977,6 +1352,7 @@ add_auto_ml_h2o <- function() {
       )
     )
   )
+
   parsnip::set_fit(
     model = "auto_ml",
     eng = "h2o",
@@ -990,6 +1366,7 @@ add_auto_ml_h2o <- function() {
       )
     )
   )
+
   parsnip::set_encoding(
     model = "auto_ml",
     eng = "h2o",
@@ -1001,6 +1378,7 @@ add_auto_ml_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   parsnip::set_encoding(
     model = "auto_ml",
     eng = "h2o",
@@ -1012,6 +1390,7 @@ add_auto_ml_h2o <- function() {
       allow_sparse_x = FALSE
     )
   )
+
   # regression predict
   parsnip::set_pred(
     model = "auto_ml",
@@ -1020,6 +1399,7 @@ add_auto_ml_h2o <- function() {
     type = "numeric",
     value = reg_info
   )
+
   parsnip::set_pred(
     model = "auto_ml",
     eng = "h2o",
@@ -1027,6 +1407,7 @@ add_auto_ml_h2o <- function() {
     type = "raw",
     value = reg_info_raw
   )
+
   # classification predict
   parsnip::set_pred(
     model = "auto_ml",
@@ -1035,6 +1416,7 @@ add_auto_ml_h2o <- function() {
     type = "class",
     value = class_info
   )
+
   parsnip::set_pred(
     model = "auto_ml",
     eng = "h2o",
