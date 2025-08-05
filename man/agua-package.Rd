@@ -3,7 +3,6 @@
 \docType{package}
 \name{agua-package}
 \alias{agua-package}
-\alias{_PACKAGE}
 \alias{agua}
 \title{tidymodels integration with h2o}
 \description{

@@ -16,7 +16,7 @@ h2o_predict_regression(object, new_data, type = "numeric", ...)
 \method{predict}{`_H2OAutoML`}(object, new_data, id = NULL, ...)
 }
 \arguments{
-\item{object}{An object of class \code{model_fit}.}
+\item{object}{A \link[parsnip:model_fit]{model fit}.}
 
 \item{new_data}{A rectangular data object, such as a data frame.}
 
