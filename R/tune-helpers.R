@@ -59,7 +59,7 @@ agua_train_predict <- function(static, grid, resample_label) {
   if (length(h2o_hyper_params) > 1) {
     h2o_search_criteria <- list(strategy = "Sequential")
   } else {
-    h2o_search_criteria <-NULL
+    h2o_search_criteria <- NULL
   }
 
   h2o_res <- h2o::h2o.grid(
@@ -107,7 +107,6 @@ vec_list_rowwise <- function(x) {
 
 # ------------------------------------------------------------------------------
 
-
 check_parallelism <- function(control) {
   backend_options <- control$backend_options
   if (is.null(backend_options)) {
@@ -125,7 +124,9 @@ check_parallelism <- function(control) {
 
   parallelism <- as.integer(backend_options$parallelism)
   if (is.na(parallelism)) {
-    cli::cli_abort("{.arg parallelism} should be an integer for the number of threads.")
+    cli::cli_abort(
+      "{.arg parallelism} should be an integer for the number of threads."
+    )
   }
 
   parallelism
@@ -136,6 +137,8 @@ check_parallelism <- function(control) {
 #' @rdname h2o_tune
 #' @export
 agua_backend_options <- function(parallelism = 1) {
-  tune::new_backend_options(parallelism = parallelism, class = "agua_backend_options")
+  tune::new_backend_options(
+    parallelism = parallelism,
+    class = "agua_backend_options"
+  )
 }
-
