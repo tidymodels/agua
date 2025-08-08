@@ -73,15 +73,18 @@ agua_train_predict <- function(static, grid, resample_label) {
     h2o_search_criteria <- NULL
   }
 
-  h2o_res <- h2o::h2o.grid(
-    h2o_algo,
-    x = predictor_names,
-    y = static$y_name,
-    training_frame = h2o_training_frame$data,
-    hyper_params = h2o_hyper_params,
-    parallelism = parallelism,
-    search_criteria = h2o_search_criteria
-  )
+  h2o_res <-
+    h2o::h2o.no_progress( # TODO this doesn't seem to fix it
+      h2o::h2o.grid(
+        h2o_algo,
+        x = predictor_names,
+        y = static$y_name,
+        training_frame = h2o_training_frame$data,
+        hyper_params = h2o_hyper_params,
+        parallelism = parallelism,
+        search_criteria = h2o_search_criteria
+      )
+    )
 
   # ----------------------------------------------------------------------------
   # Make predictions on the out-of-sample data and the calibration set (if any)
@@ -112,6 +115,8 @@ agua_train_predict <- function(static, grid, resample_label) {
       mode = model_mode
     ) |>
       purrr::map2(grid_by_row, ~ vctrs::vec_cbind(.y, .x))
+  } else {
+    h2o_cal <- list()
   }
 
   list(pred = h2o_pred, cal = h2o_cal)
@@ -152,17 +157,6 @@ check_parallelism <- function(control) {
   }
 
   parallelism
-}
-
-append_h2o_predictions <- function(collection, predictions, control) {
-  if (!control$save_pred) {
-    return(NULL)
-  }
-  if (inherits(predictions, "try-error")) {
-    return(collection)
-  }
-
-  dplyr::bind_rows(collection, predictions)
 }
 
 pull_h2o_predictions <- function(
