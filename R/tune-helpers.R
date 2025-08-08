@@ -43,14 +43,19 @@ agua_train_predict <- function(static, grid, resample_label) {
   # ----------------------------------------------------------------------------
   # data things
 
+  has_cal_data <- !is.null(static$data$cal)
+
   # extract outcome and predictor names (used by h2o.grid)
-  predictor_names <- colnames(static$fit$data)
+  predictor_names <- colnames(static$datafit$data)
   predictor_names <- predictor_names[predictor_names != static$y_name]
 
   # These data sets should be the results of any preprocessor used by the
   # workflow (e.g., a recipe).
-  h2o_training_frame <- as_h2o(static$fit$data, "training_frame")
-  h2o_val_frame <- as_h2o(static$pred$data, "val_frame")
+  h2o_training_frame <- bind_frames(static, "fit") |> as_h2o("training_frame")
+  h2o_pred_frame <- bind_frames(static, "pred") |> as_h2o("pred_frame")
+  if (has_cal_data) {
+    h2o_cal_frame <- bind_frames(static, "cal") |> as_h2o("cal_frame")
+  }
 
   # ----------------------------------------------------------------------------
 
@@ -66,43 +71,66 @@ agua_train_predict <- function(static, grid, resample_label) {
     h2o_algo,
     x = predictor_names,
     y = static$y_name,
-    training_frame = h2o_training_frame$data,
+    training_frame = h2o_training_frame,
     hyper_params = h2o_hyper_params,
     parallelism = parallelism,
     search_criteria = h2o_search_criteria
   )
 
   # remove objects from h2o server
-  on.exit(h2o::h2o.rm(c(
-    h2o_model_ids,
-    h2o_training_frame$id,
-    h2o_val_frame$id
-  )))
+  on.exit({
+    h2o::h2o.rm(
+      c(
+        h2o_model_ids,
+        h2o_training_frame$id,
+        h2o_pred_frame$id
+      )
+    )
+    if (has_cal_data) {
+      h2o::h2o.rm(h2o_cal_frame)
+    }
+  })
 
   # ----------------------------------------------------------------------------
 
   h2o_model_ids <- as.character(h2o_res@model_ids)
   h2o_models <- purrr::map(h2o_model_ids, h2o_get_model)
 
-  val_truth <- val_info$data[static$y_name]
-  h2o_predictions <- purrr::map(
+  h2o_pred <- purrr::map(
     h2o_models,
     pull_h2o_predictions,
-    val_frame = h2o_val_frame$data,
-    val_truth = val_truth,
+    val_frame = h2o_pred_frame,
+    val_truth = static$data$pred$data[static$y_name],
     fold_id = resample_label,
-    orig_rows = static$pred$ind,
+    orig_rows = static$data$pred$ind,
     mode = model_mode
   ) |>
     purrr::map2(grid_by_row, ~ vctrs::vec_cbind(.y, .x))
 
-  h2o_predictions
+  if (has_cal_data) {
+    h2o_cal <- purrr::map(
+      h2o_models,
+      pull_h2o_predictions,
+      val_frame = h2o_cal_frame,
+      val_truth = static$data$cal$data[static$y_name],
+      fold_id = resample_label,
+      orig_rows = static$data$cal$ind,
+      mode = model_mode
+    ) |>
+      purrr::map2(grid_by_row, ~ vctrs::vec_cbind(.y, .x))
+  }
+
+  list(pred = h2o_pred, cal = h2o_cal)
 }
 
 # ------------------------------------------------------------------------------
 
 vec_list_rowwise <- function(x) {
   vctrs::vec_split(x, by = 1:nrow(x))$val
+}
+
+bind_frames <- function(x, slot = "fit") {
+  dplyr::bind_cols(x$data[[slot]]$data$outcomes, x$data[[slot]]$data$predictors)
 }
 
 # ------------------------------------------------------------------------------
@@ -137,6 +165,7 @@ check_parallelism <- function(control) {
 #' @rdname h2o_tune
 #' @export
 agua_backend_options <- function(parallelism = 1) {
+  rlang::check_installed("tune")
   tune::new_backend_options(
     parallelism = parallelism,
     class = "agua_backend_options"
