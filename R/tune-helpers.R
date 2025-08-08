@@ -19,7 +19,7 @@ agua_train_predict <- function(static, grid, resample_label) {
   parallelism <- check_parallelism(static$control)
 
   # ----------------------------------------------------------------------------
-  # grid things
+  # Grid things
 
   orig_names <- names(grid)
   model_param_names_h2o <- extract_model_param_names_h2o(
@@ -39,7 +39,7 @@ agua_train_predict <- function(static, grid, resample_label) {
     as.list()
 
   # ----------------------------------------------------------------------------
-  # data things
+  # Data things
 
   has_cal_data <- !is.null(static$data$cal)
 
