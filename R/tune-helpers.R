@@ -16,8 +16,6 @@ agua_train_predict <- function(static, grid, resample_label) {
     hardhat::extract_spec_parsnip() |>
     purrr::pluck("mode")
 
-  # maybe use data slots instead of static so that they are processed
-
   parallelism <- check_parallelism(static$control)
 
   # ----------------------------------------------------------------------------
@@ -46,18 +44,26 @@ agua_train_predict <- function(static, grid, resample_label) {
   has_cal_data <- !is.null(static$data$cal)
 
   # extract outcome and predictor names (used by h2o.grid)
-  predictor_names <- colnames(static$datafit$data)
-  predictor_names <- predictor_names[predictor_names != static$y_name]
+  predictor_names <- colnames(static$data$fit$data$predictors)
 
   # These data sets should be the results of any preprocessor used by the
   # workflow (e.g., a recipe).
   h2o_training_frame <- bind_frames(static, "fit") |> as_h2o("training_frame")
   h2o_pred_frame <- bind_frames(static, "pred") |> as_h2o("pred_frame")
+
+  # For garbage collection later
+  h2o_ids <- c(h2o_training_frame$id, h2o_pred_frame$id)
+
   if (has_cal_data) {
     h2o_cal_frame <- bind_frames(static, "cal") |> as_h2o("cal_frame")
+    h2o_ids <- c(h2o_ids, h2o_cal_frame$id)
   }
 
+  # remove objects from h2o server
+  on.exit(h2o::h2o.rm(h2o_ids))
+
   # ----------------------------------------------------------------------------
+  # Run grid/resampling
 
   h2o_algo <- extract_h2o_algorithm(static$wflow)
 
@@ -77,23 +83,11 @@ agua_train_predict <- function(static, grid, resample_label) {
     search_criteria = h2o_search_criteria
   )
 
-  # remove objects from h2o server
-  on.exit({
-    h2o::h2o.rm(
-      c(
-        h2o_model_ids,
-        h2o_training_frame$id,
-        h2o_pred_frame$id
-      )
-    )
-    if (has_cal_data) {
-      h2o::h2o.rm(h2o_cal_frame)
-    }
-  })
-
   # ----------------------------------------------------------------------------
+  # Make predictions on the out-of-sample data and the calibration set (if any)
 
   h2o_model_ids <- as.character(h2o_res@model_ids)
+  h2o_ids <- c(h2o_ids, h2o_model_ids)
   h2o_models <- purrr::map(h2o_model_ids, h2o_get_model)
 
   h2o_pred <- purrr::map(
