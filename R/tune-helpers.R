@@ -165,6 +165,38 @@ append_h2o_predictions <- function(collection, predictions, control) {
   dplyr::bind_rows(collection, predictions)
 }
 
+pull_h2o_predictions <- function(
+  h2o_model,
+  val_frame,
+  val_truth,
+  fold_id,
+  control,
+  orig_rows,
+  mode
+) {
+  outcome_name <- names(val_truth)
+  h2o_preds <- h2o::h2o.predict(h2o_model, val_frame) %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(predict = vctrs::vec_cast(predict, val_truth[[outcome_name]]))
+
+  if (mode == "classification") {
+    h2o_preds <- parsnip::format_classprobs(
+      h2o_preds %>%
+        dplyr::select(-predict)
+    ) %>%
+      dplyr::mutate(.row = orig_rows) %>%
+      dplyr::bind_cols(
+        parsnip::format_class(h2o_preds %>% purrr::pluck("predict"))
+      )
+  } else {
+    h2o_preds <- parsnip::format_num(
+      h2o_preds %>%
+        purrr::pluck("predict")
+    ) %>%
+      dplyr::mutate(.row = orig_rows)
+  }
+  h2o_preds %>% dplyr::bind_cols(val_truth, fold_id)
+}
 
 #' Control model tuning via [h2o::h2o.grid()]
 #' @inheritParams h2o::h2o.grid
