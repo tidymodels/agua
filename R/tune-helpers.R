@@ -154,6 +154,18 @@ check_parallelism <- function(control) {
   parallelism
 }
 
+append_h2o_predictions <- function(collection, predictions, control) {
+  if (!control$save_pred) {
+    return(NULL)
+  }
+  if (inherits(predictions, "try-error")) {
+    return(collection)
+  }
+
+  dplyr::bind_rows(collection, predictions)
+}
+
+
 #' Control model tuning via [h2o::h2o.grid()]
 #' @inheritParams h2o::h2o.grid
 #' @rdname h2o_tune
