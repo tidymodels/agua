@@ -77,7 +77,7 @@ agua_train_predict <- function(static, grid, resample_label) {
     h2o_algo,
     x = predictor_names,
     y = static$y_name,
-    training_frame = h2o_training_frame,
+    training_frame = h2o_training_frame$data,
     hyper_params = h2o_hyper_params,
     parallelism = parallelism,
     search_criteria = h2o_search_criteria
@@ -93,7 +93,7 @@ agua_train_predict <- function(static, grid, resample_label) {
   h2o_pred <- purrr::map(
     h2o_models,
     pull_h2o_predictions,
-    val_frame = h2o_pred_frame,
+    val_frame = h2o_pred_frame$data,
     val_truth = static$data$pred$data[static$y_name],
     fold_id = resample_label,
     orig_rows = static$data$pred$ind,
@@ -105,7 +105,7 @@ agua_train_predict <- function(static, grid, resample_label) {
     h2o_cal <- purrr::map(
       h2o_models,
       pull_h2o_predictions,
-      val_frame = h2o_cal_frame,
+      val_frame = h2o_cal_frame$data,
       val_truth = static$data$cal$data[static$y_name],
       fold_id = resample_label,
       orig_rows = static$data$cal$ind,
