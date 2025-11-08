@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# agua <a href="https://agua.tidymodels.org/"><img src="man/figures/logo.svg" align="right" height="139" /></a>
+# agua <a href="https://agua.tidymodels.org/"><img src="man/figures/logo.png" align="right" height="138" alt="agua website" /></a>
 
 <!-- badges: start -->
 
